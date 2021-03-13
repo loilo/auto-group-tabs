@@ -1,0 +1,94 @@
+{
+  "appName": {
+    "message": "Auto-Group Tabs",
+    "description": "The title of the application, displayed in the web store."
+  },
+  "appDesc": {
+    "message": "Automatically add tabs to your configured groups, based on their URL.",
+    "description": "The description of the application, displayed in the web store."
+  },
+  "invalidUrlPattern": {
+    "message": "Invalid URL pattern",
+    "description": "Error message for invalid URL pattern"
+  },
+  "matchPatternInfo": {
+    "message": "Learn more about URL patterns",
+    "description": "Match pattern info link"
+  },
+  "buttonDeleteGroup": {
+    "message": "Delete group",
+    "description": "Delete group button label"
+  },
+  "groupDeletedNotice": {
+    "message": "Group was deleted",
+    "description": "Snackbar message when group was deleted"
+  },
+  "undo": {
+    "message": "Undo",
+    "description": "Undo button label"
+  },
+  "buttonSave": {
+    "message": "Save",
+    "description": "Save button label"
+  },
+  "buttonCancel": {
+    "message": "Cancel",
+    "description": "Cancel button label"
+  },
+  "buttonAddGroup": {
+    "message": "Add group",
+    "description": "Add group button label"
+  },
+  "groupTitlePlaceholder": {
+    "message": "Group title",
+    "description": "Placeholder of a group title input"
+  },
+  "urlInputPlaceholder": {
+    "message": "URL pattern",
+    "description": "Placeholder of a URL input"
+  },
+  "furtherUrlInputPlaceholder": {
+    "message": "Another URL pattern",
+    "description": "Placeholder of URL input beyond the first one"
+  },
+  "newGroupTitle": {
+    "message": "New Group",
+    "description": "Title of a newly created group"
+  },
+  "color": {
+    "message": "Color",
+    "description": "The word 'color'"
+  },
+  "colorGrey": {
+    "message": "grey",
+    "description": "The color grey"
+  },
+  "colorBlue": {
+    "message": "blue",
+    "description": "The color blue"
+  },
+  "colorRed": {
+    "message": "red",
+    "description": "The color red"
+  },
+  "colorYellow": {
+    "message": "yellow",
+    "description": "The color yellow"
+  },
+  "colorGreen": {
+    "message": "green",
+    "description": "The color green"
+  },
+  "colorPink": {
+    "message": "pink",
+    "description": "The color pink"
+  },
+  "colorPurple": {
+    "message": "purple",
+    "description": "The color purple"
+  },
+  "colorCyan": {
+    "message": "cyan",
+    "description": "The color cyan"
+  }
+}

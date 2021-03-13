@@ -1,0 +1,94 @@
+{
+  "appName": {
+    "message": "Automatische Tab-Gruppierung",
+    "description": "The title of the application, displayed in the web store."
+  },
+  "appDesc": {
+    "message": "Weise Tabs automatisiert bestimmten Gruppen zu, basierend auf ihrer Adresse.",
+    "description": "The description of the application, displayed in the web store."
+  },
+  "invalidUrlPattern": {
+    "message": "Ungültiges URL-Muster",
+    "description": "Error message for invalid URL pattern"
+  },
+  "matchPatternInfo": {
+    "message": "Mehr über URL-Muster erfahren (englisch)",
+    "description": "Match pattern info link"
+  },
+  "buttonDeleteGroup": {
+    "message": "Gruppe löschen",
+    "description": "Delete group button label"
+  },
+  "groupDeletedNotice": {
+    "message": "Gruppe wurde gelöscht",
+    "description": "Snackbar message when group was deleted"
+  },
+  "undo": {
+    "message": "Rückgängig",
+    "description": "Undo button label"
+  },
+  "buttonSave": {
+    "message": "Speichern",
+    "description": "Save button label"
+  },
+  "buttonCancel": {
+    "message": "Abbrechen",
+    "description": "Cancel button label"
+  },
+  "buttonAddGroup": {
+    "message": "Neue Gruppe",
+    "description": "Add group button label"
+  },
+  "groupTitlePlaceholder": {
+    "message": "Gruppe benennen",
+    "description": "Placeholder of a group title input"
+  },
+  "urlInputPlaceholder": {
+    "message": "URL-Muster",
+    "description": "Placeholder of a URL input"
+  },
+  "furtherUrlInputPlaceholder": {
+    "message": "Weiteres URL-Muster",
+    "description": "Placeholder of URL input beyond the first one"
+  },
+  "newGroupTitle": {
+    "message": "Neue Gruppe",
+    "description": "Title of a newly created group"
+  },
+  "color": {
+    "message": "Farbe",
+    "description": "The word 'color'"
+  },
+  "colorGrey": {
+    "message": "grau",
+    "description": "The color grey"
+  },
+  "colorBlue": {
+    "message": "blau",
+    "description": "The color blue"
+  },
+  "colorRed": {
+    "message": "rot",
+    "description": "The color red"
+  },
+  "colorYellow": {
+    "message": "gelb",
+    "description": "The color yellow"
+  },
+  "colorGreen": {
+    "message": "grün",
+    "description": "The color green"
+  },
+  "colorPink": {
+    "message": "rosa",
+    "description": "The color pink"
+  },
+  "colorPurple": {
+    "message": "violett",
+    "description": "The color purple"
+  },
+  "colorCyan": {
+    "message": "cyan",
+    "description": "The color cyan"
+  }
+}

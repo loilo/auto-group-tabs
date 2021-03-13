@@ -1,0 +1,22 @@
+{
+  "name": "__MSG_appName__",
+  "version": "0.0.1",
+  "manifest_version": 3,
+  "description": "__MSG_appDesc__",
+  "homepage_url": "https://loilo.de",
+  "icons": {
+    "16": "icons/icon16.png",
+    "19": "icons/icon19.png",
+    "128": "icons/icon128.png",
+    "256": "icons/icon256.png"
+  },
+  "default_locale": "en",
+  "background": {
+    "service_worker": "background.js"
+  },
+  "options_ui": {
+    "open_in_tab": false,
+    "page": "index.html"
+  },
+  "permissions": ["tabs", "tabGroups", "storage"]
+}

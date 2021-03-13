@@ -1,0 +1,16 @@
+{
+  "workbench.colorCustomizations": {
+    "titleBar.activeBackground": "#93d978",
+    "titleBar.activeForeground": "#15202b",
+    "titleBar.inactiveBackground": "#93d97899",
+    "titleBar.inactiveForeground": "#15202b99"
+  },
+  "peacock.color": "#93d978",
+  "editor.formatOnSave": true,
+  "search.exclude": {
+    "**/node_modules": true,
+    "**/bower_components": true,
+    "**/*.code-search": true,
+    "**/extension": true
+  }
+}
