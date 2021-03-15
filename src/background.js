@@ -46,7 +46,7 @@ function generateRegex(matcher) {
         )
       : '[^/]+.[^/]+'
   const pathPattern =
-    typeof path === 'string' ? `/${generatePatternString(path, '.*')}` : '.*'
+    typeof path === 'string' ? generatePatternString(path, '.*') : '.*'
 
   return new RegExp(`^(${schemePattern})://(${hostPattern})(/${pathPattern})?$`)
 }
