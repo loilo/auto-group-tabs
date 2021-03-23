@@ -86,6 +86,9 @@ async function main(groups) {
     // Ignore tabs that are already grouped
     if (tab.groupId !== chrome.tabGroups.TAB_GROUP_ID_NONE) return
 
+    // Ignore pinned tabs
+    if (tab.pinned) return
+
     // Iterate group assignment configuration
     for (const { title, color, matchers } of groups) {
       for (const matcher of matchers) {
