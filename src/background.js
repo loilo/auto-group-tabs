@@ -79,6 +79,11 @@ async function main(groups) {
 
   augmentGroups(groups)
 
+  chrome.runtime.onUpdateAvailable.addListener(() => {
+    // Reload the runtime on update to avoid sticking to outdated behavior in existing tabs
+    chrome.runtime.reload()
+  })
+
   chrome.tabs.onUpdated.addListener(async function (tabId, changeInfo, tab) {
     // Ignore tab updates without URL change
     if (typeof changeInfo.url !== 'string') return
