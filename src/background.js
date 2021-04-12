@@ -57,6 +57,8 @@ function generateRegex(matcher) {
  * @param {object[]} groups
  */
 function augmentGroups(groups) {
+  groups.sort((a, b) => a.title.localeCompare(b.title))
+
   for (let group of groups) {
     group.matchers = group.matchers.map(generateRegex).filter(Boolean)
   }
