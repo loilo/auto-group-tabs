@@ -34,6 +34,10 @@
           :error-message="msg.invalidUrlPattern"
         />
 
+        <!--
+          The production build partly eradicates the info icon when used as a
+          regular component, therefore we inject it as innerHTML.
+        -->
         <a
           tabindex="-1"
           class="group-matchers-info"
@@ -41,9 +45,8 @@
           target="_blank"
           rel="noopener"
           :title="msg.matchPatternInfo"
-        >
-          <mwc-icon-button icon="info_outline" />
-        </a>
+          v-html="`<mwc-icon-button icon='info_outline'></mwc-icon-button>`"
+        />
       </div>
     </div>
   </div>
