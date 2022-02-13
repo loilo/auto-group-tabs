@@ -1,15 +1,37 @@
 <template>
   <div class="group-header" :class="[color]">
-    <span class="tag">{{ title }}</span>
-    <div class="edit" v-if="editable">
-      <mwc-icon-button icon="create" @click="edit" />
+    <span class="tag" :class="{ 'no-title': !title }">
+      <span class="tag-label">{{ displayTitle }}</span>
+    </span>
+    <mwc-icon
+      v-if="hasConflictingTitle"
+      class="conflict-hint"
+      :title="msg.duplicateGroupError"
+    >
+      warning
+    </mwc-icon>
+
+    <div class="edit" v-if="editable && !sortMode">
+      <mwc-icon-button
+        class="action-button"
+        icon="edit"
+        :title="msg.editGroupTooltip"
+        @click="edit"
+      />
+      <mwc-icon-button
+        class="action-button"
+        icon="add_link"
+        :title="msg.newMatcherTooltip"
+        @click="emit('new-matcher')"
+      />
     </div>
-    <hr class="divider" />
+    <mwc-icon v-if="sortMode" class="drag-handle">drag_indicator</mwc-icon>
   </div>
 
   <transition name="from-right">
     <EditDialog
       v-if="showEditDialog"
+      :id="groupId"
       :title="title"
       :color="color"
       @save="save"
@@ -20,17 +42,41 @@
   </transition>
 </template>
 
-<script setup>
-import { defineEmit, defineProps, ref } from 'vue'
-import ColorMenu from './ColorMenu.vue'
+<script setup lang="ts">
+import EditDialog from './Dialog/EditDialog.vue'
 
-let props = defineProps({
-  title: String,
-  color: String,
-  editable: Boolean
+import { computed, inject, ref } from 'vue'
+
+import { Translation } from '@/util/types'
+import * as conflictManager from '@/util/conflict-manager'
+
+const props = defineProps<{
+  groupId?: string
+  title: string
+  color: chrome.tabGroups.ColorEnum
+  editable?: boolean
+  sortMode?: boolean
+}>()
+
+const emit = defineEmits<{
+  (e: 'update:title', title: string): void
+  (e: 'update:color', color: chrome.tabGroups.ColorEnum): void
+  (e: 'delete'): void
+  (e: 'new-matcher'): void
+}>()
+
+const msg = inject<Translation>('msg')!
+
+const hasConflictingTitle = computed(() =>
+  conflictManager.hasMarker(props.title)
+)
+
+const displayTitle = computed(() => {
+  if (!props.title) return `(${msg.noGroupTitle})`
+  if (hasConflictingTitle.value)
+    return conflictManager.withoutMarker(props.title)
+  return props.title
 })
-
-const emit = defineEmit(['update:title', 'update:color', 'delete'])
 
 const showEditDialog = ref(false)
 
@@ -38,21 +84,13 @@ function edit() {
   showEditDialog.value = true
 }
 
-function save(title, color) {
+function save(title: string, color: chrome.tabGroups.ColorEnum) {
   emit('update:title', title)
   emit('update:color', color)
 }
 
 function remove() {
   emit('delete')
-}
-
-const colorMenu = ref()
-const changeColor = value => {
-  emit('update:color', value)
-  // emit('update:title', editTitle.value)
-  // emit('update:color', editColor.value)
-  // editMode.value = false
 }
 </script>
 
@@ -69,27 +107,40 @@ const changeColor = value => {
 
   &.grey {
     --group-color: var(--group-grey);
+    --group-foreground-color: var(--group-grey-foreground);
   }
   &.blue {
     --group-color: var(--group-blue);
+    --group-foreground-color: var(--group-blue-foreground);
   }
   &.red {
     --group-color: var(--group-red);
+    --group-foreground-color: var(--group-red-foreground);
   }
   &.yellow {
     --group-color: var(--group-yellow);
+    --group-foreground-color: var(--group-yellow-foreground);
   }
   &.green {
     --group-color: var(--group-green);
+    --group-foreground-color: var(--group-green-foreground);
   }
   &.pink {
     --group-color: var(--group-pink);
+    --group-foreground-color: var(--group-pink-foreground);
   }
   &.purple {
     --group-color: var(--group-purple);
+    --group-foreground-color: var(--group-purple-foreground);
   }
   &.cyan {
     --group-color: var(--group-cyan);
+    --group-foreground-color: var(--group-cyan-foreground);
+  }
+
+  &.orange {
+    --group-color: var(--group-orange);
+    --group-foreground-color: var(--group-orange-foreground);
   }
 
   .tag {
@@ -97,33 +148,46 @@ const changeColor = value => {
     display: inline-block;
     border-radius: 5px;
     padding: 0.35em 0.6em;
-    margin-left: 0.5em;
-    color: var(--group-foreground);
+    color: var(--group-foreground-color, var(--group-foreground));
     background-color: var(--group-color);
     z-index: 1;
+    white-space: pre;
 
     &:empty {
       display: none;
     }
+
+    .tag-label {
+      // Hard-code line height in case height-modifying characters (e.g. emoji) are used
+      display: block;
+      height: 16px;
+      line-height: 1.2;
+    }
+
+    &.no-title .tag-label {
+      opacity: 0.75;
+    }
   }
 
-  .divider {
-    position: absolute;
-    top: 1.65em;
-    margin: 0;
-    padding: 0;
-    border: none;
-    width: 100%;
-    height: 4px;
-    border-radius: 1px;
-    background-color: var(--group-color);
+  .conflict-hint {
+    margin-left: 0.5rem;
+    color: var(--mdc-theme-warning);
   }
 
   .edit {
-    margin-left: auto;
+    margin-left: 0.4rem;
+    margin-right: auto;
     z-index: 1;
     color: var(--foreground);
-    background: var(--background);
+  }
+
+  .action-button {
+    --mdc-icon-size: 18px;
+  }
+
+  .drag-handle {
+    cursor: move;
+    padding: 12px 6px;
   }
 
   .eyedropper {
@@ -152,7 +216,7 @@ mwc-dialog {
 
 .preview {
   width: 100vw;
-  max-width: 100%;
+  box-sizing: border-box;
   margin: -20px -24px 20px;
   padding: 8px 24px 0 !important;
   border-radius: var(--mdc-shape-medium, 4px) var(--mdc-shape-medium, 4px) 0 0;

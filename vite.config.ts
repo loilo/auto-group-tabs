@@ -6,6 +6,13 @@ import vue from '@vitejs/plugin-vue'
 
 // See https://vitejs.dev/config/
 export default defineConfig({
+  resolve: {
+    alias: {
+      // Ensure that all parties import the exact same Vue build
+      vue: require.resolve('vue/dist/vue.runtime.esm-bundler.js'),
+      '@': resolve(__dirname, 'src')
+    }
+  },
   plugins: [
     vue({
       template: {

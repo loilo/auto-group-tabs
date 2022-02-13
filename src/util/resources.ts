@@ -7,5 +7,6 @@ export const colors = [
   'green',
   'pink',
   'purple',
-  'cyan'
-]
+  'cyan',
+  'orange'
+] as const

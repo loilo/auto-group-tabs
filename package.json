@@ -1,30 +1,47 @@
 {
   "scripts": {
-    "dev:options": "vite",
+    "dev-legacy:background": "rollup -c rollup.config.js --watch",
+    "build-legacy:background": "rollup -c rollup.config.js",
+    "dev:options": "vite --host",
+    "dev:background": "esbuild src/background.ts --bundle --outfile=extension/background.js --watch",
     "build:options": "vite build",
-    "dev:background": "rollup -c rollup.config.js --watch",
-    "build:background": "rollup -c rollup.config.js",
+    "build:check": "vue-tsc --noEmit",
+    "build:background": "esbuild src/background.ts --bundle --outfile=extension/background.js",
     "dev": "run-p dev:*",
     "build": "run-s build:options build:background",
-    "pack": "node pack"
+    "pack": "node pack",
+    "deploy": "run-s build:check build:options build:background pack"
   },
   "dependencies": {
     "@a11y/focus-trap": "^1.0.5",
-    "@material/mwc-button": "^0.20.0",
-    "@material/mwc-fab": "^0.20.0",
-    "@material/mwc-icon-button": "^0.20.0",
-    "@material/mwc-radio": "^0.20.0",
-    "@material/mwc-snackbar": "^0.20.0",
-    "@material/mwc-switch": "^0.20.0",
-    "@material/mwc-textfield": "^0.20.0",
-    "vue": "^3.0.7"
+    "@material/mwc-button": "^0.25.3",
+    "@material/mwc-checkbox": "^0.25.3",
+    "@material/mwc-fab": "^0.25.3",
+    "@material/mwc-formfield": "^0.25.3",
+    "@material/mwc-icon-button": "^0.25.3",
+    "@material/mwc-radio": "^0.25.3",
+    "@material/mwc-snackbar": "^0.25.3",
+    "@material/mwc-switch": "^0.25.3",
+    "@material/mwc-textfield": "^0.25.3",
+    "@material/mwc-top-app-bar": "^0.25.3",
+    "@material/mwc-top-app-bar-fixed": "^0.25.3",
+    "@vueuse/core": "^7.6.1",
+    "gsap": "^3.9.1",
+    "monomitter": "^1.1.1",
+    "vue": "^3.2.29",
+    "vuedraggable": "^4.1.0"
   },
   "devDependencies": {
-    "@vitejs/plugin-vue": "^1.1.4",
-    "@vue/compiler-sfc": "^3.0.7",
+    "@types/chrome": "^0.0.178",
+    "@vitejs/plugin-vue": "^2.1.0",
+    "@vue/compiler-sfc": "^3.2.29",
     "archiver": "^5.3.0",
+    "esbuild": "^0.14.21",
     "npm-run-all": "^4.1.5",
-    "sass": "^1.32.8",
-    "vite": "^2.0.5"
+    "sass": "^1.49.7",
+    "type-fest": "^2.11.2",
+    "typescript": "^4.5.5",
+    "vite": "^2.7.13",
+    "vue-tsc": "^0.31.3"
   }
 }

@@ -7,6 +7,18 @@
     "message": "Weise Tabs automatisiert bestimmten Gruppen zu, basierend auf ihrer Adresse.",
     "description": "The description of the application, displayed in the web store."
   },
+  "noGroupTitle": {
+    "message": "kein Titel",
+    "description": "A group with an empty title"
+  },
+  "editGroupTooltip": {
+    "message": "Gruppe bearbeiten",
+    "description": "The tooltip for the edit group button"
+  },
+  "newMatcherTooltip": {
+    "message": "Weiteres URL-Muster hinzufügen",
+    "description": "The tooltip for the new matcher button"
+  },
   "invalidUrlPattern": {
     "message": "Ungültiges URL-Muster",
     "description": "Error message for invalid URL pattern"
@@ -35,6 +47,10 @@
     "message": "Abbrechen",
     "description": "Cancel button label"
   },
+  "buttonSortMode": {
+    "message": "Sortiermodus aktivieren",
+    "description": "Sort mode"
+  },
   "buttonAddGroup": {
     "message": "Neue Gruppe",
     "description": "Add group button label"
@@ -54,6 +70,10 @@
   "newGroupTitle": {
     "message": "Neue Gruppe",
     "description": "Title of a newly created group"
+  },
+  "duplicateGroupError": {
+    "message": "Diese Kombination aus Gruppenname und Farbe existiert bereits.",
+    "description": "Error message when a group with the same name and color already exists"
   },
   "color": {
     "message": "Farbe",
@@ -90,5 +110,13 @@
   "colorCyan": {
     "message": "cyan",
     "description": "The color cyan"
+  },
+  "colorOrange": {
+    "message": "orange",
+    "description": "The color orange"
+  },
+  "sortHint": {
+    "message": "Die Sortierung der Gruppen bestimmt die Auswertungsreihenfolge der URL-Muster. Positioniere Gruppen mit spezifischeren URL-Mustern am Anfang, um auf Gruppen mit allgemeineren Mustern zurückzufallen.",
+    "description": "Hint to show when sort mode is enabled"
   }
 }

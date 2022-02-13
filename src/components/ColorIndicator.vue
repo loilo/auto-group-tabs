@@ -9,9 +9,9 @@
   </svg>
 </template>
 
-<script setup>
-import { computed, defineProps } from 'vue'
+<script setup lang="ts">
+import { computed } from 'vue'
 
-const props = defineProps({ color: String })
+const props = defineProps<{ color: string }>()
 const fill = computed(() => `var(--group-${props.color})`)
 </script>

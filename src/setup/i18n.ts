@@ -1,7 +1,10 @@
 // Provide a 'msg' containing all localization
 
+import { App } from 'vue'
+import { Translation } from '@/util/types'
+
 export default {
-  install(app, messages) {
+  install(app: App, messages: Translation) {
     // For usage in <script setup>
     app.provide('msg', messages)
 

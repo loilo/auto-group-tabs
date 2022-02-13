@@ -7,6 +7,18 @@
     "message": "Automatically add tabs to your configured groups, based on their URL.",
     "description": "The description of the application, displayed in the web store."
   },
+  "noGroupTitle": {
+    "message": "no title",
+    "description": "A group with an empty title"
+  },
+  "editGroupTooltip": {
+    "message": "Edit group",
+    "description": "The tooltip for the edit group button"
+  },
+  "newMatcherTooltip": {
+    "message": "Add URL pattern",
+    "description": "The tooltip for the new matcher button"
+  },
   "invalidUrlPattern": {
     "message": "Invalid URL pattern",
     "description": "Error message for invalid URL pattern"
@@ -35,6 +47,10 @@
     "message": "Cancel",
     "description": "Cancel button label"
   },
+  "buttonSortMode": {
+    "message": "Enable sort mode",
+    "description": "Sort mode"
+  },
   "buttonAddGroup": {
     "message": "Add group",
     "description": "Add group button label"
@@ -54,6 +70,10 @@
   "newGroupTitle": {
     "message": "New Group",
     "description": "Title of a newly created group"
+  },
+  "duplicateGroupError": {
+    "message": "This combination of group name and color already exists.",
+    "description": "Error message when a group with the same name and color already exists"
   },
   "color": {
     "message": "Color",
@@ -90,5 +110,13 @@
   "colorCyan": {
     "message": "cyan",
     "description": "The color cyan"
+  },
+  "colorOrange": {
+    "message": "orange",
+    "description": "The color orange"
+  },
+  "sortHint": {
+    "message": "The order of groups determines the order of pattern evaluation. Put groups with more specific patterns to the top to allow groups with more permissive patterns to serve as a fallback.",
+    "description": "Hint to show when sort mode is enabled"
   }
 }

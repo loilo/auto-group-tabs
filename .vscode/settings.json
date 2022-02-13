@@ -3,7 +3,8 @@
     "titleBar.activeBackground": "#93d978",
     "titleBar.activeForeground": "#15202b",
     "titleBar.inactiveBackground": "#93d97899",
-    "titleBar.inactiveForeground": "#15202b99"
+    "titleBar.inactiveForeground": "#15202b99",
+    "sash.hoverBorder": "#b3e4a0"
   },
   "peacock.color": "#93d978",
   "editor.formatOnSave": true,
@@ -12,5 +13,9 @@
     "**/bower_components": true,
     "**/*.code-search": true,
     "**/extension": true
+  },
+  "path-intellisense.extensionOnImport": false,
+  "files.watcherExclude": {
+    "**/extension/**": true
   }
 }

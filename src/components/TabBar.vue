@@ -12,15 +12,15 @@
       <svg
         class="tab-image"
         width="19"
-        height="34"
-        viewBox="0 0 19 34"
+        height="33"
+        viewBox="0 0 19 33"
         xmlns="http://www.w3.org/2000/svg"
       >
         <path
-          d="M20.5 1.5v34h-19v-3H3c2.167 0 3.742-.62 4.81-1.69C8.88 29.743 9.5 28.168 9.5 26h0V8c0-2.167.463-3.842 1.56-4.94C12.159 1.964 13.834 1.5 16 1.5h4.5z"
-          stroke="currentColor"
-          stroke-width="3"
+          d="M20 1v40h-48v-9H1a6.977 6.977 0 0 0 4.871-1.973 6.978 6.978 0 0 0 2.125-4.794L8 7c0-1.657.672-3.157 1.757-4.243A5.981 5.981 0 0 1 14 1h6Z"
           style="fill: var(--tab-background)"
+          stroke="currentColor"
+          stroke-width="2"
           fill-rule="evenodd"
         />
       </svg>
@@ -28,15 +28,15 @@
       <svg
         class="tab-image"
         width="19"
-        height="34"
-        viewBox="3 0 19 34"
+        height="33"
+        viewBox="0 0 19 33"
         xmlns="http://www.w3.org/2000/svg"
       >
         <path
-          d="M1.329 1.5l4.783.003c2.066.042 3.664.526 4.71 1.614C11.882 4.215 12.33 5.87 12.33 8h0v18c0 2.167.62 3.742 1.689 4.81 1.069 1.07 2.644 1.69 4.81 1.69h1.5v3h-19v-34z"
-          stroke="currentColor"
-          stroke-width="3"
+          d="M5 1c1.657 0 3.157.672 4.243 1.757A5.981 5.981 0 0 1 11 7v17.985c.063 1.988.856 3.739 2.112 4.995A6.875 6.875 0 0 0 18 32h29v9H-1V1Z"
           style="fill: var(--tab-background)"
+          stroke="currentColor"
+          stroke-width="2"
           fill-rule="evenodd"
         />
       </svg>
@@ -44,13 +44,11 @@
   </div>
 </template>
 
-<script>
-export default {
-  props: {
-    groupTitle: String,
-    tabTitle: String
-  }
-}
+<script lang="ts" setup>
+defineProps<{
+  groupTitle: string
+  tabTitle: string
+}>()
 </script>
 
 <style lang="scss" scoped>
@@ -80,22 +78,22 @@ export default {
 
   .group {
     display: grid;
-    grid-template-rows: 1fr 22px 3px;
-    gap: 3px;
-    height: 34px;
+    grid-template-rows: auto 22px 2px;
+    gap: 4px;
+    height: 33px;
     overflow: hidden;
     max-width: 131px;
 
     .group-label {
       grid-row: 2 / span 1;
       border-radius: 5px;
-      padding: 6px 7px;
+      padding: 5px 7px;
       font-size: 12px;
       font-weight: 500;
       letter-spacing: 0;
       line-height: 1;
       background-color: var(--group-color);
-      color: var(--group-foreground);
+      color: var(--group-foreground-color, var(--group-foreground));
       white-space: pre;
       overflow: hidden;
       text-overflow: ellipsis;
@@ -107,20 +105,22 @@ export default {
         height: 14px;
         border-radius: 7px;
         margin-top: 4px;
+        margin-right: 4px;
       }
     }
 
     .group-underline {
       grid-row: 3 / span 1;
-      height: 6px;
+      height: 4px;
       background-color: var(--group-color);
-      border-top-left-radius: 3px;
+      border-top-left-radius: 2px;
     }
   }
 
   .tab {
     width: 176px;
-    height: 34px;
+    height: 33px;
+    margin-left: -3px;
     overflow: hidden;
     display: flex;
     align-items: stretch;
@@ -138,7 +138,7 @@ export default {
 
       background: var(--tab-background);
       color: var(--tab-foreground);
-      border-top: 3px solid var(--group-color);
+      border-top: 2px solid var(--group-color);
 
       cursor: default;
     }
