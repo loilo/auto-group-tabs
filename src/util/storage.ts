@@ -10,7 +10,7 @@ export async function readStorage<T = any>(
     const result = window.localStorage.getItem(key)
     return result ? JSON.parse(result) : undefined
   } else {
-    return (await chrome.storage[storage].get([key]))[key]
+    return (await chrome.storage[storage].get([key]))?.[key]
   }
 }
 
