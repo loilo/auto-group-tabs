@@ -14,9 +14,8 @@
   "background": {
     "service_worker": "background.js"
   },
-  "options_ui": {
-    "open_in_tab": true,
-    "page": "index.html"
+  "action": {
+	  "default_popup": "index.html"
   },
   "permissions": ["tabs", "tabGroups", "storage"]
 }
