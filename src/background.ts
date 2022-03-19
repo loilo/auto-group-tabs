@@ -565,3 +565,7 @@ when(groupConfigurations.loaded).then(async () => {
     }
   })
 })
+
+chrome.action.onClicked.addListener(() => {
+  chrome.runtime.openOptionsPage()
+})
