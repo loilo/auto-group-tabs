@@ -25,12 +25,13 @@ export function generateMatcherRegex(matcher: string) {
     typeof scheme === 'string'
       ? generatePatternString(scheme, 'https?')
       : 'https?|file|ftp'
+
   const hostPattern =
     typeof host === 'string'
       ? generatePatternString(
           host.startsWith('*.') ? `*${host.slice(2)}` : host,
-        )
           host === '*' ? '[^/]+\\.[^/]+|localhost(:[0-9]+)?' : '([^/]+\\.)?'
+        ) + (/:[0-9]+$/.test(host) ? '' : '(:[0-9]+)?')
       : '[^/]+.[^/]+'
   const pathPattern =
     typeof path === 'string' ? generatePatternString(path, '.*') : '.*'
