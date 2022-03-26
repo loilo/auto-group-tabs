@@ -29,8 +29,8 @@ export function generateMatcherRegex(matcher: string) {
     typeof host === 'string'
       ? generatePatternString(
           host.startsWith('*.') ? `*${host.slice(2)}` : host,
-          host === '*' ? '[^/]+.[^/]+|localhost(:[0-9]+)?' : '([^/]+.)?'
         )
+          host === '*' ? '[^/]+\\.[^/]+|localhost(:[0-9]+)?' : '([^/]+\\.)?'
       : '[^/]+.[^/]+'
   const pathPattern =
     typeof path === 'string' ? generatePatternString(path, '.*') : '.*'
