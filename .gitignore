@@ -3,3 +3,5 @@ node_modules
 *.local
 auto-group-tabs.zip
 /extension
+.idea
+*.iml

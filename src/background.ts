@@ -395,7 +395,7 @@ watch(
           tab => tab.groupId === groupToDelete.id
         )
 
-        chrome.tabs.ungroup(tabsToUngroup.flatMap(tab => tab.id ?? []))
+        await chrome.tabs.ungroup(tabsToUngroup.flatMap(tab => tab.id ?? []))
       }
     }
 
@@ -456,7 +456,7 @@ watch(chromeState.tabGroups.lastUpdated, async tabGroup => {
     updatedGroupItem.title = tabGroup.title ?? ''
     updatedGroupItem.color = tabGroup.color
 
-    saveGroupConfigurations(groupsCopy)
+    await saveGroupConfigurations(groupsCopy)
 
     if (conflictingItem) {
       // When there was a conflict, and the conflicting group has been renamed,

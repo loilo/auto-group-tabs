@@ -18,6 +18,9 @@
     "open_in_tab": false,
     "page": "index.html"
   },
-  "action": {},
+  "action": {
+    "default_action": "Manage Tab Auto Grouping",
+    "default_popup": "index.html"
+  },
   "permissions": ["tabs", "tabGroups", "storage"]
 }
