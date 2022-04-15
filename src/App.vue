@@ -49,6 +49,24 @@
 
     <div class="bottom-buttons">
       <mwc-fab
+          ref="importButton"
+          class="secondary-button import-button"
+          icon="restore"
+          @click="openImportDialog"
+          mini
+          :title="msg.buttonImportConfig"
+      />
+
+      <mwc-fab
+          v-if="groups.data.value.length > 0"
+          class="secondary-button export-button"
+          icon="folder_shared"
+          @click="exportConfig"
+          mini
+          :title="msg.buttonExportConfig"
+      />
+
+      <mwc-fab
         v-if="groups.data.value.length > 1"
         class="secondary-button sort-button"
         :class="{ toggled: sortMode }"
@@ -76,6 +94,14 @@
       />
     </transition>
 
+    <transition name="from-right">
+      <ImportDialog
+        v-if="showImportDialog"
+        @save="importConfig"
+        @close="closeImportDialog"
+      />
+    </transition>
+
     <mwc-snackbar :labelText="msg.groupDeletedNotice" ref="snackbar">
       <mwc-button slot="action" @click="undo">{{ msg.undo }}</mwc-button>
       <mwc-icon-button icon="close" slot="dismiss" />
@@ -86,6 +112,7 @@
 <script setup lang="ts">
 import Group from './components/Group.vue'
 import EditDialog from './components/Dialog/EditDialog.vue'
+import ImportDialog from './components/Dialog/ImportDialog.vue'
 import SlideVertical from './components/Util/SlideVertical.vue'
 
 import { inject, nextTick, ref } from 'vue'
@@ -99,6 +126,7 @@ import { GroupConfiguration, Translation } from '@/util/types'
 const msg = inject<Translation>('msg')!
 const snackbar = ref()
 const addButton = ref()
+const importButton = ref()
 const groupRefs: Record<string, typeof Group> = {}
 
 const groups = useGroupConfigurations()
@@ -141,6 +169,21 @@ function toggleSortMode() {
       behavior: 'smooth'
     })
   }
+}
+
+function exportConfig() {
+  chrome.runtime.sendMessage({data: "exportGroupConfigurations"})
+}
+
+const showImportDialog = ref(false)
+
+function openImportDialog() {
+  showImportDialog.value = true
+}
+
+function closeImportDialog() {
+  showImportDialog.value = false
+  importButton.value.focus()
 }
 
 const dragging = ref(false)
@@ -194,6 +237,29 @@ function addGroup(title: string, color: chrome.tabGroups.ColorEnum) {
       scrollGroupIntoView(id)
     }, 0)
   })
+}
+
+function importConfig(importedJson: string) {
+  try {
+    const enteredJson: GroupConfiguration[] = JSON.parse(importedJson)
+
+    enteredJson.forEach(importedConfig => {
+
+      const existingWithSameId = groupsCopy.value.find(config => config.id === importedConfig.id)
+
+      if(existingWithSameId) {
+        console.debug(`Group already exists with id ${existingWithSameId.id}, updating with imported config`)
+        existingWithSameId.matchers = [...new Set(existingWithSameId.matchers.concat(importedConfig.matchers))]
+        existingWithSameId.color = importedConfig.color
+        existingWithSameId.title = importedConfig.title
+      } else {
+        console.debug(`Importing group config to new group`)
+        groupsCopy.value.push(importedConfig)
+      }
+    })
+  } catch (e) {
+    console.error(`Unable to import configuration: ${e}`)
+  }
 }
 
 // This starter template is using Vue 3 experimental <script setup> SFCs

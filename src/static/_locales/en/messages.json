@@ -51,6 +51,14 @@
     "message": "Enable sort mode",
     "description": "Sort mode"
   },
+  "buttonExportConfig": {
+    "message": "Export Configuration",
+    "description": "Label for export configuration button"
+  },
+  "buttonImportConfig": {
+    "message": "Import Configuration",
+    "description": "Label for import configuration button"
+  },
   "buttonAddGroup": {
     "message": "Add group",
     "description": "Add group button label"
@@ -58,6 +66,10 @@
   "groupTitlePlaceholder": {
     "message": "Group title",
     "description": "Placeholder of a group title input"
+  },
+  "importJsonPlaceholder": {
+    "message": "Enter configuration in JSON format",
+    "description": "Placeholder of the import text field"
   },
   "urlInputPlaceholder": {
     "message": "URL pattern",

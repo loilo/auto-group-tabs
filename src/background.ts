@@ -569,3 +569,19 @@ when(groupConfigurations.loaded).then(async () => {
 chrome.action.onClicked.addListener(() => {
   chrome.runtime.openOptionsPage()
 })
+
+chrome.runtime.onMessage.addListener((message) => {
+  if (message.data === "exportGroupConfigurations") {
+    console.debug("Exporting group configurations")
+    const result = JSON.stringify(groupConfigurations.data.value);
+    const url = 'data:application/json;base64,' + btoa(result);
+    chrome.downloads.download({
+      url,
+      filename: 'groupConfigurations.json'
+    });
+  } else {
+    console.log('Unknown message type')
+  }
+
+  return true;
+})
