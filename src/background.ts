@@ -4,12 +4,8 @@ import {
   TabUpdate,
   tickResetRef,
   useGroupConfigurations,
-  useReadonlyChromeTabGroups,
-  useReadonlyChromeTabs,
-  useReadonlyChromeWindows,
-  useChromeTabsById,
-  useChromeTabsByWindowId,
-  useChromeTabGroupsByWindowId
+  ignoreChromeRuntimeEvents,
+  useChromeState
 } from '@/composables'
 import * as conflictManager from '@/util/conflict-manager'
 import { saveGroupConfigurations } from '@/util/group-configurations'
@@ -20,14 +16,7 @@ import { when } from '@/util/when'
 
 const groupConfigurations = useGroupConfigurations()
 
-const chromeState = {
-  windows: useReadonlyChromeWindows(),
-  tabGroups: useReadonlyChromeTabGroups(),
-  tabs: useReadonlyChromeTabs(),
-  tabsById: useChromeTabsById(),
-  tabsByWindowId: useChromeTabsByWindowId(),
-  tabGroupsByWindowId: useChromeTabGroupsByWindowId()
-}
+const chromeState = useChromeState()
 
 // Augmented group configurations are group configurations with
 // enhanced functionality, e.g. matchers converted to regular expressions
