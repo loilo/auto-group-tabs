@@ -8,7 +8,10 @@ import {
   useChromeState
 } from '@/composables'
 import * as conflictManager from '@/util/conflict-manager'
-import { saveGroupConfigurations } from '@/util/group-configurations'
+import {
+  saveGroupConfigurations,
+  createGroupConfigurationMatcher
+} from '@/util/group-configurations'
 import { GroupCreationTracker } from '@/util/group-creation-tracker'
 import { generateMatcherRegex } from '@/util/matcher-regex'
 import { GroupConfiguration } from '@/util/types'
@@ -112,13 +115,6 @@ function getGroupConfigurationForTab(tab: chrome.tabs.Tab) {
 
 const groupCreationTracker = new GroupCreationTracker()
 
-function matchTabGroup(
-  group: Partial<Pick<GroupConfiguration, 'title' | 'color'>>
-) {
-  return (tabGroup: Partial<Pick<GroupConfiguration, 'title' | 'color'>>) =>
-    tabGroup.title === group.title && tabGroup.color === group.color
-}
-
 async function assignTabsToGroup(
   tabs: chrome.tabs.Tab[],
   group: GroupConfiguration
@@ -127,7 +123,7 @@ async function assignTabsToGroup(
 
   const windowId = tabs[0].windowId
 
-  const tabGroupPredicate = matchTabGroup(group)
+  const tabGroupPredicate = createGroupConfigurationMatcher(group)
 
   // Get existing tab groups that match the configured group
   let tabGroup =
@@ -421,8 +417,8 @@ watch(chromeState.tabGroups.lastUpdated, async tabGroup => {
   )
     return
 
-  const matchesOldGroup = matchTabGroup(oldTabGroup)
-  const matchesNewGroup = matchTabGroup(tabGroup)
+  const matchesOldGroup = createGroupConfigurationMatcher(oldTabGroup)
+  const matchesNewGroup = createGroupConfigurationMatcher(tabGroup)
 
   if (groupConfigurations.data.value.some(matchesOldGroup)) {
     const groupsCopy: GroupConfiguration[] = JSON.parse(

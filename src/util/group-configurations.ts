@@ -28,3 +28,14 @@ export async function saveGroupConfigurations(groups: GroupConfiguration[]) {
 
   return await writeStorage('groups', groupsCopy, 'sync')
 }
+
+/**
+ * Create a predicate function for a given group configuration which matches
+ * another group configuration if it has the same title and color
+ */
+export function createGroupConfigurationMatcher(
+  group: Partial<Pick<GroupConfiguration, 'title' | 'color'>>
+) {
+  return (tabGroup: Partial<Pick<GroupConfiguration, 'title' | 'color'>>) =>
+    tabGroup.title === group.title && tabGroup.color === group.color
+}
