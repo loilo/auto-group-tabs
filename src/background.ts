@@ -82,25 +82,23 @@ const chromeTabsByWindowIdAndGroupConfiguration = computed(() =>
 
 Object.assign(self, { chromeState })
 
+/**
+ * Get a matching configuration group for a tab
+ */
 function getGroupConfigurationForTab(tab: chrome.tabs.Tab) {
-  // Ignore tabs that are already grouped
-  // if (tab.groupId !== chrome.tabGroups.TAB_GROUP_ID_NONE) {
-  //   console.debug('Tab already grouped, ignore')
-  //   return
-  // }
-
   // Ignore pinned tabs
   if (tab.pinned) {
     console.debug('Tab %o (%o) pinned, ignore.', tab.title, tab.id)
     return
   }
 
+  // Ignore tabs with no URL
   if (!tab.url) {
     console.debug('Tab %o (%o) has no URL, ignore.', tab.title, tab.id)
     return
   }
 
-  // Iterate group assignment configuration
+  // Iterate tab group configurations
   let groupIndex = 0
   for (const group of augmentedGroupConfigurations.value) {
     for (const matcher of group.matchers) {
@@ -110,6 +108,7 @@ function getGroupConfigurationForTab(tab: chrome.tabs.Tab) {
     groupIndex++
   }
 
+  // No matching group found
   return
 }
 
@@ -253,9 +252,11 @@ const programmaticallyUpdatingTabGroups = ref(false)
 
 const draggingTabs = new Set<number>()
 
+// React to changed group configurations
 watch(
   augmentedGroupConfigurations,
   async (newGroups, oldGroups) => {
+    // Bail out if group configurations haven't loaded yet
     if (
       !groupConfigurations.loaded.value ||
       justLoadedGroupConfigurations.value
@@ -552,5 +553,6 @@ when(groupConfigurations.loaded).then(async () => {
 })
 
 chrome.action.onClicked.addListener(() => {
+  console.debug('Trigger extension action')
   chrome.runtime.openOptionsPage()
 })
