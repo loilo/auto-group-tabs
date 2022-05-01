@@ -3,8 +3,16 @@
  *
  * @see https://developer.chrome.com/docs/extensions/mv3/match_patterns/
  */
+// prettier-ignore
 export const matcherPattern =
-  '((?<scheme>\\*|https?|file|ftp)://)?(?<host>\\*|\\*\\.[^/*]+|[^/*]+\\.[^/*]+|localhost(:[0-9]+)?)(/(?<path>.*))?'
+  '^(?:' +
+    '(?:(?<scheme>\\*|https?|ftp)://)?' +
+    '(?<host>\\*|\\*\\.[^/*]+|[^/*]+\\.[^/*]+|localhost(:[0-9]+)?)' +
+    '(?:/(?<path>.*))?' +
+  '|' +
+    '(?<fileScheme>file)://' +
+    '(?<filePath>/.*|\\*)' +
+  ')$'
 
 /**
  * Capitalize a string
