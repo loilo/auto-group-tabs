@@ -1,5 +1,6 @@
 import { whenever } from '@vueuse/core'
 import { computed, readonly, ref } from 'vue'
+import { ignoreChromeRuntimeEvents } from './util'
 import { useReadonlyChromeWindows } from './windows'
 
 function _useReadonlyChromeTabGroups() {
@@ -22,11 +23,19 @@ function _useReadonlyChromeTabGroups() {
     loaded.value = true
 
     chrome.tabGroups.onCreated.addListener(createdTabGroup => {
+      if (ignoreChromeRuntimeEvents.value) {
+        return
+      }
+
       lastCreated.value = createdTabGroup
       tabGroups.value = [...tabGroups.value, createdTabGroup]
     })
 
     chrome.tabGroups.onRemoved.addListener(removedTabGroup => {
+      if (ignoreChromeRuntimeEvents.value) {
+        return
+      }
+
       lastRemoved.value = removedTabGroup
       tabGroups.value = tabGroups.value.filter(
         Tab => Tab.id !== removedTabGroup.id
@@ -34,6 +43,10 @@ function _useReadonlyChromeTabGroups() {
     })
 
     chrome.tabGroups.onUpdated.addListener(updatedTabGroup => {
+      if (ignoreChromeRuntimeEvents.value) {
+        return
+      }
+
       lastUpdated.value = updatedTabGroup
       const index = tabGroups.value.findIndex(
         tabGroup => tabGroup.id === updatedTabGroup.id

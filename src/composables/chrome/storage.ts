@@ -2,6 +2,7 @@ import { tickResetRef, toRawDeep } from '@/composables'
 import { readStorage, watchStorage, writeStorage } from '@/util/storage'
 import { throttledWatch } from '@vueuse/core'
 import { ref, Ref, watch } from 'vue'
+import { ignoreChromeRuntimeEvents } from './util'
 
 let storageHandles = { sync: new Map(), local: new Map(), managed: new Map() }
 
@@ -48,6 +49,10 @@ export function useStorage<T = any>(
       watchStorage(
         key,
         newValue => {
+          if (ignoreChromeRuntimeEvents.value) {
+            return
+          }
+
           changedFromStorage.value = true
 
           if (typeof mapper === 'function') {

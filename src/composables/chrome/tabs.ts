@@ -1,5 +1,6 @@
 import { whenever } from '@vueuse/core'
 import { computed, readonly, ref } from 'vue'
+import { ignoreChromeRuntimeEvents } from './util'
 import { useReadonlyChromeWindows } from './windows'
 
 export type TabUpdate = {
@@ -29,26 +30,46 @@ function _useReadonlyChromeTabs() {
     loaded.value = true
 
     chrome.tabs.onCreated.addListener(createdTab => {
+      if (ignoreChromeRuntimeEvents.value) {
+        return
+      }
+
       lastCreated.value = createdTab
       tabs.value = [...tabs.value, createdTab]
     })
 
     chrome.tabs.onRemoved.addListener(removedTabId => {
+      if (ignoreChromeRuntimeEvents.value) {
+        return
+      }
+
       lastRemoved.value = removedTabId
       tabs.value = tabs.value.filter(tab => tab.id !== removedTabId)
     })
 
     chrome.tabs.onDetached.addListener(removedTabId => {
+      if (ignoreChromeRuntimeEvents.value) {
+        return
+      }
+
       detachedTabs.value = [...detachedTabs.value, removedTabId]
     })
 
     chrome.tabs.onAttached.addListener(async attachedTabId => {
+      if (ignoreChromeRuntimeEvents.value) {
+        return
+      }
+
       detachedTabs.value = detachedTabs.value.filter(
         tabId => tabId !== attachedTabId
       )
     })
 
     chrome.tabs.onUpdated.addListener((tabId, changeInfo, updatedTab) => {
+      if (ignoreChromeRuntimeEvents.value) {
+        return
+      }
+
       lastUpdated.value = {
         changes: changeInfo,
         tab: updatedTab,

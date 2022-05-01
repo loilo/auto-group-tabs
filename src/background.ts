@@ -17,6 +17,8 @@ import { generateMatcherRegex } from '@/util/matcher-regex'
 import { GroupConfiguration } from '@/util/types'
 import { when } from '@/util/when'
 
+ignoreChromeRuntimeEvents.value = true
+
 const groupConfigurations = useGroupConfigurations()
 
 const chromeState = useChromeState()
@@ -495,6 +497,11 @@ when(groupConfigurations.loaded).then(async () => {
     'Extension state initialized, grouping all appropriate tabs now...'
   )
   await groupAllAppropriateTabs()
+
+  console.debug(
+    'Initial grouping done, begin listening to chrome runtime events...'
+  )
+  ignoreChromeRuntimeEvents.value = false
 
   watch(chromeState.tabs.lastUpdated, async (update: TabUpdate | undefined) => {
     if (!update) return
