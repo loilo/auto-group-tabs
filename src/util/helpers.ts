@@ -7,7 +7,7 @@
 export const matcherPattern =
   '^(?:' +
     '(?:(?<scheme>\\*|https?|ftp)://)?' +
-    '(?<host>\\*|\\*\\.[^/*]+|[^/*]+\\.[^/*]+|localhost(:[0-9]+)?)' +
+    '(?<host>\\*|\\*\\.[^/*]+|[^/]+)' +
     '(?:/(?<path>.*))?' +
   '|' +
     '(?<fileScheme>file)://' +

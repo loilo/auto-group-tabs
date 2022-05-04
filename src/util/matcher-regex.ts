@@ -31,11 +31,10 @@ export function generateMatcherRegex(matcher: string) {
   if (fileScheme) {
     hostPattern = ''
   } else if (typeof host === 'string') {
-    hostPattern =
-      generatePatternString(
-        host.startsWith('*.') ? `*${host.slice(2)}` : host,
-        host === '*' ? '[^/]+\\.[^/]+|localhost(:[0-9]+)?' : '([^/]+\\.)?'
-      ) + (/:[0-9]+$/.test(host) ? '' : '(:[0-9]+)?')
+    hostPattern = generatePatternString(
+      host.startsWith('*.') ? `*${host.slice(2)}` : host,
+      host === '*' ? '[^/]+' : '([^/]+\\.)?'
+    )
   } else {
     hostPattern = '[^/]+.[^/]+'
   }
