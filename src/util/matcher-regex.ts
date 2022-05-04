@@ -31,12 +31,20 @@ export function generateMatcherRegex(matcher: string) {
   if (fileScheme) {
     hostPattern = ''
   } else if (typeof host === 'string') {
-    hostPattern = generatePatternString(
-      host.startsWith('*.') ? `*${host.slice(2)}` : host,
-      host === '*' ? '[^/]+' : '([^/]+\\.)?'
-    )
+    // Three possible formats: *, *.host, host
+    if (host === '*') {
+      hostPattern = '[^/]+'
+    } else if (host.startsWith('*.')) {
+      // Format: *.host
+      hostPattern = generatePatternString(`*${host.slice(2)}`, '([^/]+\\.)?')
+    } else {
+      // Format: host
+      hostPattern = sanitizeRegex(host)
+    }
   } else {
-    hostPattern = '[^/]+.[^/]+'
+    // A theoretically impossible case, but used as a fallback
+    // if for some reason input validation did not catch it
+    hostPattern = '[^/]+'
   }
 
   let pathPattern: string
