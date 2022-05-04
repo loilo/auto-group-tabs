@@ -25,7 +25,7 @@ export function generateMatcherRegex(matcher: string) {
     ? 'file'
     : typeof scheme === 'string'
     ? generatePatternString(scheme, 'https?')
-    : 'https?|ftp'
+    : '(?:https?|ftp)'
 
   let hostPattern: string
   if (fileScheme) {
@@ -36,7 +36,7 @@ export function generateMatcherRegex(matcher: string) {
       hostPattern = '[^/]+'
     } else if (host.startsWith('*.')) {
       // Format: *.host
-      hostPattern = generatePatternString(`*${host.slice(2)}`, '([^/]+\\.)?')
+      hostPattern = generatePatternString(`*${host.slice(2)}`, '(?:[^/]+\\.)?')
     } else {
       // Format: host
       hostPattern = sanitizeRegex(host)
@@ -51,10 +51,10 @@ export function generateMatcherRegex(matcher: string) {
   if (filePath) {
     pathPattern = generatePatternString(filePath, '.*')
   } else if (typeof path === 'string') {
-    pathPattern = `(/${generatePatternString(path, '.*')})?`
+    pathPattern = `(?:/${generatePatternString(path, '.*')})?`
   } else {
-    pathPattern = '(/.*)?'
+    pathPattern = '(?:/.*)?'
   }
 
-  return new RegExp(`^(${schemePattern})://(${hostPattern})${pathPattern}$`)
+  return new RegExp(`^${schemePattern}://${hostPattern}${pathPattern}$`)
 }
