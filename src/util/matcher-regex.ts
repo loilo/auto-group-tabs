@@ -41,6 +41,11 @@ export function generateMatcherRegex(matcher: string) {
       // Format: host
       hostPattern = sanitizeRegex(host)
     }
+
+    // Add port wildcard
+    if (!/:[0-9]+$/.test(host)) {
+      hostPattern += '(?::[0-9]+)?'
+    }
   } else {
     // A theoretically impossible case, but used as a fallback
     // if for some reason input validation did not catch it
