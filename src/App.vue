@@ -33,15 +33,14 @@
         icon="import_export" @click="toggleSortMode" mini :title="msg.buttonSortMode" />
 
       <mwc-fab ref="addButton" icon="add" @click="openAddDialog" mini :title="msg.buttonAddGroup" />
-      <!-- <mwc-fab ref="getGroups" icon="bracket" @click="getGroups" /> -->
-      <mwc-fab ref="addJSON" icon="bracket" @click="openAddJSON" />
+      <mwc-fab ref="addJSON" icon="bracket" @click="openAddJSON" mini :title="msg.buttonAddJSON" />
     </div>
 
     <transition name="from-right">
       <EditDialog v-if="showAddDialog" color="grey" @save="addGroup" @close="closeAddDialog" />
     </transition>
 
-    <transition name="from-right">
+    <transition name="from-left">
       <JSONImporter v-if="showAddJSON" color="grey" @save="addJSON" @close="closeAddJSON" />
     </transition>
 
@@ -62,7 +61,7 @@ import Draggable from 'vuedraggable'
 import { useDebounceFn } from '@vueuse/core'
 
 import { useSyncedCopy, useGroupConfigurations } from '@/composables'
-import { saveGroupConfigurations } from '@/util/group-configurations'
+import { saveGroupConfigurations, saveGroupJSONConfigurations } from '@/util/group-configurations'
 import { GroupConfiguration, Translation } from '@/util/types'
 import { readStorage, writeStorage } from './util/storage'
 import JSONImporter from './components/Dialog/JSONImporter.vue'
@@ -70,6 +69,8 @@ import JSONImporter from './components/Dialog/JSONImporter.vue'
 const msg = inject<Translation>('msg')!
 const snackbar = ref()
 const addButton = ref()
+const addJson = ref()
+const showJson = ref()
 const groupRefs: Record<string, typeof Group> = {}
 
 const groups = useGroupConfigurations()
@@ -99,11 +100,11 @@ function closeAddDialog() {
 }
 
 function openAddJSON() {
-  showAddDialog.value = true
+  showAddJSON.value = true
 }
 function closeAddJSON() {
   showAddJSON.value = false
-  addButton.value.focus()
+  addJson.value.focus()
 }
 
 const sortMode = ref(false)
@@ -177,16 +178,12 @@ function addGroup(title: string, color: chrome.tabGroups.ColorEnum) {
   })
 }
 
-async function getGroups() {
-  let groups = await readStorage("groups", 'sync')
-  console.log(JSON.stringify(groups))
-}
-
 async function addJSON(rawJson: string) {
   console.log(JSON.parse(rawJson))
-  let resp = await writeStorage("groups", JSON.parse(rawJson), 'sync')
+  let resp = await saveGroupJSONConfigurations(rawJson)
   console.log(resp)
 }
+
 
 // This starter template is using Vue 3 experimental <script setup> SFCs
 // Check out https://github.com/vuejs/rfcs/blob/script-setup-2/active-rfcs/0000-script-setup.md

@@ -7,11 +7,17 @@ import { GroupConfiguration } from './types'
  * Save configured groups to storage
  */
 export async function saveGroupConfigurations(groups: GroupConfiguration[]) {
-  const groupsCopy: GroupConfiguration[] = JSON.parse(
-    JSON.stringify(toRawDeep(groups))
+  return saveConfigurations(JSON.parse(JSON.stringify(toRawDeep(groups)))
   )
+}
 
-  for (const group of groupsCopy) {
+export async function saveGroupJSONConfigurations(groups: string) {
+  return saveConfigurations(JSON.parse(groups))
+}
+
+export async function saveConfigurations(groups: GroupConfiguration[]) {
+
+  for (const group of groups) {
     // If there are no more conflicts, get rid of the conflict marker
 
     if (!conflictManager.hasMarker(group.title)) continue
@@ -20,11 +26,13 @@ export async function saveGroupConfigurations(groups: GroupConfiguration[]) {
       group.title
     )
 
-    if (groupsCopy.some(group => group.title === titleWithoutConflictMarker))
+    if (groups.some(group => group.title === titleWithoutConflictMarker))
       continue
 
     group.title = titleWithoutConflictMarker
   }
 
-  return await writeStorage('groups', groupsCopy, 'sync')
+  return await writeStorage('groups', groups, 'sync')
 }
+
+

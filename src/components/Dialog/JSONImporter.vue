@@ -1,7 +1,7 @@
 <template>
   <OverlayDialog @keydown.esc="cancel" @keydown.enter="save">
-    <Textfield ref="rawJSON" class="group-title" v-model="editTitle" />
-
+    <Textfield ref="jsonField" class="group-title" v-model="editJSON" :placeholder="msg.jsonPlaceholder" />
+    <span ref="currentJSON">{{ currentJson }}</span>
     <template v-slot:actionsBar>
       <mwc-button class="button-save" dialogAction="ok" unelevated @click="save" v-text="msg.buttonSave" />
       <mwc-button class="button-cancel" style="--mdc-theme-primary: var(--dimmed)" @click="cancel"
@@ -18,7 +18,9 @@ import OverlayDialog from './OverlayDialog.vue'
 
 import { onMounted, ref } from 'vue'
 import { useGroupConfigurations } from '@/composables'
+import { readStorage } from '../../util/storage'
 import * as conflictManager from '@/util/conflict-manager'
+import { html } from 'lit-html'
 
 const props = withDefaults(
   defineProps<{
@@ -26,10 +28,11 @@ const props = withDefaults(
     title?: string
     color: chrome.tabGroups.ColorEnum
     deletable?: boolean
+    json?: string
   }>(),
   {
     title: '',
-    deletable: false
+    deletable: false,
   }
 )
 
@@ -40,23 +43,27 @@ const emit = defineEmits<{
   (e: 'close'): void
 }>()
 
+
 const groups = useGroupConfigurations()
 
-const editTitle = ref(conflictManager.withoutMarker(props.title))
-const editColor = ref(props.color)
-
-const colorMenu = ref()
-const titleField = ref()
+const editJSON = ref(conflictManager.withoutMarker(props.title))
+const jsonField = ref()
+const currentJson = ref()
 
 onMounted(() => {
-  colorMenu.value.refresh()
-
   // Need to wait for the <mwc-*> custom elements to render
+  currentJson = getGroups()
   requestAnimationFrame(() => {
-    titleField.value.focus()
-    titleField.value.select()
+    jsonField.value.focus()
+    jsonField.value.select()
   })
 })
+
+async function getGroups() {
+  let groups = await readStorage("groups", 'sync')
+  return JSON.stringify(groups)
+}
+
 
 function save(event: KeyboardEvent) {
   if (!groups.loaded.value) {
@@ -66,11 +73,11 @@ function save(event: KeyboardEvent) {
     return
   }
 
-  if (!titleField.value.isValid()) return
+  if (!jsonField.value.isValid()) return
 
   event.preventDefault()
 
-  emit('save', editTitle.value)
+  emit('save', editJSON.value)
   emit('close')
 }
 

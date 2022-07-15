@@ -55,9 +55,17 @@
     "message": "Add group",
     "description": "Add group button label"
   },
+  "buttonAddJSON": {
+    "message": "Add json",
+    "description": "Add json button label"
+  },
   "groupTitlePlaceholder": {
     "message": "Group title",
     "description": "Placeholder of a group title input"
+  },
+  "jsonPlaceholder": {
+    "message": "{\"Placeholder\": \"Your JSON HERE!\"}",
+    "description": "Placeholder of a json input"
   },
   "urlInputPlaceholder": {
     "message": "URL pattern",
