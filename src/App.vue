@@ -31,9 +31,10 @@
     <div class="bottom-buttons">
       <mwc-fab v-if="groups.data.value.length > 1" class="secondary-button sort-button" :class="{ toggled: sortMode }"
         icon="import_export" @click="toggleSortMode" mini :title="msg.buttonSortMode" />
+      <mwc-fab ref="addJSON" icon="code" @click="openAddJSON" mini :title="msg.buttonAddJSON" />
 
       <mwc-fab ref="addButton" icon="add" @click="openAddDialog" mini :title="msg.buttonAddGroup" />
-      <mwc-fab ref="addJSON" icon="bracket" @click="openAddJSON" mini :title="msg.buttonAddJSON" />
+
     </div>
 
     <transition name="from-right">
@@ -41,7 +42,7 @@
     </transition>
 
     <transition name="from-left">
-      <JSONImporter v-if="showAddJSON" color="grey" @save="addJSON" @close="closeAddJSON" />
+      <JSONImporter v-if="showAddJSON" color="grey" @save="addJSONFunction" @close="closeAddJSON" />
     </transition>
 
     <mwc-snackbar :labelText="msg.groupDeletedNotice" ref="snackbar">
@@ -63,14 +64,11 @@ import { useDebounceFn } from '@vueuse/core'
 import { useSyncedCopy, useGroupConfigurations } from '@/composables'
 import { saveGroupConfigurations, saveGroupJSONConfigurations } from '@/util/group-configurations'
 import { GroupConfiguration, Translation } from '@/util/types'
-import { readStorage, writeStorage } from './util/storage'
 import JSONImporter from './components/Dialog/JSONImporter.vue'
 
 const msg = inject<Translation>('msg')!
 const snackbar = ref()
 const addButton = ref()
-const addJson = ref()
-const showJson = ref()
 const groupRefs: Record<string, typeof Group> = {}
 
 const groups = useGroupConfigurations()
@@ -104,7 +102,6 @@ function openAddJSON() {
 }
 function closeAddJSON() {
   showAddJSON.value = false
-  addJson.value.focus()
 }
 
 const sortMode = ref(false)
@@ -178,9 +175,9 @@ function addGroup(title: string, color: chrome.tabGroups.ColorEnum) {
   })
 }
 
-async function addJSON(rawJson: string) {
-  console.log(JSON.parse(rawJson))
-  let resp = await saveGroupJSONConfigurations(rawJson)
+function addJSONFunction(editJSON: string) {
+  console.log("This is hitting", editJSON)
+  let resp = saveGroupJSONConfigurations(editJSON)
   console.log(resp)
 }
 

@@ -1,7 +1,9 @@
 <template>
   <OverlayDialog @keydown.esc="cancel" @keydown.enter="save">
     <Textfield ref="jsonField" class="group-title" v-model="editJSON" :placeholder="msg.jsonPlaceholder" />
-    <span ref="currentJSON">{{ currentJson }}</span>
+    <div>
+      {{ currentJson }}
+    </div>
     <template v-slot:actionsBar>
       <mwc-button class="button-save" dialogAction="ok" unelevated @click="save" v-text="msg.buttonSave" />
       <mwc-button class="button-cancel" style="--mdc-theme-primary: var(--dimmed)" @click="cancel"
@@ -15,11 +17,11 @@ import ColorMenu from '@/components/Form/ColorMenu.vue'
 import Textfield from '@/components/Form/Textfield.vue'
 import TabBar from '@/components/TabBar.vue'
 import OverlayDialog from './OverlayDialog.vue'
-
-import { onMounted, ref } from 'vue'
+import { computed, inject, onMounted, onBeforeMount, ref, defineAsyncComponent } from 'vue'
 import { useGroupConfigurations } from '@/composables'
 import { readStorage } from '../../util/storage'
 import * as conflictManager from '@/util/conflict-manager'
+import { Translation } from '@/util/types'
 import { html } from 'lit-html'
 
 const props = withDefaults(
@@ -35,35 +37,28 @@ const props = withDefaults(
     deletable: false,
   }
 )
+const editJSON = ref(conflictManager.withoutMarker(props.title))
+const groups = useGroupConfigurations()
+const msg = inject<Translation>('msg')!
+const jsonField = ref()
+
+const currentJson = JSON.stringify(groups.data.value, null, "\t")
 
 const emit = defineEmits<{
-  (e: 'save', rawJSON: string): void
+  (e: 'save', editJSON: string): void
   (e: 'delete'): void
   (e: 'cancel'): void
   (e: 'close'): void
 }>()
 
-
-const groups = useGroupConfigurations()
-
-const editJSON = ref(conflictManager.withoutMarker(props.title))
-const jsonField = ref()
-const currentJson = ref()
-
 onMounted(() => {
   // Need to wait for the <mwc-*> custom elements to render
-  currentJson = getGroups()
   requestAnimationFrame(() => {
     jsonField.value.focus()
     jsonField.value.select()
   })
+
 })
-
-async function getGroups() {
-  let groups = await readStorage("groups", 'sync')
-  return JSON.stringify(groups)
-}
-
 
 function save(event: KeyboardEvent) {
   if (!groups.loaded.value) {
@@ -72,12 +67,10 @@ function save(event: KeyboardEvent) {
     )
     return
   }
-
-  if (!jsonField.value.isValid()) return
-
+  // TODO: VALIDATE JSON
   event.preventDefault()
-
   emit('save', editJSON.value)
+  console.log("This is not working")
   emit('close')
 }
 
