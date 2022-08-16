@@ -5,9 +5,11 @@
       :group-id="groupId"
       :title="title"
       :color="color"
+      :options="options"
       :sort-mode="sortMode"
       @update:title="emit('update:title', $event)"
       @update:color="emit('update:color', $event)"
+      @update:options="emit('update:options', $event)"
       @delete="emit('delete')"
       @new-matcher="showNewMatcher"
     />
@@ -84,6 +86,7 @@ import GroupHeader from './GroupHeader.vue'
 import SlideVertical from './Util/SlideVertical.vue'
 
 import { matcherPattern } from '@/util/helpers'
+import { SaveOptions } from '@/util/types'
 import { computed, nextTick, ref, toRaw, toRef, watch } from 'vue'
 import { tickResetRef, useSyncedCopy } from '@/composables'
 
@@ -91,6 +94,7 @@ const props = defineProps<{
   groupId?: string
   title: string
   color: chrome.tabGroups.ColorEnum
+  options: SaveOptions
   matchers: string[]
   sortMode?: boolean
 }>()
@@ -98,6 +102,7 @@ const props = defineProps<{
 const emit = defineEmits<{
   (e: 'update:title', title: string): void
   (e: 'update:color', color: chrome.tabGroups.ColorEnum): void
+  (e: 'update:options', options: SaveOptions): void
   (e: 'update:matchers', matchers: string[]): void
   (e: 'delete'): void
   (e: 'after-enter'): void

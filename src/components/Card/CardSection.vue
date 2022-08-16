@@ -4,6 +4,7 @@
     class="card-section"
     :class="{
       'card-section-ghost': ghost,
+      'card-section-seamless': seamless,
       'card-section-tight': tight,
       'card-section-collapse': collapse
     }"
@@ -17,6 +18,7 @@ withDefaults(
   defineProps<{
     tag?: string
     ghost?: boolean
+    seamless?: boolean
     tight?: boolean
     collapse?: boolean
   }>(),
@@ -42,6 +44,11 @@ withDefaults(
   padding: var(--body-padding);
   min-height: 54px;
   transition: box-shadow 150ms;
+
+  &.card-section-seamless {
+    padding-left: 0;
+    padding-right: 0;
+  }
 
   &.card-section-tight {
     &:not(:first-child) {

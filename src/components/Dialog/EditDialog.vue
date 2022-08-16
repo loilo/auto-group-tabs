@@ -10,6 +10,8 @@
       }"
     />
 
+    <h3>{{ msg.headlineAppearance }}</h3>
+
     <Textfield
       ref="titleField"
       class="group-title"
@@ -24,6 +26,26 @@
       v-model="editColor"
       @update:model-value="titleField.validate()"
     />
+
+    <h3>{{ msg.headlineBehavior }}</h3>
+
+    <Card seamless>
+      <CardSection ghost tight collapse seamless class="radio-container">
+        <mwc-checkbox
+          id="edit-dialog-strict"
+          :checked="editStrict"
+          @change="editStrict = $event.target.checked"
+        />
+        <ToggleLabel for="edit-dialog-strict">
+          <Text>
+            {{ msg.checkboxStrict }}
+            <template #secondary>
+              {{ msg.checkboxStrictDescription }}
+            </template>
+          </Text>
+        </ToggleLabel>
+      </CardSection>
+    </Card>
 
     <template v-slot:actionsBar>
       <mwc-button
@@ -51,30 +73,43 @@
 </template>
 
 <script setup lang="ts">
+import Card from '@/components/Card/Card.vue'
+import CardSection from '@/components/Card/CardSection.vue'
 import ColorMenu from '@/components/Form/ColorMenu.vue'
 import Textfield from '@/components/Form/Textfield.vue'
+import ToggleLabel from '@/components/Form/ToggleLabel.vue'
 import TabBar from '@/components/TabBar.vue'
+import Text from '@/components/Text.vue'
 import OverlayDialog from './OverlayDialog.vue'
 
 import { onMounted, ref } from 'vue'
 import { useGroupConfigurations } from '@/composables'
 import * as conflictManager from '@/util/conflict-manager'
+import { SaveOptions } from '@/util/types'
 
 const props = withDefaults(
   defineProps<{
     id?: string
     title?: string
     color: chrome.tabGroups.ColorEnum
+    options: SaveOptions
     deletable?: boolean
   }>(),
   {
     title: '',
-    deletable: false
+    deletable: false,
+    strict: false,
+    options: () => ({ strict: false })
   }
 )
 
 const emit = defineEmits<{
-  (e: 'save', title: string, color: chrome.tabGroups.ColorEnum): void
+  (
+    e: 'save',
+    title: string,
+    color: chrome.tabGroups.ColorEnum,
+    options: { strict: boolean }
+  ): void
   (e: 'delete'): void
   (e: 'cancel'): void
   (e: 'close'): void
@@ -84,6 +119,7 @@ const groups = useGroupConfigurations()
 
 const editTitle = ref(conflictManager.withoutMarker(props.title))
 const editColor = ref(props.color)
+const editStrict = ref(props.options.strict)
 
 const colorMenu = ref()
 const titleField = ref()
@@ -120,8 +156,7 @@ function save(event: KeyboardEvent) {
   if (!titleField.value.isValid()) return
 
   event.preventDefault()
-
-  emit('save', editTitle.value, editColor.value)
+  emit('save', editTitle.value, editColor.value, { strict: editStrict.value })
   emit('close')
 }
 
@@ -245,5 +280,10 @@ mwc-dialog {
 .button-cancel {
   margin-left: auto;
   order: -1;
+}
+
+.radio-container {
+  display: flex;
+  align-items: center;
 }
 </style>

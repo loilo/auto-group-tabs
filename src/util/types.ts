@@ -1,7 +1,12 @@
+export type SaveOptions = {
+  strict: boolean
+}
+
 export type GroupConfiguration = {
   id: string
   title: string
   color: chrome.tabGroups.ColorEnum
+  options: SaveOptions
   matchers: string[]
 }
 

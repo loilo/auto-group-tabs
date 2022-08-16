@@ -1,8 +1,19 @@
 <template>
-  <div class="card">
+  <div
+    class="card"
+    :class="{
+      'card-seamless': seamless
+    }"
+  >
     <slot />
   </div>
 </template>
+
+<script setup lang="ts">
+defineProps<{
+  seamless?: boolean
+}>()
+</script>
 
 <style lang="scss" scoped>
 .card {
@@ -18,5 +29,9 @@
   box-shadow: var(--card-shadow);
   border-radius: var(--mdc-shape-small, 4px);
   background-color: var(--background);
+
+  &.card-seamless {
+    --card-shadow: none;
+  }
 }
 </style>

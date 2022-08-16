@@ -229,13 +229,58 @@ async function assignTabsToGroup(
   await attemptGroupAssignment()
 }
 
+async function ungroupAppropriateTabs(tabs: chrome.tabs.Tab[]) {
+  for (let tab of tabs) {
+    if (tab.groupId !== chrome.tabGroups.TAB_GROUP_ID_NONE) {
+      let assignedGroup = chromeState.tabGroups.items.value.find(
+        tabGroup => tabGroup.id === tab.groupId
+      )
+      if (!assignedGroup) continue
+
+      for (let groupConfiguration of augmentedGroupConfigurations.value) {
+        let matchesGroupConfiguration =
+          createGroupConfigurationMatcher(groupConfiguration)
+        if (matchesGroupConfiguration(assignedGroup!)) {
+          if (groupConfiguration.options.strict) {
+            console.debug(
+              'Unassigning tab %o (%o) from group %o (%o / %o)...',
+              tab.title,
+              tab.id,
+              tab.groupId,
+              groupConfiguration.title,
+              groupConfiguration.color
+            )
+
+            await chrome.tabs.ungroup(tab.id!)
+          }
+        }
+      }
+    }
+  }
+}
+
 async function groupAllAppropriateTabs() {
+  let assignedTabIds = new Set<number>()
+
   for (const {
     tabsByGroups
   } of chromeTabsByWindowIdAndGroupConfiguration.value) {
     for (const [group, tabs] of tabsByGroups) {
+      for (let tab of tabs) {
+        assignedTabIds.add(tab.id!)
+      }
+
       await assignTabsToGroup(tabs, group)
     }
+  }
+
+  let tabsToUnassign: chrome.tabs.Tab[] = []
+  for (let tab of chromeState.tabs.items.value) {
+    if (assignedTabIds.has(tab.id!)) continue
+    tabsToUnassign.push(tab)
+  }
+  if (tabsToUnassign.length > 0) {
+    await ungroupAppropriateTabs(tabsToUnassign)
   }
 }
 
@@ -296,6 +341,9 @@ watch(
       // Group is at a different position than before
       if (oldGroups!.indexOf(oldGroup) !== newGroups.indexOf(newGroup))
         return true
+
+      // Group's 'strict' option changed
+      if (oldGroup.options.strict !== newGroup.options.strict) return true
 
       // Group has different matchers than before
       if (oldGroup.matchers.length !== newGroup.matchers.length) return true
@@ -551,10 +599,19 @@ when(groupConfigurations.loaded).then(async () => {
     // by moving a tab.
     let updatedTab = await chrome.tabs.get(update.tab.id!)
 
+    let assignedAny = false
     for (const [group, tabs] of chromeTabsByGroupConfiguration.value) {
       if (!tabs.some(tab => tab.id === updatedTab.id)) continue
 
+      assignedAny = true
       await assignTabsToGroup([updatedTab], group)
+    }
+
+    // Check if tab has been reassigned,
+    // otherwise check if it needs to be removed from its current group
+    // because the group is configured as strict.
+    if (!assignedAny) {
+      ungroupAppropriateTabs([updatedTab])
     }
   })
 })

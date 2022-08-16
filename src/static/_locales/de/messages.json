@@ -11,6 +11,22 @@
     "message": "Vorschau",
     "description": "The title of the preview tab in the edit dialog."
   },
+  "headlineAppearance": {
+    "message": "Darstellung",
+    "description": "The headline of the appearance section in the edit dialog."
+  },
+  "headlineBehavior": {
+    "message": "Verhalten",
+    "description": "The headline of the behavior section in the edit dialog."
+  },
+  "checkboxStrict": {
+    "message": "Exakt",
+    "description": "The label of the strict checkbox in the edit dialog."
+  },
+  "checkboxStrictDescription": {
+    "message": "Entferne Tabs aus dieser Gruppe, wenn ihre URL nicht mehr übereinstimmt.",
+    "description": "The description of the strict checkbox in the edit dialog."
+  },
   "noGroupTitle": {
     "message": "kein Titel",
     "description": "A group with an empty title"

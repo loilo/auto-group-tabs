@@ -34,6 +34,7 @@
       :id="groupId"
       :title="title"
       :color="color"
+      :options="options"
       @save="save"
       @delete="remove"
       @close="showEditDialog = false"
@@ -44,6 +45,7 @@
 
 <script setup lang="ts">
 import EditDialog from './Dialog/EditDialog.vue'
+import { SaveOptions } from '@/util/types'
 
 import { computed, inject, ref } from 'vue'
 
@@ -54,6 +56,7 @@ const props = defineProps<{
   groupId?: string
   title: string
   color: chrome.tabGroups.ColorEnum
+  options: SaveOptions
   editable?: boolean
   sortMode?: boolean
 }>()
@@ -61,6 +64,7 @@ const props = defineProps<{
 const emit = defineEmits<{
   (e: 'update:title', title: string): void
   (e: 'update:color', color: chrome.tabGroups.ColorEnum): void
+  (e: 'update:options', options: SaveOptions): void
   (e: 'delete'): void
   (e: 'new-matcher'): void
 }>()
@@ -84,9 +88,14 @@ function edit() {
   showEditDialog.value = true
 }
 
-function save(title: string, color: chrome.tabGroups.ColorEnum) {
+function save(
+  title: string,
+  color: chrome.tabGroups.ColorEnum,
+  options: SaveOptions
+) {
   emit('update:title', title)
   emit('update:color', color)
+  emit('update:options', options)
 }
 
 function remove() {

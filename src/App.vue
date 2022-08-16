@@ -37,6 +37,7 @@
               :group-id="group.id"
               v-model:title="group.title"
               v-model:color="group.color"
+              v-model:options="group.options"
               v-model:matchers="group.matchers"
               @delete="deleteGroup(group)"
               @after-enter="resetBodyHeight"
@@ -184,7 +185,10 @@ function addGroup(title: string, color: chrome.tabGroups.ColorEnum) {
     id,
     title: title,
     color: color,
-    matchers: []
+    matchers: [],
+    options: {
+      strict: false
+    }
   })
 
   nextTick(() => {
@@ -352,6 +356,13 @@ h2 {
   letter-spacing: 0.0125em;
   text-decoration: inherit;
   text-transform: inherit;
+}
+
+h3 {
+  margin: 2em 0 0;
+  font-size: 14px;
+  font-weight: 500;
+  letter-spacing: 0.1px;
 }
 
 mwc-textfield {

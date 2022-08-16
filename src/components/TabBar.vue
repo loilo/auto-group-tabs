@@ -60,7 +60,7 @@ defineProps<{
   --group-foreground: #ffffff;
 
   @media (prefers-color-scheme: dark) {
-    --tab-bar-background: #000000;
+    --tab-bar-background: #3c4043;
     --tab-bar-border: #353535;
     --tab-background: var(--mdc-theme-surface, #353535);
     --tab-foreground: #f1f3f4;
