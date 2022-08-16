@@ -11,7 +11,7 @@ export function generateMatcherRegex(matcher: string) {
     return string.split('*').map(sanitizeRegex).join(asteriskReplacement)
   }
 
-  const matcherPatternRegex = new RegExp(`^${matcherPattern}$`)
+  const matcherPatternRegex = new RegExp(matcherPattern)
 
   const result = matcher.match(matcherPatternRegex)
 

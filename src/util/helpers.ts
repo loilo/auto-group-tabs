@@ -6,12 +6,12 @@
 // prettier-ignore
 export const matcherPattern =
   '^(?:' +
-    '(?:(?<scheme>\\*|https?|ftp)://)?' +
-    '(?<host>\\*|\\*\\.[^/*]+|[^/]+)' +
-    '(?:/(?<path>.*))?' +
-  '|' +
     '(?<fileScheme>file)://' +
     '(?<filePath>/.*|\\*)' +
+  '|' +
+    '(?:(?<scheme>https?|ftp)://)?' +
+    '(?<host>\\*|\\*\\.[^/*]+|[^/]+)' +
+    '(?:/(?<path>.*))?' +
   ')$'
 
 /**
