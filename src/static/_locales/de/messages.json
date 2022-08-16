@@ -7,6 +7,10 @@
     "message": "Weise Tabs automatisiert bestimmten Gruppen zu, basierend auf ihrer Adresse.",
     "description": "The description of the application, displayed in the web store."
   },
+  "previewTitle": {
+    "message": "Vorschau",
+    "description": "The title of the preview tab in the edit dialog."
+  },
   "noGroupTitle": {
     "message": "kein Titel",
     "description": "A group with an empty title"

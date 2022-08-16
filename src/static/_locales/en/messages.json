@@ -7,6 +7,10 @@
     "message": "Automatically add tabs to your configured groups, based on their URL.",
     "description": "The description of the application, displayed in the web store."
   },
+  "previewTitle": {
+    "message": "Preview",
+    "description": "The title of the preview tab in the edit dialog."
+  },
   "noGroupTitle": {
     "message": "no title",
     "description": "A group with an empty title"

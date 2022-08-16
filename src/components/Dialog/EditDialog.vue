@@ -1,7 +1,7 @@
 <template>
   <OverlayDialog @keydown.esc="cancel" @keydown.enter="save">
     <TabBar
-      tab-title="Vorschau"
+      :tab-title="msg.previewTitle"
       :group-title="editTitle"
       class="preview"
       :style="{
