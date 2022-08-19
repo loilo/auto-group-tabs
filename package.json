@@ -4,13 +4,15 @@
     "build-legacy:background": "rollup -c rollup.config.js",
     "dev:options": "vite --host",
     "dev:background": "esbuild src/background.ts --bundle --outfile=extension/background.js --watch",
+    "dev:test": "vitest",
     "build:options": "vite build",
     "build:check": "vue-tsc --noEmit",
     "build:background": "esbuild src/background.ts --bundle --outfile=extension/background.js",
-    "dev": "run-p dev:*",
+    "test": "vitest run",
+    "dev": "run-p dev:options dev:background",
     "build": "run-s build:options build:background",
     "pack": "node pack",
-    "deploy": "run-s build:check build:options build:background pack"
+    "deploy": "run-s build:check test build:options build:background pack"
   },
   "dependencies": {
     "@a11y/focus-trap": "^1.0.5",
@@ -43,6 +45,7 @@
     "type-fest": "^2.18.0",
     "typescript": "^4.7.4",
     "vite": "^3.0.8",
+    "vitest": "^0.22.1",
     "vue-tsc": "^0.40.1"
   }
 }

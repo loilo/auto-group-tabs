@@ -1,7 +1,7 @@
 // Configuration for bundling the options page
 
 import { resolve } from 'path'
-import { defineConfig } from 'vite'
+import { defineConfig } from 'vitest/config'
 import vue from '@vitejs/plugin-vue'
 
 // See https://vitejs.dev/config/
