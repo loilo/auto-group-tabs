@@ -19,16 +19,19 @@ export function generateMatcherRegex(matcher: string) {
     throw new Error('Invalid matcher: ' + matcher)
   }
 
-  const { scheme, host, path, fileScheme, filePath } = result.groups ?? {}
+  // Shortcut for catch-all matchers
+  if (matcher === '*') return /^.*$/
 
-  const schemePattern = fileScheme
-    ? 'file'
+  const { scheme, host, path, simpleScheme, simplePath } = result.groups ?? {}
+
+  const schemePattern = simpleScheme
+    ? simpleScheme
     : typeof scheme === 'string'
     ? generatePatternString(scheme, 'https?')
-    : '(?:https?|ftp)'
+    : 'https?'
 
   let hostPattern: string
-  if (fileScheme) {
+  if (simpleScheme) {
     hostPattern = ''
   } else if (typeof host === 'string') {
     // Three possible formats: *, *.host, host
@@ -53,8 +56,8 @@ export function generateMatcherRegex(matcher: string) {
   }
 
   let pathPattern: string
-  if (filePath) {
-    pathPattern = generatePatternString(filePath, '.*')
+  if (simplePath) {
+    pathPattern = generatePatternString(simplePath, '.*')
   } else if (typeof path === 'string') {
     pathPattern = `(?:/${generatePatternString(path, '.*')})?`
   } else {
