@@ -32,7 +32,6 @@ export default defineConfig({
     outDir: '../extension',
     emptyOutDir: true,
     target: 'chrome89',
-    polyfillDynamicImport: false,
     sourcemap: true,
     minify: false
   }

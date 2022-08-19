@@ -1,10 +1,15 @@
 import { tickResetRef, toRawDeep } from '@/composables'
 import { readStorage, watchStorage, writeStorage } from '@/util/storage'
-import { throttledWatch } from '@vueuse/core'
+import { watchThrottled } from '@vueuse/core'
 import { ref, Ref, watch } from 'vue'
 import { ignoreChromeRuntimeEvents } from './util'
 
-let storageHandles = { sync: new Map(), local: new Map(), managed: new Map() }
+let storageHandles = {
+  sync: new Map(),
+  local: new Map(),
+  managed: new Map(),
+  session: new Map()
+}
 
 export type UseStorageOptions<T> = Partial<{
   storage: chrome.storage.AreaName
@@ -71,7 +76,7 @@ export function useStorage<T = any>(
     }
 
     if (throttle > 0) {
-      throttledWatch(data, watcher as any, { deep: true, throttle })
+      watchThrottled(data, watcher as any, { deep: true, throttle })
     } else {
       watch(data, watcher, { deep: true })
     }
