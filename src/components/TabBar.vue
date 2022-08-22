@@ -2,8 +2,9 @@
   <div class="tab-bar">
     <div class="group">
       <div
+        ref="groupLabelRef"
         class="group-label"
-        :class="{ empty: !groupTitle }"
+        :class="{ overflowing, empty: !groupTitle }"
         v-text="groupTitle"
       />
       <div class="group-underline"></div>
@@ -45,10 +46,31 @@
 </template>
 
 <script lang="ts" setup>
-defineProps<{
+import { nextTick, onMounted, ref, watch } from 'vue'
+
+const props = defineProps<{
   groupTitle: string
   tabTitle: string
 }>()
+
+const groupLabelRef = ref<HTMLDivElement>()
+const overflowing = ref(false)
+function updateOverflowing() {
+  overflowing.value =
+    groupLabelRef.value!.scrollWidth > groupLabelRef.value!.clientWidth
+}
+
+onMounted(() => {
+  updateOverflowing()
+})
+watch(
+  () => props.groupTitle,
+  () => {
+    nextTick(() => {
+      updateOverflowing()
+    })
+  }
+)
 </script>
 
 <style lang="scss" scoped>
@@ -86,18 +108,33 @@ defineProps<{
 
     .group-label {
       grid-row: 2 / span 1;
+      position: relative;
       border-radius: 5px;
       padding: 5px 7px;
       font-size: 12px;
       font-weight: 500;
-      letter-spacing: 0;
+      letter-spacing: -0.1px;
       line-height: 1;
       background-color: var(--group-color);
       color: var(--group-foreground-color, var(--group-foreground));
       white-space: pre;
       overflow: hidden;
-      text-overflow: ellipsis;
       cursor: default;
+
+      &.overflowing::after {
+        content: '';
+        position: absolute;
+        right: 0;
+        top: 0;
+        height: 100%;
+        width: 24px;
+        background: linear-gradient(
+          to left,
+          var(--group-color),
+          var(--group-color) 4px,
+          transparent
+        );
+      }
 
       &.empty {
         padding: 0;
