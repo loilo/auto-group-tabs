@@ -1,7 +1,7 @@
 <template>
   <div class="ui-textfield" :class="$attrs.class">
     <mwc-textfield
-      ref="textfield"
+      ref="textfieldRef"
       class="textfield"
       fullwidth
       v-bind="$attrs"
@@ -42,7 +42,7 @@ const emit = defineEmits<{
 }>()
 
 const isInvalid = ref(false)
-const textfield = ref()
+const textfieldRef = ref()
 
 const validityTransform = computed(() =>
   props.validator
@@ -61,7 +61,7 @@ const validityTransform = computed(() =>
 )
 
 onBeforeUnmount(() => {
-  delete textfield.value.validityTransform
+  delete textfieldRef.value.validityTransform
 })
 
 function onChange(event: Event) {
@@ -70,24 +70,24 @@ function onChange(event: Event) {
 }
 
 function isValid() {
-  return textfield.value?.checkValidity()
+  return textfieldRef.value?.checkValidity()
 }
 
 function blur() {
-  textfield.value.blur()
+  textfieldRef.value.blur()
 }
 
 function focus() {
-  textfield.value.focus()
+  textfieldRef.value.focus()
 }
 
 function select() {
-  textfield.value.select()
+  textfieldRef.value.select()
 }
 
 function validate() {
   isInvalid.value = !isValid()
-  textfield.value.reportValidity()
+  textfieldRef.value.reportValidity()
 }
 
 defineExpose({
@@ -99,9 +99,22 @@ defineExpose({
 })
 
 onMounted(() => {
+  const sheet = new CSSStyleSheet()
+  // @ts-ignore
+  sheet.replaceSync(`
+  .mdc-text-field {
+    border-radius: var(--mdc-shape-small, 4px);
+  }
+
+  .mdc-text-field--filled {
+    height: 40px;
+  }
+  `)
+  textfieldRef.value.shadowRoot.adoptedStyleSheets.push(sheet)
+
   nextTick(() => {
     isInvalid.value = !isValid()
-    textfield.value.reportValidity()
+    textfieldRef.value.reportValidity()
   })
 })
 </script>
@@ -113,8 +126,5 @@ onMounted(() => {
 
 mwc-textfield {
   width: 100%;
-  height: 40px;
-  border-radius: var(--mdc-shape-small, 4px);
-  overflow: hidden;
 }
 </style>
