@@ -138,5 +138,137 @@
   "sortHint": {
     "message": "Die Sortierung der Gruppen bestimmt die Auswertungsreihenfolge der URL-Muster. Positioniere Gruppen mit spezifischeren URL-Mustern am Anfang, um auf Gruppen mit allgemeineren Mustern zurückzufallen.",
     "description": "Hint to show when sort mode is enabled"
+  },
+  "suggestionTitle": {
+    "message": "Vorschläge",
+    "description": "Suggestions title for matcher patterns"
+  },
+  "derivedNameChromePage": {
+    "message": "Chrome-Seite",
+    "description": "Description of a generic Chrome-specific page"
+  },
+  "derivedNameChromeSettings": {
+    "message": "Chrome-Einstellungen",
+    "description": "Description of the Chrome Settings page"
+  },
+  "derivedNameChromeSettingsSection": {
+    "message": "Dieser Bereich der Chrome-Einstellungen",
+    "description": "Description of a Chrome Settings section page"
+  },
+  "derivedNameChromeExtensions": {
+    "message": "Chrome Erweiterungen",
+    "description": "Description of the Chrome Extensions page"
+  },
+  "derivedNameChromeDownloads": {
+    "message": "Chrome Downloads",
+    "description": "Description of the Chrome Downloads page"
+  },
+  "derivedNameChromeHistory": {
+    "message": "Chrome Verlauf",
+    "description": "Description of the Chrome History page"
+  },
+  "derivedNameChromeBookmarks": {
+    "message": "Chrome Lesezeichen",
+    "description": "Description of the Chrome Bookmarks page"
+  },
+  "derivedNameChromeApps": {
+    "message": "Chrome Apps",
+    "description": "Description of the Chrome Apps page"
+  },
+  "derivedNameChromeFlags": {
+    "message": "Chrome Flags",
+    "description": "Description of the Chrome Flags page"
+  },
+  "derivedNameChromeNewtab": {
+    "message": "Chrome \"Neuer Tab\" Seite",
+    "description": "Description of the Chrome Newtab page"
+  },
+  "derivedNameChromeExactUrl": {
+    "message": "Nur diese URL",
+    "description": "Description of an exactly matching Chrome-specific page"
+  },
+  "derivedNameChromeAll": {
+    "message": "Alle Chrome-spezifischen Seiten",
+    "description": "Description of all Chrome-specific pages"
+  },
+  "derivedNameExtensionHost": {
+    "message": "Diese Erweiterung",
+    "description": "Description of a specific Chrome extension"
+  },
+  "derivedNameExtensionAll": {
+    "message": "Alle Erweiterungen",
+    "description": "Description of all Chrome-Extension-specific pages"
+  },
+  "derivedNameExtensionExactUrl": {
+    "message": "Nur diese Erweiterungs-URL",
+    "description": "Description of an exact Chrome extension URL"
+  },
+  "derivedNameFileAll": {
+    "message": "Alle Datei-URLs",
+    "description": "Description of all file:// URLs"
+  },
+  "derivedNameFileDirname": {
+    "message": "Alle Dateien im \"%s\" Ordner",
+    "description": "Description of a file:// folder"
+  },
+  "derivedNameFileThisFolder": {
+    "message": "Alle Dateien in diesem Ordner",
+    "description": "Description of the current file:// folder"
+  },
+  "derivedNameFileExactUrl": {
+    "message": "Nur diese Datei",
+    "description": "Description of an exact file:// file URL"
+  },
+  "derivedNameFileExactFolderUrl": {
+    "message": "Nur dieser Ordner",
+    "description": "Description of an exact file:// folder URL"
+  },
+  "derivedNameHttpDomain": {
+    "message": "Diese Domain",
+    "description": "Description of an HTTP domain pattern"
+  },
+  "derivedNameHttpSubdomain": {
+    "message": "Diese Domain und ihre Subdomains",
+    "description": "Description of an HTTP domain and subdomain pattern"
+  },
+  "derivedNameGenericExactUrl": {
+    "message": "Genau diese URL",
+    "description": "Description of an exact URL"
+  },
+  "popupHeadline": {
+    "message": "URL-Muster anlegen",
+    "description": "Main headline in a popup"
+  },
+  "popupSelectLabel": {
+    "message": "Konfigurierte Gruppe auswählen",
+    "description": "Main headline in a popup"
+  },
+  "popupAddLink": {
+    "message": "Weiteres URL-Muster hinzufügen",
+    "description": "Add pattern button in a popup"
+  },
+  "popupCreateGroup": {
+    "message": "Neue Gruppe",
+    "description": "Create Group item in the popup menu select"
+  },
+  "popupSaveButton": {
+    "message": "Neue Muster speichern",
+    "description": "Save button for new URL patterns item in a popup"
+  },
+  "popupSavedMessage": {
+    "message": "URL-Muster wurden gespeichert",
+    "description": "Message when new patterns have been saved in a popup"
+  },
+  "popupMoreOptions": {
+    "message": "Weitere Optionen",
+    "description": "Button to go to options page from a popup"
+  },
+  "popupEditCurrentGroup": {
+    "message": "Alle Regeln für",
+    "description": "Edit existing tab group configuration button from a popup"
+  },
+  "popupAddCurrentGroup": {
+    "message": "Konfiguration erstellen für",
+    "description": "Add tab group configuration button from a popup"
   }
 }

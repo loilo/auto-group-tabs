@@ -9,7 +9,7 @@ import { ref, watch, nextTick, Ref, computed, UnwrapRef } from 'vue'
  */
 export function useSyncedCopy<T>(
   original: Ref<T> | (() => T),
-  localChangeCallback?: () => void
+  localChangeCallback?: (value: T) => void
 ) {
   const get = (): T =>
     JSON.parse(
@@ -35,9 +35,9 @@ export function useSyncedCopy<T>(
 
   watch(
     syncedCopy,
-    () => {
+    copyValue => {
       if (!externalChange.value) {
-        localChangeCallback?.()
+        localChangeCallback?.(copyValue)
       }
     },
     { deep: true }

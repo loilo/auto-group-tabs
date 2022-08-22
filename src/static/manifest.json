@@ -16,8 +16,10 @@
   },
   "options_ui": {
     "open_in_tab": false,
-    "page": "index.html"
+    "page": "index.html?context=options"
   },
-  "action": {},
+  "action": {
+    "default_popup": "index.html?context=popup"
+  },
   "permissions": ["tabs", "tabGroups", "storage"]
 }

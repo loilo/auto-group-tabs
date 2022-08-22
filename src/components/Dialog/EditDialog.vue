@@ -10,7 +10,7 @@
       }"
     />
 
-    <h3>{{ msg.headlineAppearance }}</h3>
+    <h3 class="headline-margin subtitle-2">{{ msg.headlineAppearance }}</h3>
 
     <Textfield
       ref="titleField"
@@ -27,7 +27,7 @@
       @update:model-value="titleField.validate()"
     />
 
-    <h3>{{ msg.headlineBehavior }}</h3>
+    <h3 class="headline-margin subtitle-2">{{ msg.headlineBehavior }}</h3>
 
     <Card seamless>
       <CardSection ghost tight collapse seamless class="radio-container">
@@ -82,17 +82,19 @@ import TabBar from '@/components/TabBar.vue'
 import Text from '@/components/Text.vue'
 import OverlayDialog from './OverlayDialog.vue'
 
-import { onMounted, ref } from 'vue'
+import { getCurrentInstance, onMounted, onUnmounted, ref } from 'vue'
 import { useGroupConfigurations } from '@/composables'
 import * as conflictManager from '@/util/conflict-manager'
 import { SaveOptions } from '@/util/types'
+import { useViewStore } from '@/stores'
+import { useStyleTag } from '@vueuse/core'
 
 const props = withDefaults(
   defineProps<{
     id?: string
     title?: string
     color: chrome.tabGroups.ColorEnum
-    options: SaveOptions
+    options?: SaveOptions
     deletable?: boolean
   }>(),
   {
@@ -124,7 +126,18 @@ const editStrict = ref(props.options.strict)
 const colorMenu = ref()
 const titleField = ref()
 
+const viewStore = useViewStore()
+
+viewStore.edit.onCloseSignal(cancel)
+
+const { load } = useStyleTag(`html {
+  min-height: 515px;
+}`)
+
 onMounted(() => {
+  load()
+
+  viewStore.edit.register(getCurrentInstance()!)
   colorMenu.value.refresh()
 
   // Need to wait for the <mwc-*> custom elements to render
@@ -132,6 +145,10 @@ onMounted(() => {
     titleField.value.focus()
     titleField.value.select()
   })
+})
+
+onUnmounted(() => {
+  viewStore.edit.deregister(getCurrentInstance()!)
 })
 
 function checkForDuplicates() {

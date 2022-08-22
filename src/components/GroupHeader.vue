@@ -1,8 +1,6 @@
 <template>
   <div class="group-header" :class="[color]">
-    <span class="tag" :class="{ 'no-title': !title }">
-      <span class="tag-label">{{ displayTitle }}</span>
-    </span>
+    <Tag :color="color" :title="title" />
     <mwc-icon
       v-if="hasConflictingTitle"
       class="conflict-hint"
@@ -51,6 +49,7 @@ import { computed, inject, ref } from 'vue'
 
 import { Translation } from '@/util/types'
 import * as conflictManager from '@/util/conflict-manager'
+import Tag from './Tag.vue'
 
 const props = defineProps<{
   groupId?: string
@@ -150,32 +149,6 @@ function remove() {
   &.orange {
     --group-color: var(--group-orange);
     --group-foreground-color: var(--group-orange-foreground);
-  }
-
-  .tag {
-    position: relative;
-    display: inline-block;
-    border-radius: 5px;
-    padding: 0.35em 0.6em;
-    color: var(--group-foreground-color, var(--group-foreground));
-    background-color: var(--group-color);
-    z-index: 1;
-    white-space: pre;
-
-    &:empty {
-      display: none;
-    }
-
-    .tag-label {
-      // Hard-code line height in case height-modifying characters (e.g. emoji) are used
-      display: block;
-      height: 16px;
-      line-height: 1.2;
-    }
-
-    &.no-title .tag-label {
-      opacity: 0.75;
-    }
   }
 
   .conflict-hint {

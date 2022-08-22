@@ -7,6 +7,7 @@
     @leave="leave"
     @after-leave="resetLeave"
     @leave-cancelled="cancel"
+    appear
   >
     <slot />
   </transition>

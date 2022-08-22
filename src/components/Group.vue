@@ -16,79 +16,32 @@
 
     <SlideVertical :duration="0.3" @after-enter="emit('after-enter')">
       <div v-if="!sortMode" class="group-matchers">
-        <Textfield
-          v-for="(matcher, index) in localMatchers"
-          :key="matcher.id"
-          :ref="(component: any) => {
-            if (component === null) {
-              delete matcherRefs[matcher.id]
-            } else {
-              matcherRefs[matcher.id] = {component, index}
-            }
-          }"
-          :modelValue="matcher.value"
-          @update:modelValue="matcher.value = $event"
-          :pattern="matcherPattern"
-          :placeholder="msg.urlInputPlaceholder"
-          @change="updateMatchers"
-          @keydown.backspace="
-            matcher.value.length === 0 && backspaceFromMatcherInput(index)
-          "
-          @keydown.enter="returnFromMatcherInput(index)"
-          @keydown.escape="($event.target as HTMLElement).blur()"
-          :validation-message="msg.invalidUrlPattern"
-        />
-        <SlideVertical :disabled="justCreatedNewMatcher" :duration="0.3">
-          <div
-            v-if="showNewMatcherInput"
-            class="group-matchers-new"
-            ref="newMatcherContainer"
-            @focusout="handleBlur"
-          >
-            <Textfield
-              ref="newMatcher"
-              v-model="newMatcherValue"
-              :pattern="matcherPattern"
-              :placeholder="msg.urlInputPlaceholder"
-              @change="handleNewMatcher"
-              @keydown.backspace="
-                newMatcherValue.length === 0 && backspaceFromMatcherInput(-1)
-              "
-              @keydown.enter="returnFromMatcherInput(-1)"
-              @keydown.escape="($event.target as HTMLElement).blur()"
-              :validation-message="msg.invalidUrlPattern"
-              auto-validate
-            />
+        <PatternList
+          ref="patternListRef"
+          @update:model-value="
+            data => {
+              data.forEach((value, index) => {
+                localMatchers[index] = value
+              })
 
-            <!--
-          The production build partly eradicates the info icon when used as a
-          regular component, therefore we inject it as innerHTML.
-          -->
-            <a
-              tabindex="-1"
-              class="group-matchers-info"
-              href="https://developer.chrome.com/docs/extensions/mv3/match_patterns/"
-              target="_blank"
-              rel="noopener"
-              :title="msg.matchPatternInfo"
-              v-html="`<mwc-icon-button icon='info_outline'></mwc-icon-button>`"
-            />
-          </div>
-        </SlideVertical>
+              emit('update:matchers', localMatchers)
+            }
+          "
+          :model-value="localMatchers"
+        />
       </div>
     </SlideVertical>
   </div>
 </template>
 
 <script setup lang="ts">
-import Textfield from './Form/Textfield.vue'
 import GroupHeader from './GroupHeader.vue'
 import SlideVertical from './Util/SlideVertical.vue'
 
-import { matcherPattern } from '@/util/helpers'
+import { useSyncedCopy } from '@/composables'
 import { SaveOptions } from '@/util/types'
-import { computed, nextTick, ref, toRaw, toRef, watch } from 'vue'
-import { tickResetRef, useSyncedCopy } from '@/composables'
+import { nextTick, ref } from 'vue'
+import PatternList from './PatternList.vue'
 
 const props = defineProps<{
   groupId?: string
@@ -112,126 +65,22 @@ defineExpose({
   showNewMatcher
 })
 
-const matcherRefs = ref<Record<string, { component: any; index: number }>>({})
-const sortedMatcherRefs = computed(() =>
-  Object.values(matcherRefs.value)
-    .sort((a, b) => a.index - b.index)
-    .map(({ component }) => component)
-)
-
 // Create a copy of the matchers prop for easier local mutability
-const localMatchers = useSyncedCopy(() =>
-  props.matchers.map(matcher => ({ id: crypto.randomUUID(), value: matcher }))
-)
-
-const justCreatedNewMatcher = tickResetRef(false)
-const newMatcherValue = ref('')
-const newMatcher = ref()
-const showNewMatcherInput = ref(false)
-
-const isEmpty = (value: string) => value.trim().length === 0
-const isEmptyMatcher = (matcher: { value: string }) => isEmpty(matcher.value)
-const not =
-  <T extends (...args: any[]) => boolean>(fn: T) =>
-  (...args: Parameters<T>) =>
-    !fn(...args)
-
-function getNonEmptyMatchers() {
-  let matchers = localMatchers.value
-
-  if (matchers.some(isEmptyMatcher)) {
-    matchers = matchers.filter(not(isEmptyMatcher))
-  }
-
-  return matchers.map(({ value }) => value)
-}
+const localMatchers = useSyncedCopy(() => props.matchers)
+const patternListRef = ref<InstanceType<typeof PatternList>>()
 
 function showNewMatcher() {
-  showNewMatcherInput.value = true
-
   nextTick(() => {
-    newMatcher.value.focus()
+    patternListRef.value?.showNewMatcher()
   })
-}
-
-function returnFromMatcherInput(matcherIndex: number) {
-  setTimeout(() => {
-    if (matcherIndex === -1) {
-      showNewMatcher()
-      nextTick(() => {
-        newMatcher.value.focus()
-      })
-    } else if (matcherIndex < sortedMatcherRefs.value.length - 1) {
-      sortedMatcherRefs.value[matcherIndex + 1]?.focus()
-    } else {
-      showNewMatcher()
-    }
-  }, 0)
-}
-
-function backspaceFromMatcherInput(matcherIndex: number) {
-  setTimeout(() => {
-    if (matcherIndex === -1) {
-      if (sortedMatcherRefs.value.length > 0) {
-        sortedMatcherRefs.value[sortedMatcherRefs.value.length - 1].focus()
-      } else {
-        newMatcher.value.blur()
-      }
-    } else if (matcherIndex > 0) {
-      sortedMatcherRefs.value[matcherIndex].blur()
-
-      // As the list re-renders after blurring, we need to
-      // wait a moment before focusing one of its elements
-      setTimeout(() => {
-        sortedMatcherRefs.value[matcherIndex - 1].focus()
-      }, 0)
-    } else {
-      sortedMatcherRefs.value[matcherIndex].blur()
-    }
-  }, 0)
-}
-
-function handleNewMatcher() {
-  let validMatchers = getNonEmptyMatchers()
-
-  if (
-    !isEmpty(newMatcherValue.value) &&
-    newMatcher.value?.isValid() &&
-    !validMatchers.includes(newMatcherValue.value)
-  ) {
-    justCreatedNewMatcher.value = true
-    showNewMatcherInput.value = false
-
-    emit('update:matchers', [...validMatchers, newMatcherValue.value])
-
-    newMatcherValue.value = ''
-  }
-}
-
-const newMatcherContainer = ref<HTMLElement>()
-function handleBlur() {
-  setTimeout(() => {
-    if (
-      !newMatcherContainer.value?.contains(document.activeElement) &&
-      newMatcherValue.value.length === 0
-    ) {
-      showNewMatcherInput.value = false
-    }
-  }, 0)
-}
-
-function updateMatchers() {
-  emit('update:matchers', getNonEmptyMatchers())
-}
-
-function showMatchPatternInfo() {
-  window.open(
-    'https://developer.chrome.com/docs/extensions/mv3/match_patterns/'
-  )
 }
 </script>
 
 <style lang="scss">
+.group:not(.sort-hint ~ .group):not(:first-child):last-child {
+  min-height: calc(100vh - 60px - 1.25rem - var(--body-padding));
+}
+
 .group.dragging {
   background-color: var(--dimmed-background);
   padding: 5px 10px;
@@ -244,29 +93,7 @@ function showMatchPatternInfo() {
 }
 
 .group-matchers {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
   margin-bottom: 1rem;
-}
-
-.group-matchers-info {
-  display: none;
-  position: absolute;
-  top: -0.25rem;
-  right: 0;
-
-  color: var(--grey);
-}
-
-.group-matchers-new {
-  display: flex;
-  align-items: center;
-  position: relative;
-}
-
-.group-matchers-new:focus-within .group-matchers-info {
-  display: block;
 }
 
 .invalid-matcher {

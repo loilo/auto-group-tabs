@@ -12,6 +12,8 @@ export function useGroupConfigurations() {
         value = JSON.parse(value)
       }
 
+      if (!Array.isArray(value)) return []
+
       // Group options have been added in v0.0.12, add them if missing
       for (let group of value) {
         if (!('options' in group)) {
