@@ -1,9 +1,9 @@
 <script lang="ts" setup>
-import Tag from './Tag.vue'
+import GroupTag from './GroupTag.vue'
 
+import { computed } from 'vue'
 import { useChromeState, useGroupConfigurations } from '@/composables'
 import { until } from '@vueuse/core'
-import { computed } from '@vue/reactivity'
 import { createGroupConfigurationMatcher } from '@/util/group-configurations'
 
 const [currentTab] = await chrome.tabs.query({
@@ -44,23 +44,12 @@ const emit = defineEmits<{
 function edit() {
   emit('editGroup', tabGroupConfigured.value!.id)
 }
-
-function create() {
-  emit(
-    'createGroup',
-    tabGroup.value!.title!,
-    tabGroup.value!.color,
-    chromeState.tabs.items.value.filter(
-      tab => tab.groupId === tabGroup.value!.id
-    )
-  )
-}
 </script>
 
 <template>
   <mwc-button v-if="tabGroup && tabGroupConfigured" icon="tab" @click="edit">
     {{ msg.popupEditCurrentGroup }} &nbsp;
-    <Tag :color="tabGroup.color" :title="tabGroup.title" dense />
+    <GroupTag :color="tabGroup.color" :title="tabGroup.title" dense />
   </mwc-button>
 </template>
 

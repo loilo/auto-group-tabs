@@ -87,9 +87,9 @@
 import Textfield from './Form/Textfield.vue'
 import SlideVertical from './Util/SlideVertical.vue'
 
-import { computed, nextTick, ref, toRaw, toRef, watch } from 'vue'
-import { matcherPattern } from '@/util/helpers'
 import { tickResetRef, useSyncedCopy } from '@/composables'
+import { matcherPattern } from '@/util/helpers'
+import { computed, nextTick, ref } from 'vue'
 
 const props = defineProps<{
   modelValue: string[]

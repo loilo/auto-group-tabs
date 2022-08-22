@@ -37,12 +37,12 @@
           @change="editStrict = $event.target.checked"
         />
         <ToggleLabel for="edit-dialog-strict">
-          <Text>
+          <LabelText>
             {{ msg.checkboxStrict }}
             <template #secondary>
               {{ msg.checkboxStrictDescription }}
             </template>
-          </Text>
+          </LabelText>
         </ToggleLabel>
       </CardSection>
     </Card>
@@ -79,7 +79,7 @@ import ColorMenu from '@/components/Form/ColorMenu.vue'
 import Textfield from '@/components/Form/Textfield.vue'
 import ToggleLabel from '@/components/Form/ToggleLabel.vue'
 import TabBar from '@/components/TabBar.vue'
-import Text from '@/components/Text.vue'
+import LabelText from '@/components/LabelText.vue'
 import OverlayDialog from './OverlayDialog.vue'
 
 import { getCurrentInstance, onMounted, onUnmounted, ref } from 'vue'

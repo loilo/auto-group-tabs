@@ -1,0 +1,37 @@
+env:
+  browser: true
+  es2021: true
+globals:
+  chrome: true
+extends:
+  - eslint:recommended
+  - plugin:vue/vue3-essential
+  - plugin:@typescript-eslint/recommended
+  - prettier
+overrides: []
+parser: 'vue-eslint-parser'
+parserOptions:
+  parser: '@typescript-eslint/parser'
+  ecmaVersion: latest
+  sourceType: module
+  extraFileExtensions:
+    - '*.d.ts'
+plugins:
+  - vue
+  - '@typescript-eslint'
+rules:
+  indent: off
+  linebreak-style:
+    - error
+    - unix
+  quotes:
+    - error
+    - single
+  semi:
+    - error
+    - never
+  '@typescript-eslint/no-explicit-any': off
+  '@typescript-eslint/no-non-null-assertion': off
+  'vue/multi-word-component-names': off
+  'vue/no-v-text-v-html-on-component': off
+  'vue/no-deprecated-slot-attribute': off

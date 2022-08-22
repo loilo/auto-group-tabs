@@ -1,4 +1,4 @@
-import { ref, watch, nextTick, Ref, computed, UnwrapRef } from 'vue'
+import { nextTick, ref, Ref, UnwrapRef, watch } from 'vue'
 
 /**
  * Create a copy of a ref/computed callback that is updated whenever the ref changes but does not populate
@@ -37,7 +37,7 @@ export function useSyncedCopy<T>(
     syncedCopy,
     copyValue => {
       if (!externalChange.value) {
-        localChangeCallback?.(copyValue)
+        localChangeCallback?.(copyValue as T)
       }
     },
     { deep: true }

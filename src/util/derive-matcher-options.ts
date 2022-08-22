@@ -10,17 +10,17 @@ function deriveChromeMatcherOptions(
   url: URL,
   msg: Translation
 ) {
-  let options: MatcherOptions[] = []
+  const options: MatcherOptions[] = []
 
-  let [initialGroup] = url.host.split('/')
-  let [, secondaryGroup] = url.pathname.split('/')
+  const [initialGroup] = url.host.split('/')
+  const [, secondaryGroup] = url.pathname.split('/')
 
-  let initialGroupPatterns = [
+  const initialGroupPatterns = [
     `chrome://${initialGroup}`,
     `chrome://${initialGroup}/*`
   ]
 
-  let wellKnownInitialGroupNames = {
+  const wellKnownInitialGroupNames = {
     extensions: msg.derivedNameChromeExtensions,
     downloads: msg.derivedNameChromeDownloads,
     history: msg.derivedNameChromeHistory,
@@ -65,7 +65,7 @@ function deriveChromeMatcherOptions(
   }
 
   options.push({
-    patterns: [`chrome://*`],
+    patterns: ['chrome://*'],
     description: msg.derivedNameChromeAll
   })
 
@@ -104,12 +104,12 @@ function deriveExtensionMatcherOptions(
 }
 
 function deriveFileMatcherOptions(rawUrl: string, url: URL, msg: Translation) {
-  let options: MatcherOptions[] = []
+  const options: MatcherOptions[] = []
 
-  let pathParts = url.pathname.split('/')
-  let basename = pathParts.at(-1)
-  let dirnamePath = pathParts.slice(0, -1).join('/')
-  let dirname = pathParts.at(-2)
+  const pathParts = url.pathname.split('/')
+  const basename = pathParts.at(-1)
+  const dirnamePath = pathParts.slice(0, -1).join('/')
+  const dirname = pathParts.at(-2)
 
   options.push({
     patterns: ['file://*'],

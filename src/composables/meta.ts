@@ -1,11 +1,11 @@
-import { ref, computed, nextTick, toRaw, UnwrapRef } from 'vue'
-import { JsonArray, JsonValue } from 'type-fest'
+import { JsonValue } from 'type-fest'
+import { computed, nextTick, ref, toRaw, UnwrapRef } from 'vue'
 
 /**
  * A ref that automatically resets to its initial value after one tick
  */
 export function tickResetRef<T>(initialValue: T) {
-  let value = ref(initialValue)
+  const value = ref(initialValue)
 
   return computed({
     get: () => value.value,
@@ -23,7 +23,7 @@ export function tickResetRef<T>(initialValue: T) {
  * Like toRaw, but recursive
  */
 export function toRawDeep<T extends JsonValue>(value: T): T {
-  let rawValue = toRaw(value)
+  const rawValue = toRaw(value)
   if (typeof rawValue !== 'object' || rawValue === null) return rawValue
 
   if (Array.isArray(rawValue)) {

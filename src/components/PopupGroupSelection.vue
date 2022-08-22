@@ -1,15 +1,14 @@
 <script lang="ts" setup>
-import Tag from './Tag.vue'
+import GroupTag from './GroupTag.vue'
 import Select from './Form/Select.vue'
 
-import { onMounted, watch } from 'vue'
+import { onMounted, watch, computed } from 'vue'
+import { until } from '@vueuse/core'
 import {
   useChromeState,
   useGroupConfigurations,
   useSyncedCopy
 } from '@/composables'
-import { computed } from '@vue/reactivity'
-import { until } from '@vueuse/core'
 import {
   createGroupConfigurationMatcher,
   saveGroupConfigurations
@@ -112,13 +111,13 @@ watch(value, async value => {
           <span class="create-group-item-label">
             {{ msg.popupAddCurrentGroup }}
           </span>
-          <Tag :color="tabGroup!.color" :title="tabGroup!.title" />
+          <GroupTag :color="tabGroup!.color" :title="tabGroup!.title" />
         </span>
       </mwc-list-item>
       <li divider role="separator"></li>
     </template>
     <template #default="{ value, label }">
-      <Tag :color="groupColors[value]" :title="label" />
+      <GroupTag :color="groupColors[value]" :title="label" />
     </template>
     <template #after>
       <li divider role="separator"></li>

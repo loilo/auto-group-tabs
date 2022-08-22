@@ -4,7 +4,7 @@ import { watchThrottled } from '@vueuse/core'
 import { ref, Ref, watch } from 'vue'
 import { ignoreChromeRuntimeEvents } from './util'
 
-let storageHandles = {
+const storageHandles = {
   sync: new Map(),
   local: new Map(),
   managed: new Map(),
@@ -32,7 +32,7 @@ export function useStorage<T = any>(
   loaded: Ref<boolean>
   data: Ref<T>
 } {
-  let storageHandle = storageHandles[storage]
+  const storageHandle = storageHandles[storage]
 
   if (!storageHandle.has(key)) {
     const loaded = ref(false)
@@ -70,7 +70,7 @@ export function useStorage<T = any>(
       )
     })
 
-    let watcher = <U>(newValue: U) => {
+    const watcher = <U>(newValue: U) => {
       if (changedFromStorage.value) return
       writeStorage(key, toRawDeep(newValue), storage)
     }

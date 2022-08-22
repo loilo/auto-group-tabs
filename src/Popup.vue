@@ -6,7 +6,7 @@ import PopupAdditionalActions from './components/PopupAdditionalActions.vue'
 import EditDialog from './components/Dialog/EditDialog.vue'
 import SlideVertical from './components/Util/SlideVertical.vue'
 
-import { ref, nextTick, computed, onMounted, watch } from 'vue'
+import { ref, computed, onMounted, watch } from 'vue'
 import { useGroupConfigurations, useStorage } from '@/composables'
 import { saveGroupConfigurations } from '@/util/group-configurations'
 import { SaveOptions } from '@/util/types'

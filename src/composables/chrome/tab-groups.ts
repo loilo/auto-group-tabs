@@ -13,7 +13,7 @@ function _useReadonlyChromeTabGroups() {
   const chromeWindows = useReadonlyChromeWindows()
 
   whenever(chromeWindows.loaded, async () => {
-    let queriedTabGroups = await Promise.all(
+    const queriedTabGroups = await Promise.all(
       chromeWindows.items.value.map(window =>
         chrome.tabGroups.query({ windowId: window.id })
       )

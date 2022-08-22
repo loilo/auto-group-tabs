@@ -16,8 +16,8 @@ export type Queue<T> = {
 export function queueUntilResolve<T>(
   initialPromise: Promise<T> = Promise.reject()
 ) {
-  let list = [initialPromise]
-  let [publishNewPromise, subscribeNewPromise] = monomitter()
+  const list = [initialPromise]
+  const [publishNewPromise, subscribeNewPromise] = monomitter()
 
   function push(newPromise: Promise<T>) {
     list.push(newPromise)
@@ -25,14 +25,14 @@ export function queueUntilResolve<T>(
   }
 
   function resolveList(): Promise<T> {
-    let firstItem = list.shift()!
+    const firstItem = list.shift()!
 
     return firstItem
       .catch(() => {
         if (list.length === 0) {
           // If no list items remain, wait for a new Promise to be attached
           return new Promise<T>(resolve => {
-            let unsubscribe = subscribeNewPromise(() => {
+            const unsubscribe = subscribeNewPromise(() => {
               unsubscribe()
               resolve(resolveList())
             })

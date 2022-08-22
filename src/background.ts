@@ -127,9 +127,9 @@ async function assignTabsToGroup(
   const tabGroupPredicate = createGroupConfigurationMatcher(group)
 
   // Get existing tab groups that match the configured group
-  let tabGroup =
+  const tabGroup =
     chromeState.tabGroupsByWindowId.value[windowId]?.find(tabGroupPredicate)
-  let tabGroupId = tabGroup?.id
+  const tabGroupId = tabGroup?.id
 
   console.debug(
     'Assigning %o tabs to group %o (%o / %o)...',
@@ -230,15 +230,15 @@ async function assignTabsToGroup(
 }
 
 async function ungroupAppropriateTabs(tabs: chrome.tabs.Tab[]) {
-  for (let tab of tabs) {
+  for (const tab of tabs) {
     if (tab.groupId !== chrome.tabGroups.TAB_GROUP_ID_NONE) {
-      let assignedGroup = chromeState.tabGroups.items.value.find(
+      const assignedGroup = chromeState.tabGroups.items.value.find(
         tabGroup => tabGroup.id === tab.groupId
       )
       if (!assignedGroup) continue
 
-      for (let groupConfiguration of augmentedGroupConfigurations.value) {
-        let matchesGroupConfiguration =
+      for (const groupConfiguration of augmentedGroupConfigurations.value) {
+        const matchesGroupConfiguration =
           createGroupConfigurationMatcher(groupConfiguration)
         if (matchesGroupConfiguration(assignedGroup!)) {
           if (groupConfiguration.options.strict) {
@@ -260,13 +260,13 @@ async function ungroupAppropriateTabs(tabs: chrome.tabs.Tab[]) {
 }
 
 async function groupAllAppropriateTabs() {
-  let assignedTabIds = new Set<number>()
+  const assignedTabIds = new Set<number>()
 
   for (const {
     tabsByGroups
   } of chromeTabsByWindowIdAndGroupConfiguration.value) {
     for (const [group, tabs] of tabsByGroups) {
-      for (let tab of tabs) {
+      for (const tab of tabs) {
         assignedTabIds.add(tab.id!)
       }
 
@@ -274,8 +274,8 @@ async function groupAllAppropriateTabs() {
     }
   }
 
-  let tabsToUnassign: chrome.tabs.Tab[] = []
-  for (let tab of chromeState.tabs.items.value) {
+  const tabsToUnassign: chrome.tabs.Tab[] = []
+  for (const tab of chromeState.tabs.items.value) {
     if (assignedTabIds.has(tab.id!)) continue
     tabsToUnassign.push(tab)
   }
@@ -416,7 +416,7 @@ watch(
         'Deleted tab group configurations:',
         deletedGroupConfigurations
       )
-      let groupsToDelete = chromeState.tabGroups.items.value.filter(tabGroup =>
+      const groupsToDelete = chromeState.tabGroups.items.value.filter(tabGroup =>
         deletedGroupConfigurations.some(
           groupConfiguration =>
             groupConfiguration.title === tabGroup.title &&
@@ -426,8 +426,8 @@ watch(
 
       console.debug('Tab groups to delete: %o', groupsToDelete)
 
-      for (let groupToDelete of groupsToDelete) {
-        let tabsToUngroup = chromeState.tabs.items.value.filter(
+      for (const groupToDelete of groupsToDelete) {
+        const tabsToUngroup = chromeState.tabs.items.value.filter(
           tab => tab.groupId === groupToDelete.id
         )
 
@@ -597,7 +597,7 @@ when(groupConfigurations.loaded).then(async () => {
     // Fetch current data for tab instead of reusing update.tab
     // as this leads to problems in cases where the user closed a window
     // by moving a tab.
-    let updatedTab = await chrome.tabs.get(update.tab.id!)
+    const updatedTab = await chrome.tabs.get(update.tab.id!)
 
     let assignedAny = false
     for (const [group, tabs] of chromeTabsByGroupConfiguration.value) {

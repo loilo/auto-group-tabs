@@ -2,7 +2,7 @@
  * Promisified storage reading.
  * Uses Chrome storage API if available, falls back to localStorage.
  */
-export async function readStorage<T = any>(
+export async function readStorage(
   key: string,
   storage: chrome.storage.AreaName
 ) {
@@ -35,8 +35,8 @@ export function watchStorage<T = any>(
 
       if (event.oldValue === event.newValue) return
 
-      let oldValue = event.oldValue ? JSON.parse(event.oldValue) : undefined
-      let newValue = event.newValue ? JSON.parse(event.newValue) : undefined
+      const oldValue = event.oldValue ? JSON.parse(event.oldValue) : undefined
+      const newValue = event.newValue ? JSON.parse(event.newValue) : undefined
 
       callback(newValue, oldValue)
     }

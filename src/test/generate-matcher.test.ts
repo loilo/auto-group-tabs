@@ -2,7 +2,7 @@ import { expect, it } from 'vitest'
 import { generateMatcherRegex } from '@/util/matcher-regex'
 
 it('handles no-wildcard domain pattern', () => {
-  let regex = generateMatcherRegex('example.com')
+  const regex = generateMatcherRegex('example.com')
 
   expect(regex.test('http://example.com/')).toBe(true)
   expect(regex.test('https://example.com/')).toBe(true)
@@ -14,7 +14,7 @@ it('handles no-wildcard domain pattern', () => {
 })
 
 it('handles no-wildcard scheme + host', () => {
-  let regex = generateMatcherRegex('https://example.com')
+  const regex = generateMatcherRegex('https://example.com')
 
   expect(regex.test('https://example.com/')).toBe(true)
 
@@ -26,7 +26,7 @@ it('handles no-wildcard scheme + host', () => {
 })
 
 it('handles no-wildcard scheme + host + root path', () => {
-  let regex = generateMatcherRegex('https://example.com/')
+  const regex = generateMatcherRegex('https://example.com/')
 
   expect(regex.test('https://example.com/')).toBe(true)
 
@@ -38,7 +38,7 @@ it('handles no-wildcard scheme + host + root path', () => {
 })
 
 it('handles match-all pattern', () => {
-  let regex = generateMatcherRegex('*')
+  const regex = generateMatcherRegex('*')
 
   expect(regex.test('')).toBe(true)
   expect(regex.test('chrome://settings')).toBe(true)
@@ -55,7 +55,7 @@ it('handles match-all pattern', () => {
 })
 
 it('handles scheme wildcard', () => {
-  let regex = generateMatcherRegex('*://example.com')
+  const regex = generateMatcherRegex('*://example.com')
 
   expect(regex.test('http://example.com/')).toBe(true)
   expect(regex.test('https://example.com/')).toBe(true)
@@ -68,7 +68,7 @@ it('handles scheme wildcard', () => {
 
 it('handles host wildcards', () => {
   it('subdomain wildcard', () => {
-    let regex = generateMatcherRegex('*.example.com')
+    const regex = generateMatcherRegex('*.example.com')
 
     expect(regex.test('http://example.com/')).toBe(true)
     expect(regex.test('https://example.com/')).toBe(true)
@@ -80,7 +80,7 @@ it('handles host wildcards', () => {
   })
 
   it('arbitrary host wildcard', () => {
-    let regex = generateMatcherRegex('ex*.com')
+    const regex = generateMatcherRegex('ex*.com')
 
     expect(regex.test('http://example.com/')).toBe(true)
     expect(regex.test('https://example.com/')).toBe(true)
@@ -94,7 +94,7 @@ it('handles host wildcards', () => {
 })
 
 it('handles path wildcard', () => {
-  let regex = generateMatcherRegex('example.com/foo/*')
+  const regex = generateMatcherRegex('example.com/foo/*')
 
   expect(regex.test('https://example.com/foo/')).toBe(true)
   expect(regex.test('https://example.com/foo/bar/baz')).toBe(true)
@@ -106,7 +106,7 @@ it('handles path wildcard', () => {
 })
 
 it('handles simple scheme', () => {
-  let regex = generateMatcherRegex('file:///foo/*')
+  const regex = generateMatcherRegex('file:///foo/*')
 
   expect(regex.test('file:///foo/')).toBe(true)
   expect(regex.test('file:///foo/bar.txt')).toBe(true)

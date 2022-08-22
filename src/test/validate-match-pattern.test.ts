@@ -3,7 +3,7 @@ import { expect, it } from 'vitest'
 import { matcherPattern } from '@/util/helpers'
 
 it('validates match patterns', () => {
-  let regex = new RegExp(matcherPattern)
+  const regex = new RegExp(matcherPattern)
 
   expect(regex.test('*')).toBe(true)
   expect(regex.test('*.example.com')).toBe(true)

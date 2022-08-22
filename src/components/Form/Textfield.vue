@@ -25,7 +25,7 @@ export default {
 </script>
 
 <script setup lang="ts">
-import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue'
+import { computed, nextTick, onBeforeUnmount, onMounted, ref } from 'vue'
 
 const props = defineProps<{
   modelValue: string
@@ -100,8 +100,7 @@ defineExpose({
 
 onMounted(() => {
   const sheet = new CSSStyleSheet()
-  // @ts-ignore
-  sheet.replaceSync(`
+  ;(sheet as any).replaceSync(`
   .mdc-text-field {
     border-radius: var(--mdc-shape-small, 4px);
   }

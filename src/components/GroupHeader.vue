@@ -1,6 +1,6 @@
 <template>
   <div class="group-header" :class="[color]">
-    <Tag :color="color" :title="title" />
+    <GroupTag :color="color" :title="title" />
     <mwc-icon
       v-if="hasConflictingTitle"
       class="conflict-hint"
@@ -49,7 +49,7 @@ import { computed, inject, ref } from 'vue'
 
 import { Translation } from '@/util/types'
 import * as conflictManager from '@/util/conflict-manager'
-import Tag from './Tag.vue'
+import GroupTag from './GroupTag.vue'
 
 const props = defineProps<{
   groupId?: string
@@ -73,13 +73,6 @@ const msg = inject<Translation>('msg')!
 const hasConflictingTitle = computed(() =>
   conflictManager.hasMarker(props.title)
 )
-
-const displayTitle = computed(() => {
-  if (!props.title) return `(${msg.noGroupTitle})`
-  if (hasConflictingTitle.value)
-    return conflictManager.withoutMarker(props.title)
-  return props.title
-})
 
 const showEditDialog = ref(false)
 

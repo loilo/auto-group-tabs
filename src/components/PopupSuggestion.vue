@@ -57,6 +57,7 @@ const patterns = useSyncedCopy(
   <div class="suggestions">
     <span class="suggestions-title">{{ msg.suggestionTitle }}:</span>
 
+    <!-- eslint-disable vue/valid-v-for -->
     <mwc-button
       dense
       v-for="option in options"
@@ -64,6 +65,7 @@ const patterns = useSyncedCopy(
     >
       {{ option.description }}
     </mwc-button>
+    <!-- eslint-enable vue/valid-v-for -->
   </div>
   <PatternList ref="patternListRef" v-model="patterns" keep-one />
 </template>
