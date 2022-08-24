@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import PatternList from './PatternList.vue'
+import PatternList from '@/components/PatternList.vue'
 import { inject, ref } from 'vue'
 
 import {
@@ -8,6 +8,7 @@ import {
 } from '@/util/derive-matcher-options'
 import { Translation } from '@/util/types'
 import { useSyncedCopy } from '@/composables'
+import { isExtensionWorker } from '@/util/helpers'
 
 const patternListRef = ref<InstanceType<typeof PatternList>>()
 
@@ -23,7 +24,7 @@ defineExpose({
 const options = ref<MatcherOptions[]>([])
 const msg = inject<Translation>('msg')!
 
-if (typeof chrome.tabs !== 'undefined') {
+if (isExtensionWorker) {
   const [tab] = await chrome.tabs.query({
     active: true,
     lastFocusedWindow: true

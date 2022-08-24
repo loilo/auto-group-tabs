@@ -62,3 +62,5 @@ export const capitalize = (string: string) =>
 export function sanitizeRegex(string: string) {
   return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
 }
+
+export const isExtensionWorker = typeof chrome.runtime !== 'undefined'

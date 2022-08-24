@@ -1,8 +1,8 @@
 <script lang="ts" setup>
 import Layout from './Layout.vue'
-import PopupSuggestion from './components/PopupSuggestion.vue'
-import PopupGroupSelection from './components/PopupGroupSelection.vue'
-import PopupAdditionalActions from './components/PopupAdditionalActions.vue'
+import PopupSuggestion from './components/Popup/Suggestion.vue'
+import PopupGroupSelection from './components/Popup/GroupSelection.vue'
+import PopupAdditionalActions from './components/Popup/AdditionalActions.vue'
 import EditDialog from './components/Dialog/EditDialog.vue'
 import SlideVertical from './components/Util/SlideVertical.vue'
 
@@ -10,7 +10,7 @@ import { ref, computed, onMounted, watch } from 'vue'
 import { useGroupConfigurations, useStorage } from '@/composables'
 import { saveGroupConfigurations } from '@/util/group-configurations'
 import { SaveOptions } from '@/util/types'
-import { matcherPattern } from '@/util/helpers'
+import { isExtensionWorker, matcherPattern } from '@/util/helpers'
 
 const popupSuggestionRef = ref<InstanceType<typeof PopupSuggestion>>()
 
@@ -105,7 +105,7 @@ function addLink() {
 }
 
 function openOptions() {
-  if (typeof chrome.runtime !== 'undefined') {
+  if (isExtensionWorker) {
     chrome.runtime.openOptionsPage()
   } else {
     window.open('/?context=options')
@@ -147,8 +147,6 @@ async function createFromCurrentGroup(
 const scrollToGroup = useStorage('scrollToGroup', '', {
   storage: 'local'
 })
-
-const isRunningInExtension = typeof chrome.runtime !== 'undefined'
 
 onMounted(() => {
   setTimeout(() => {
@@ -204,7 +202,7 @@ onMounted(() => {
           </mwc-button>
 
           <PopupAdditionalActions
-            v-if="isRunningInExtension"
+            v-if="isExtensionWorker"
             @create-group="createFromCurrentGroup"
             @edit-group="editGroup"
           />

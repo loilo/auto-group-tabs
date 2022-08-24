@@ -1,6 +1,6 @@
 <script lang="ts" setup>
-import GroupTag from './GroupTag.vue'
-import Select from './Form/Select.vue'
+import GroupTag from '@/components/GroupTag.vue'
+import Select from '@/components/Form/Select.vue'
 
 import { onMounted, watch, computed } from 'vue'
 import { until } from '@vueuse/core'
@@ -13,6 +13,7 @@ import {
   createGroupConfigurationMatcher,
   saveGroupConfigurations
 } from '@/util/group-configurations'
+import { isExtensionWorker } from '@/util/helpers'
 
 const groups = useGroupConfigurations()
 
@@ -20,23 +21,21 @@ const groupColors = computed(() =>
   Object.fromEntries(groups.data.value.map(group => [group.id, group.color]))
 )
 
-const isRunningInExtension = typeof chrome.runtime !== 'undefined'
-
-const [currentTab] = isRunningInExtension
+const [currentTab] = isExtensionWorker
   ? await chrome.tabs.query({
       active: true,
       lastFocusedWindow: true
     })
   : []
 
+const chromeState = useChromeState()
+
 await until(groups.loaded).toBeTruthy()
-await until(() =>
-  isRunningInExtension ? useChromeState().tabGroups.loaded.value : true
-).toBeTruthy()
+await until(() => chromeState.tabGroups.loaded.value).toBeTruthy()
 
 const tabGroup = computed(() =>
   currentTab && currentTab.groupId !== chrome.tabGroups.TAB_GROUP_ID_NONE
-    ? useChromeState().tabGroups.items.value.find(
+    ? chromeState.tabGroups.items.value.find(
         tabGroup => tabGroup.id === currentTab!.groupId
       )
     : undefined
@@ -68,9 +67,6 @@ const emit = defineEmits<{
 }>()
 
 onMounted(() => {
-  console.log('TAB?', currentTab)
-  console.log('ANY GROUP?', tabGroup.value)
-  console.log('CONFIGURED GROUP?', tabGroupConfigured.value)
   if (tabGroupConfigured.value) {
     emit('update:modelValue', tabGroupConfigured.value.id)
   }

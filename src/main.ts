@@ -23,10 +23,10 @@ import Options from './Options.vue'
 import Popup from './Popup.vue'
 
 import { RawTranslation } from './util/types'
+import { isExtensionWorker } from './util/helpers'
+
 const language = /^de-?/.test(
-  typeof chrome.i18n !== 'undefined'
-    ? chrome.i18n.getUILanguage()
-    : navigator.language
+  isExtensionWorker ? chrome.i18n.getUILanguage() : navigator.language
 )
   ? 'de'
   : 'en'

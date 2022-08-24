@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import GroupTag from './GroupTag.vue'
+import GroupTag from '@/components/GroupTag.vue'
 
 import { computed } from 'vue'
 import { useChromeState, useGroupConfigurations } from '@/composables'
