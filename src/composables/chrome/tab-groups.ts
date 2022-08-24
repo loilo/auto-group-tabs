@@ -10,54 +10,58 @@ function _useReadonlyChromeTabGroups() {
   const lastUpdated = ref<chrome.tabGroups.TabGroup | undefined>(undefined)
   const lastRemoved = ref<chrome.tabGroups.TabGroup | undefined>(undefined)
 
-  const chromeWindows = useReadonlyChromeWindows()
+  if (typeof chrome.tabGroups !== 'undefined') {
+    const chromeWindows = useReadonlyChromeWindows()
 
-  whenever(chromeWindows.loaded, async () => {
-    const queriedTabGroups = await Promise.all(
-      chromeWindows.items.value.map(window =>
-        chrome.tabGroups.query({ windowId: window.id })
+    whenever(chromeWindows.loaded, async () => {
+      const queriedTabGroups = await Promise.all(
+        chromeWindows.items.value.map(window =>
+          chrome.tabGroups.query({ windowId: window.id })
+        )
       )
-    )
 
-    tabGroups.value = queriedTabGroups.flat()
+      tabGroups.value = queriedTabGroups.flat()
+      loaded.value = true
+
+      chrome.tabGroups.onCreated.addListener(createdTabGroup => {
+        if (ignoreChromeRuntimeEvents.value) {
+          return
+        }
+
+        lastCreated.value = createdTabGroup
+        tabGroups.value = [...tabGroups.value, createdTabGroup]
+      })
+
+      chrome.tabGroups.onRemoved.addListener(removedTabGroup => {
+        if (ignoreChromeRuntimeEvents.value) {
+          return
+        }
+
+        lastRemoved.value = removedTabGroup
+        tabGroups.value = tabGroups.value.filter(
+          Tab => Tab.id !== removedTabGroup.id
+        )
+      })
+
+      chrome.tabGroups.onUpdated.addListener(updatedTabGroup => {
+        if (ignoreChromeRuntimeEvents.value) {
+          return
+        }
+
+        lastUpdated.value = updatedTabGroup
+        const index = tabGroups.value.findIndex(
+          tabGroup => tabGroup.id === updatedTabGroup.id
+        )
+        tabGroups.value = [
+          ...tabGroups.value.slice(0, index),
+          updatedTabGroup,
+          ...tabGroups.value.slice(index + 1)
+        ]
+      })
+    })
+  } else {
     loaded.value = true
-
-    chrome.tabGroups.onCreated.addListener(createdTabGroup => {
-      if (ignoreChromeRuntimeEvents.value) {
-        return
-      }
-
-      lastCreated.value = createdTabGroup
-      tabGroups.value = [...tabGroups.value, createdTabGroup]
-    })
-
-    chrome.tabGroups.onRemoved.addListener(removedTabGroup => {
-      if (ignoreChromeRuntimeEvents.value) {
-        return
-      }
-
-      lastRemoved.value = removedTabGroup
-      tabGroups.value = tabGroups.value.filter(
-        Tab => Tab.id !== removedTabGroup.id
-      )
-    })
-
-    chrome.tabGroups.onUpdated.addListener(updatedTabGroup => {
-      if (ignoreChromeRuntimeEvents.value) {
-        return
-      }
-
-      lastUpdated.value = updatedTabGroup
-      const index = tabGroups.value.findIndex(
-        tabGroup => tabGroup.id === updatedTabGroup.id
-      )
-      tabGroups.value = [
-        ...tabGroups.value.slice(0, index),
-        updatedTabGroup,
-        ...tabGroups.value.slice(index + 1)
-      ]
-    })
-  })
+  }
 
   return {
     items: readonly(tabGroups),

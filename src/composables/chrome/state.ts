@@ -1,19 +1,28 @@
-import { useReadonlyChromeWindows } from './windows'
+import { computed } from 'vue'
 import {
-  useReadonlyChromeTabs,
-  useChromeTabsById,
-  useChromeTabsByWindowId
-} from './tabs'
-import {
-  useReadonlyChromeTabGroups,
-  useChromeTabGroupsByWindowId
+  useChromeTabGroupsByWindowId,
+  useReadonlyChromeTabGroups
 } from './tab-groups'
+import {
+  useChromeTabsById,
+  useChromeTabsByWindowId,
+  useReadonlyChromeTabs
+} from './tabs'
+import { useReadonlyChromeWindows } from './windows'
 
 export function useChromeState() {
+  const windows = useReadonlyChromeWindows()
+  const tabs = useReadonlyChromeTabs()
+  const tabGroups = useReadonlyChromeTabGroups()
+  const loaded = computed(
+    () => windows.loaded.value && tabs.loaded.value && tabGroups.loaded.value
+  )
+
   return {
-    windows: useReadonlyChromeWindows(),
-    tabs: useReadonlyChromeTabs(),
-    tabGroups: useReadonlyChromeTabGroups(),
+    loaded,
+    windows,
+    tabs,
+    tabGroups,
     tabsById: useChromeTabsById(),
     tabsByWindowId: useChromeTabsByWindowId(),
     tabGroupsByWindowId: useChromeTabGroupsByWindowId()
