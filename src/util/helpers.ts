@@ -63,4 +63,5 @@ export function sanitizeRegex(string: string) {
   return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
 }
 
-export const isExtensionWorker = typeof chrome.runtime !== 'undefined'
+export const isExtensionWorker =
+  typeof globalThis?.chrome?.runtime !== 'undefined'
