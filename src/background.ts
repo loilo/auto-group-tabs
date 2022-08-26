@@ -577,7 +577,7 @@ when(groupConfigurations.loaded).then(async () => {
         )
 
         await when(removedTabGroups.history, history =>
-          history.some(item => item.snapshot?.id === update.oldTab!.groupId)
+          history.some(item => item.snapshot?.id === update.oldTab?.groupId)
         )
 
         console.debug('Reflected tab group removal in extension state')
