@@ -22,7 +22,7 @@
           matcher.value.length === 0 && backspaceFromMatcherInput(index)
         "
         @keydown.enter="returnFromMatcherInput(index)"
-        @keydown.escape="($event.target as HTMLElement).blur()"
+        @keydown.escape="triggerBlur"
         :validation-message="msg.invalidUrlPattern"
       />
       <!--
@@ -58,7 +58,7 @@
             newMatcherValue.length === 0 && backspaceFromMatcherInput(-1)
           "
           @keydown.enter="returnFromMatcherInput(-1)"
-          @keydown.escape="($event.target as HTMLElement).blur()"
+          @keydown.escape="triggerBlur"
           :validation-message="msg.invalidUrlPattern"
           auto-validate
         />
@@ -212,6 +212,10 @@ function handleNewMatcher() {
 
     newMatcherValue.value = ''
   }
+}
+
+function triggerBlur(event: KeyboardEvent) {
+  ;(event.target as HTMLElement).blur()
 }
 
 const newMatcherContainer = ref<HTMLElement>()
