@@ -20,6 +20,8 @@
           ref="patternListRef"
           @update:model-value="
             data => {
+              localMatchers.splice(data.length)
+
               data.forEach((value, index) => {
                 localMatchers[index] = value
               })
