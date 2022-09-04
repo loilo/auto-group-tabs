@@ -102,7 +102,7 @@ import {
   useStorage
 } from '@/composables'
 import { saveGroupConfigurations } from '@/util/group-configurations'
-import { GroupConfiguration, Translation } from '@/util/types'
+import { GroupConfiguration, SaveOptions, Translation } from '@/util/types'
 import { useViewStore } from '@/stores'
 
 const msg = inject<Translation>('msg')!
@@ -187,7 +187,11 @@ function deleteGroup(group: GroupConfiguration) {
   snackbar.value.show()
 }
 
-function addGroup(title: string, color: chrome.tabGroups.ColorEnum) {
+function addGroup(
+  title: string,
+  color: chrome.tabGroups.ColorEnum,
+  { strict }: SaveOptions
+) {
   const id = crypto.randomUUID()
 
   groupsCopy.value.push({
@@ -196,7 +200,7 @@ function addGroup(title: string, color: chrome.tabGroups.ColorEnum) {
     color: color,
     matchers: [],
     options: {
-      strict: false
+      strict
     }
   })
 

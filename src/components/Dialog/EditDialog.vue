@@ -110,7 +110,7 @@ const emit = defineEmits<{
     e: 'save',
     title: string,
     color: chrome.tabGroups.ColorEnum,
-    options: { strict: boolean }
+    options: SaveOptions
   ): void
   (e: 'delete'): void
   (e: 'cancel'): void
