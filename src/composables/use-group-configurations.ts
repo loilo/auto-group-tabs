@@ -17,7 +17,7 @@ export function useGroupConfigurations() {
       // Group options have been added in v0.0.12, add them if missing
       for (const group of value) {
         if (!('options' in group)) {
-          group.options = { strict: false }
+          group.options = { strict: false, singleWindow: true }
         }
       }
 

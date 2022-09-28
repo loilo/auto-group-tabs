@@ -45,6 +45,22 @@
           </LabelText>
         </ToggleLabel>
       </CardSection>
+
+      <CardSection ghost tight collapse seamless class="radio-container">
+        <mwc-checkbox
+          id="edit-dialog-singlewindow"
+          :checked="editSingleWindow"
+          @change="editSingleWindow = $event.target.checked"
+        />
+        <ToggleLabel for="edit-dialog-singlewindow">
+          <LabelText>
+            {{ msg.checkboxSingleWindow }}
+            <template #secondary>
+              {{ msg.checkboxSingleWindowDescription }}
+            </template>
+          </LabelText>
+        </ToggleLabel>
+      </CardSection>
     </Card>
 
     <template v-slot:actionsBar>
@@ -101,7 +117,11 @@ const props = withDefaults(
     title: '',
     deletable: false,
     strict: false,
-    options: () => ({ strict: false })
+    singleWindow: false,
+    options: () => ({
+      strict: false,
+      singleWindow: false
+    })
   }
 )
 
@@ -122,6 +142,7 @@ const groups = useGroupConfigurations()
 const editTitle = ref(conflictManager.withoutMarker(props.title))
 const editColor = ref(props.color)
 const editStrict = ref(props.options.strict)
+const editSingleWindow = ref(props.options.singleWindow)
 
 const colorMenu = ref()
 const titleField = ref()
@@ -173,7 +194,7 @@ function save(event: KeyboardEvent) {
   if (!titleField.value.isValid()) return
 
   event.preventDefault()
-  emit('save', editTitle.value, editColor.value, { strict: editStrict.value })
+  emit('save', editTitle.value, editColor.value, { strict: editStrict.value, singleWindow: editSingleWindow.value })
   emit('close')
 }
 

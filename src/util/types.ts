@@ -1,5 +1,6 @@
 export type SaveOptions = {
-  strict: boolean
+  strict: boolean,
+  singleWindow: boolean
 }
 
 export type GroupConfiguration = {

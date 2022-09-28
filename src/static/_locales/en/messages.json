@@ -27,6 +27,14 @@
     "message": "Remove tabs from this group if their URL no longer matches.",
     "description": "The description of the strict checkbox in the edit dialog."
   },
+  "checkboxSingleWindow": {
+    "message": "Single Window",
+    "description": "The label of the single window checkbox in the edit dialog."
+  },
+  "checkboxSingleWindowDescription": {
+    "message": "Force all tabs to be in the same window.",
+    "description": "The description of the single window checkbox in the edit dialog."
+  },
   "noGroupTitle": {
     "message": "no title",
     "description": "A group with an empty title"

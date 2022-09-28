@@ -127,8 +127,9 @@ async function assignTabsToGroup(
   const tabGroupPredicate = createGroupConfigurationMatcher(group)
 
   // Get existing tab groups that match the configured group
-  const tabGroup =
-    chromeState.tabGroupsByWindowId.value[windowId]?.find(tabGroupPredicate)
+  const tabGroup = group.options.singleWindow
+    ? chromeState.tabGroups.items.value.find(tabGroupPredicate)
+    : chromeState.tabGroupsByWindowId.value[windowId]?.find(tabGroupPredicate)
   const tabGroupId = tabGroup?.id
 
   console.debug(
@@ -148,10 +149,9 @@ async function assignTabsToGroup(
     // may have been dragged to a different window
     const windowId = (await chrome.tabs.get(tabs[0].id!)).windowId
 
-    let tabGroupId =
-      chromeState.tabGroupsByWindowId.value[windowId]?.find(
-        tabGroupPredicate
-      )?.id
+    let tabGroupId = (group.options.singleWindow
+      ? chromeState.tabGroups.items.value.find(tabGroupPredicate)
+      : chromeState.tabGroupsByWindowId.value[windowId]?.find(tabGroupPredicate))?.id
 
     try {
       if (waitable && groupCreationTracker.isCreating(windowId, group)) {
@@ -344,6 +344,8 @@ watch(
 
       // Group's 'strict' option changed
       if (oldGroup.options.strict !== newGroup.options.strict) return true
+
+      if (oldGroup.options.singleWindow !== newGroup.options.singleWindow) return true
 
       // Group has different matchers than before
       if (oldGroup.matchers.length !== newGroup.matchers.length) return true

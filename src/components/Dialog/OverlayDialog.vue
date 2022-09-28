@@ -57,5 +57,6 @@ focus-trap {
 
 .content {
   grid-row: 1 / span 1;
+  overflow-x: hidden;
 }
 </style>

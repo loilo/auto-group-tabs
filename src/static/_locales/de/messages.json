@@ -27,6 +27,14 @@
     "message": "Entferne Tabs aus dieser Gruppe, wenn ihre URL nicht mehr übereinstimmt.",
     "description": "The description of the strict checkbox in the edit dialog."
   },
+  "checkboxSingleWindow": {
+    "message": "Enkel raam",
+    "description": "The label of the single window checkbox in the edit dialog."
+  },
+  "checkboxSingleWindowDescription": {
+    "message": "Forceer alle tabbladen om zich in hetzelfde venster te bevinden.",
+    "description": "The description of the single window checkbox in the edit dialog."
+  },
   "noGroupTitle": {
     "message": "kein Titel",
     "description": "A group with an empty title"
