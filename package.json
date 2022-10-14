@@ -10,8 +10,9 @@
     "build:background": "esbuild src/background.ts --bundle --outfile=extension/background.js",
     "test:ts": "vue-tsc --noEmit",
     "test:eslint": "eslint \"src/**/*.{vue,ts}\"",
-    "test:vitest": "vitest run",
-    "test": "run-s test:ts test:eslint test:vitest",
+    "test:unit": "vitest run",
+    "test:browser": "playwright test",
+    "test": "run-s test:ts test:eslint test:unit test:browser",
     "dev": "run-p dev:options dev:background",
     "build": "run-s build:options build:background",
     "pack": "node pack",
@@ -41,6 +42,7 @@
     "vuedraggable": "^4.1.0"
   },
   "devDependencies": {
+    "@playwright/test": "^1.25.1",
     "@types/chrome": "^0.0.193",
     "@typescript-eslint/eslint-plugin": "^5.34.0",
     "@typescript-eslint/parser": "^5.34.0",

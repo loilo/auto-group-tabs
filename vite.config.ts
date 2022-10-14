@@ -34,5 +34,8 @@ export default defineConfig({
     target: 'chrome89',
     sourcemap: true,
     minify: false
+  },
+  test: {
+    include: ['./test/unit/**/*.test.ts']
   }
 })
