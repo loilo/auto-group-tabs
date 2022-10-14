@@ -1,3 +1,15 @@
+<script lang="ts" setup>
+import { onMounted, onUnmounted } from 'vue'
+
+onMounted(() => {
+  document.body.classList.add('no-scroll')
+})
+
+onUnmounted(() => {
+  document.body.classList.remove('no-scroll')
+})
+</script>
+
 <template>
   <div class="dialog" role="dialog">
     <focus-trap>
@@ -14,6 +26,10 @@
 </template>
 
 <style lang="scss" scoped>
+:global(.no-scroll) {
+  overflow: hidden !important;
+}
+
 .dialog {
   position: fixed;
   top: 0;
@@ -30,6 +46,31 @@
 
   ::v-deep(mwc-top-app-bar-fixed) {
     margin: 0 calc(-1 * var(--body-padding)) var(--body-padding);
+  }
+
+  @supports (overflow-y: overlay) {
+    overflow-y: overlay;
+
+    &::-webkit-scrollbar {
+      width: 16px;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      background-color: var(--blue-grey);
+      border-radius: 10px;
+      border: 6px solid transparent;
+      box-sizing: content-box;
+      background-clip: padding-box;
+      transition: border-width 400ms;
+    }
+
+    &::-webkit-scrollbar-thumb:hover {
+      border-width: 5px;
+    }
+
+    &::-webkit-scrollbar-track-piece {
+      background: 0 0;
+    }
   }
 }
 
