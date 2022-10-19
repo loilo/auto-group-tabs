@@ -6,10 +6,6 @@ export type GroupConfiguration = z.infer<
   typeof schemas.GroupConfigurationSchema
 >
 
-export type ExtensionOptions = {
-  x: 1
-}
-
 // Use JSON file as typings for messages
 import type Messages from '@/static/_locales/en/messages.json'
 type MessageKey = keyof typeof Messages
