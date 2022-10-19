@@ -67,9 +67,41 @@
     "message": "Abbrechen",
     "description": "Cancel button label"
   },
+  "headlineImport": {
+    "message": "Importieren",
+    "description": "The import headline of the import/export settings dialog."
+  },
+  "headlineExport": {
+    "message": "Exportieren",
+    "description": "The import headline of the import/export settings dialog."
+  },
+  "buttonExport": {
+    "message": "Gruppierungsregeln in Datei speichern",
+    "description": "Export button label"
+  },
+  "buttonImport": {
+    "message": "Gruppierungsregeln aus Datei laden...",
+    "description": "Import button label"
+  },
+  "importFormatError": {
+    "message": "Die zu importierende Datei enthält ungültige Einstellungen.",
+    "description": "Error message when imported file is not valid JSON or does not match the schema"
+  },
+  "importDiscardWarning": {
+    "message": "Existierende Regeln werden verworfen.",
+    "description": "Warning message when importing settings"
+  },
+  "importSuccess": {
+    "message": "Import erfolgreich abgeschlossen",
+    "description": "Snackbar message when importing succeeded"
+  },
   "buttonSortMode": {
     "message": "Sortiermodus aktivieren",
     "description": "Sort mode"
+  },
+  "buttonSettings": {
+    "message": "Einstellungen",
+    "description": "General settings"
   },
   "buttonAddGroup": {
     "message": "Neue Gruppe",
@@ -138,6 +170,18 @@
   "sortHint": {
     "message": "Die Sortierung der Gruppen bestimmt die Auswertungsreihenfolge der URL-Muster. Positioniere Gruppen mit spezifischeren URL-Mustern am Anfang, um auf Gruppen mit allgemeineren Mustern zurückzufallen.",
     "description": "Hint to show when sort mode is enabled"
+  },
+  "settingsTitle": {
+    "message": "Einstellungen",
+    "description": "Name of the settings area"
+  },
+  "settingsTransferConfigurationTitle": {
+    "message": "Konfiguration übertragen",
+    "description": "Title of the transfer configuration section"
+  },
+  "settingsTransferConfigurationSubtitle": {
+    "message": "Gruppierungsregeln importieren und exportieren",
+    "description": "Subtitle of the transfer configuration section"
   },
   "suggestionTitle": {
     "message": "Vorschläge",

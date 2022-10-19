@@ -69,6 +69,8 @@
   --group-orange: #f1903e;
   --group-orange-foreground: var(--black);
 
+  --mdc-theme-success: #2e8038;
+
   --separator: rgb(0 0 0 / 6%);
 
   @media (prefers-color-scheme: dark) {
@@ -102,6 +104,7 @@
     --mdc-theme-primary: #8ab4f8;
     --mdc-theme-on-primary: var(--black);
     --mdc-theme-error: #f18b82;
+    --mdc-theme-success: #81c895;
 
     --mdc-button-disabled-fill-color: #5c5f68;
     --mdc-button-disabled-ink-color: #2a2f3c;
@@ -202,6 +205,30 @@ hr {
   height: 0;
   border: none;
   border-bottom: 1px solid var(--super-dimmed);
+}
+
+.error-message {
+  color: var(--mdc-theme-error);
+  font-weight: 500;
+  font-size: 14px;
+}
+
+.warning-message {
+  color: var(--mdc-theme-warning);
+  font-weight: 500;
+  font-size: 14px;
+  display: flex;
+  gap: 0.75em;
+}
+
+.warning-icon {
+  --mdc-icon-size: 18px;
+}
+
+.success-message {
+  color: var(--mdc-theme-success);
+  font-weight: 500;
+  font-size: 14px;
 }
 
 [fullwidth] {

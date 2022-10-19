@@ -31,15 +31,20 @@
     "@material/mwc-select": "^0.27.0",
     "@material/mwc-snackbar": "^0.27.0",
     "@material/mwc-switch": "^0.27.0",
+    "@material/mwc-textarea": "^0.27.0",
     "@material/mwc-textfield": "^0.27.0",
     "@material/mwc-top-app-bar": "^0.27.0",
     "@material/mwc-top-app-bar-fixed": "^0.27.0",
     "@vueuse/core": "^9.1.0",
+    "@vueuse/shared": "^9.3.1",
+    "destr": "^1.1.1",
     "gsap": "^3.11.0",
     "monomitter": "^1.1.1",
+    "php-date": "^4.0.1",
     "pinia": "^2.0.20",
     "vue": "^3.2.37",
-    "vuedraggable": "^4.1.0"
+    "vuedraggable": "^4.1.0",
+    "zod": "^3.19.1"
   },
   "devDependencies": {
     "@playwright/test": "^1.25.1",

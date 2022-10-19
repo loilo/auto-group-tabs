@@ -11,6 +11,7 @@ import '@material/mwc-snackbar'
 import '@material/mwc-switch'
 import '@material/mwc-checkbox'
 import '@material/mwc-textfield'
+import '@material/mwc-textarea'
 import '@material/mwc-top-app-bar'
 import '@material/mwc-top-app-bar-fixed'
 

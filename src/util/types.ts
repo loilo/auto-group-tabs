@@ -1,13 +1,13 @@
-export type SaveOptions = {
-  strict: boolean
-}
+import type { z } from 'zod'
+import * as schemas from './schemas'
 
-export type GroupConfiguration = {
-  id: string
-  title: string
-  color: chrome.tabGroups.ColorEnum
-  options: SaveOptions
-  matchers: string[]
+export type SaveOptions = z.infer<typeof schemas.SaveOptionsSchema>
+export type GroupConfiguration = z.infer<
+  typeof schemas.GroupConfigurationSchema
+>
+
+export type ExtensionOptions = {
+  x: 1
 }
 
 // Use JSON file as typings for messages

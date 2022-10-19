@@ -61,6 +61,15 @@
         />
 
         <mwc-fab
+          ref="settingsButton"
+          class="secondary-button settings-button"
+          icon="settings"
+          @click="openSettingsDialog"
+          mini
+          :title="msg.buttonSettings"
+        />
+
+        <mwc-fab
           ref="addButton"
           icon="add"
           @click="openAddDialog"
@@ -78,6 +87,14 @@
         />
       </transition>
 
+      <transition name="from-right">
+        <SettingsDialog
+          v-if="showSettingsDialog"
+          color="grey"
+          @close="closeSettingsDialog"
+        />
+      </transition>
+
       <mwc-snackbar :labelText="msg.groupDeletedNotice" ref="snackbar">
         <mwc-button slot="action" @click="undo">{{ msg.undo }}</mwc-button>
         <mwc-icon-button icon="close" slot="dismiss" />
@@ -87,26 +104,28 @@
 </template>
 
 <script setup lang="ts">
-import Layout from './Layout.vue'
-import Group from './components/Group.vue'
 import EditDialog from './components/Dialog/EditDialog.vue'
+import SettingsDialog from './components/Dialog/SettingsDialog.vue'
+import Group from './components/Group.vue'
 import SlideVertical from './components/Util/SlideVertical.vue'
+import Layout from './Layout.vue'
 
+import { until, useDebounceFn, useStyleTag } from '@vueuse/core'
 import { inject, nextTick, onMounted, ref, watch } from 'vue'
 import Draggable from 'vuedraggable'
-import { until, useDebounceFn, useStyleTag } from '@vueuse/core'
 
 import {
-  useSyncedCopy,
   useGroupConfigurations,
-  useStorage
+  useStorage,
+  useSyncedCopy
 } from '@/composables'
+import { useViewStore } from '@/stores'
 import { saveGroupConfigurations } from '@/util/group-configurations'
 import { GroupConfiguration, SaveOptions, Translation } from '@/util/types'
-import { useViewStore } from '@/stores'
 
 const msg = inject<Translation>('msg')!
 const snackbar = ref()
+const settingsButton = ref()
 const addButton = ref()
 const groupRefs: Record<string, typeof Group> = {}
 
@@ -132,6 +151,15 @@ function openAddDialog() {
 function closeAddDialog() {
   showAddDialog.value = false
   addButton.value.focus()
+}
+
+const showSettingsDialog = ref(false)
+function openSettingsDialog() {
+  showSettingsDialog.value = true
+}
+function closeSettingsDialog() {
+  showSettingsDialog.value = false
+  settingsButton.value.focus()
 }
 
 const sortMode = ref(false)

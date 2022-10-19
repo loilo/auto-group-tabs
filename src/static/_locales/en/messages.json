@@ -67,9 +67,41 @@
     "message": "Cancel",
     "description": "Cancel button label"
   },
+  "headlineImport": {
+    "message": "Import",
+    "description": "The import headline of the import/export settings dialog."
+  },
+  "headlineExport": {
+    "message": "Export",
+    "description": "The import headline of the import/export settings dialog."
+  },
+  "buttonExport": {
+    "message": "Save grouping rules to file",
+    "description": "Export button label"
+  },
+  "buttonImport": {
+    "message": "Load grouping rules from file...",
+    "description": "Import button label"
+  },
+  "importFormatError": {
+    "message": "The file to be imported contains invalid grouping rules.",
+    "description": "Error message when imported file is not valid JSON or does not match the schema"
+  },
+  "importDiscardWarning": {
+    "message": "Preexisting grouping rules will be discarded.",
+    "description": "Warning message when importing settings"
+  },
+  "importSuccess": {
+    "message": "Import finished successfully",
+    "description": "Snackbar message when importing succeeded"
+  },
   "buttonSortMode": {
     "message": "Enable sort mode",
     "description": "Sort mode"
+  },
+  "buttonSettings": {
+    "message": "Settings",
+    "description": "General settings"
   },
   "buttonAddGroup": {
     "message": "Add group",
@@ -138,6 +170,22 @@
   "sortHint": {
     "message": "The order of groups determines the order of pattern evaluation. Put groups with more specific patterns to the top to allow groups with more permissive patterns to serve as a fallback.",
     "description": "Hint to show when sort mode is enabled"
+  },
+  "settingsTitle": {
+    "message": "Settings",
+    "description": "Name of the settings area"
+  },
+  "settingsTransferConfigurationTitle": {
+    "message": "Transfer Configuration",
+    "description": "Title of the transfer configuration section"
+  },
+  "settingsTransferConfigurationSubtitle": {
+    "message": "Import and export grouping rules",
+    "description": "Subtitle of the transfer configuration section"
+  },
+  "settingsReassignTitle": {
+    "message": "Neuzuweisung",
+    "description": "Name of the reassign section"
   },
   "suggestionTitle": {
     "message": "Suggestions",

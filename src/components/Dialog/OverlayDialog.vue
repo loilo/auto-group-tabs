@@ -98,5 +98,6 @@ focus-trap {
 
 .content {
   grid-row: 1 / span 1;
+  padding-bottom: var(--body-padding);
 }
 </style>

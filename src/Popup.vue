@@ -138,8 +138,6 @@ async function createFromCurrentGroup(
     }
   ])
 
-  console.log('OKAY', tabs)
-
   patterns.value = tabs.map(tab => tab.url!)
   selectedGroup.value = id
 }
@@ -244,12 +242,6 @@ onMounted(() => {
 
 .button-save {
   align-self: flex-start;
-}
-
-.error-message {
-  color: var(--mdc-theme-error);
-  font-weight: 500;
-  font-size: 14px;
 }
 
 .more-options {

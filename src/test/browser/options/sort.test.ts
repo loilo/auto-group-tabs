@@ -1,10 +1,7 @@
 import { expect, test } from '@playwright/test'
-import msg from '../../../static/_locales/en/messages.json'
 import {
   getGroups,
-  getValue,
   GroupConfigurationWithoutId,
-  isMacOS,
   setGroups,
   waitAnimationsFinished
 } from '../util/evaluations'
@@ -24,19 +21,19 @@ test('Drag and drop groups', async ({ page }) => {
     title: 'Test Group 1',
     color: 'blue',
     matchers: [],
-    options: { strict: true }
+    options: { strict: true, merge: false }
   }
   const group2 = {
     title: 'Test Group 2',
     color: 'red',
     matchers: ['example.com', 'example.org'],
-    options: { strict: true }
+    options: { strict: true, merge: false }
   }
   const group3 = {
     title: 'Test Group 3',
     color: 'green',
     matchers: ['github.com'],
-    options: { strict: true }
+    options: { strict: true, merge: false }
   }
 
   // Define groups programmatically
