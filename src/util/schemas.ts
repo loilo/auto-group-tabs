@@ -3,7 +3,8 @@ import { matcherPattern } from './helpers'
 import { colors } from './resources'
 
 export const SaveOptionsSchema = z.object({
-  strict: z.boolean().default(false)
+  strict: z.boolean().default(false),
+  merge: z.boolean().default(false)
 })
 
 const matcherPatternRegex = new RegExp(matcherPattern)

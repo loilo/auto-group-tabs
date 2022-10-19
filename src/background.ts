@@ -127,8 +127,25 @@ async function assignTabsToGroup(
   const tabGroupPredicate = createGroupConfigurationMatcher(group)
 
   // Get existing tab groups that match the configured group
-  const tabGroup =
+  const targetTabGroupInSameWindow =
     chromeState.tabGroupsByWindowId.value[windowId]?.find(tabGroupPredicate)
+  const targetTabGroup =
+    chromeState.tabGroups.items.value.find(tabGroupPredicate)
+
+  // Before attempting a merge: Check whether the source and target windows are compatible to move tabs between them
+  let shouldMerge = false
+  if (group.options.merge) {
+    const sourceWindow = chromeState.windows.items.value.find(
+      window => window.id === windowId
+    )
+    const targetWindow = chromeState.windows.items.value.find(
+      window => window.id === targetTabGroup?.windowId
+    )
+    const canMerge = sourceWindow?.incognito === targetWindow?.incognito
+    shouldMerge = canMerge
+  }
+
+  const tabGroup = shouldMerge ? targetTabGroup : targetTabGroupInSameWindow
   const tabGroupId = tabGroup?.id
 
   console.debug(
@@ -148,10 +165,10 @@ async function assignTabsToGroup(
     // may have been dragged to a different window
     const windowId = (await chrome.tabs.get(tabs[0].id!)).windowId
 
-    let tabGroupId =
-      chromeState.tabGroupsByWindowId.value[windowId]?.find(
-        tabGroupPredicate
-      )?.id
+    let tabGroupId = shouldMerge
+      ? chromeState.tabGroups.items.value.find(tabGroupPredicate)?.id
+      : chromeState.tabGroupsByWindowId.value[windowId]?.find(tabGroupPredicate)
+          ?.id
 
     try {
       if (waitable && groupCreationTracker.isCreating(windowId, group)) {
@@ -181,11 +198,34 @@ async function assignTabsToGroup(
           color: group.color
         })
       } else {
+        // Change focus if tab has moved to another window
+        const currentWindow = await chrome.windows.getCurrent()
+        const currentWindowId = currentWindow?.id
+        const currentTab = (
+          await chrome.tabs.query({ active: true, windowId: currentWindowId })
+        )?.[0]
+        const currentTabId = currentTab?.id
+
         console.debug('Attempt assignment to existing group %o', tabGroupId)
         await chrome.tabs.group({
           tabIds,
           groupId: tabGroupId
         })
+
+        if (currentTabId && tabIds.includes(currentTabId)) {
+          const targetWindowId = chromeState.tabGroups.items.value.find(
+            tabGroup => tabGroup.id === tabGroupId
+          )?.windowId
+
+          if (targetWindowId && currentWindowId !== targetWindowId) {
+            chrome.windows.update(targetWindowId, {
+              focused: true
+            })
+            chrome.tabs.update(currentTabId, {
+              active: true
+            })
+          }
+        }
       }
 
       tabIds.forEach(tabId => draggingTabs.delete(tabId))
@@ -345,6 +385,9 @@ watch(
       // Group's 'strict' option changed
       if (oldGroup.options.strict !== newGroup.options.strict) return true
 
+      // Group's 'merge' option changed
+      if (oldGroup.options.merge !== newGroup.options.merge) return true
+
       // Group has different matchers than before
       if (oldGroup.matchers.length !== newGroup.matchers.length) return true
       const sortedOldMatchers = [...oldGroup.matchers].sort()
@@ -416,12 +459,13 @@ watch(
         'Deleted tab group configurations:',
         deletedGroupConfigurations
       )
-      const groupsToDelete = chromeState.tabGroups.items.value.filter(tabGroup =>
-        deletedGroupConfigurations.some(
-          groupConfiguration =>
-            groupConfiguration.title === tabGroup.title &&
-            groupConfiguration.color === tabGroup.color
-        )
+      const groupsToDelete = chromeState.tabGroups.items.value.filter(
+        tabGroup =>
+          deletedGroupConfigurations.some(
+            groupConfiguration =>
+              groupConfiguration.title === tabGroup.title &&
+              groupConfiguration.color === tabGroup.color
+          )
       )
 
       console.debug('Tab groups to delete: %o', groupsToDelete)

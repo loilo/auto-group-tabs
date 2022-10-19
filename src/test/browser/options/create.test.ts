@@ -40,8 +40,14 @@ test('Test group creation flow', async ({ page }) => {
   // Click the blue radio label to select the color
   await dialogContainer.locator(`text=${msg.colorBlue.message}`).click()
 
+  // Show advanced options
+  await dialogContainer.locator('.toggle-advanced-button').click()
+
   // Enable strict mode
   await dialogContainer.locator('#edit-dialog-strict').click()
+
+  // Enable merge mode
+  await dialogContainer.locator('#edit-dialog-merge').click()
 
   // Expect the preview to have updated
   expect(await previewLabel.textContent()).toBe('Test Group')
@@ -75,7 +81,7 @@ test('Test group creation flow', async ({ page }) => {
       title: 'Test Group',
       color: 'blue',
       matchers: [],
-      options: { strict: true }
+      options: { strict: true, merge: true }
     }
   ])
 })

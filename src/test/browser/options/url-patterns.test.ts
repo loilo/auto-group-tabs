@@ -25,7 +25,7 @@ test.beforeEach(async ({ page }) => {
       title: 'Test Group',
       color: 'blue',
       matchers: [],
-      options: { strict: true }
+      options: { strict: true, merge: false }
     } as GroupConfigurationWithoutId
   ])
 

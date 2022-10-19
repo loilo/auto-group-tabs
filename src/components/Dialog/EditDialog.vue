@@ -10,8 +10,6 @@
       }"
     />
 
-    <h3 class="headline-margin subtitle-2">{{ msg.headlineAppearance }}</h3>
-
     <Textfield
       ref="titleField"
       class="group-title"
@@ -27,25 +25,50 @@
       @update:model-value="titleField.validate()"
     />
 
-    <h3 class="headline-margin subtitle-2">{{ msg.headlineBehavior }}</h3>
+    <mwc-button
+      class="toggle-advanced-button"
+      :icon="showAdvanced ? 'expand_less' : 'expand_more'"
+      trailingicon
+      @click="showAdvanced = !showAdvanced"
+    >
+      {{ msg.headlineAdvanced }}
+    </mwc-button>
 
-    <Card seamless>
-      <CardSection ghost tight collapse seamless class="radio-container">
-        <mwc-checkbox
-          id="edit-dialog-strict"
-          :checked="editStrict"
-          @change="editStrict = $event.target.checked"
-        />
-        <ToggleLabel for="edit-dialog-strict">
-          <LabelText>
-            {{ msg.checkboxStrict }}
-            <template #secondary>
-              {{ msg.checkboxStrictDescription }}
-            </template>
-          </LabelText>
-        </ToggleLabel>
-      </CardSection>
-    </Card>
+    <SlideVertical :duration="0.3">
+      <Card v-if="showAdvanced" seamless>
+        <CardSection ghost tight collapse seamless class="radio-container">
+          <mwc-checkbox
+            id="edit-dialog-strict"
+            :checked="editStrict"
+            @change="editStrict = $event.target.checked"
+          />
+          <ToggleLabel for="edit-dialog-strict">
+            <LabelText>
+              {{ msg.checkboxStrict }}
+              <template #secondary>
+                {{ msg.checkboxStrictDescription }}
+              </template>
+            </LabelText>
+          </ToggleLabel>
+        </CardSection>
+
+        <CardSection ghost tight collapse seamless class="radio-container">
+          <mwc-checkbox
+            id="edit-dialog-merge"
+            :checked="editMerge"
+            @change="editMerge = $event.target.checked"
+          />
+          <ToggleLabel for="edit-dialog-merge">
+            <LabelText>
+              {{ msg.checkboxMerge }}
+              <template #secondary>
+                {{ msg.checkboxMergeDescription }}
+              </template>
+            </LabelText>
+          </ToggleLabel>
+        </CardSection>
+      </Card>
+    </SlideVertical>
 
     <template v-slot:actionsBar>
       <mwc-button
@@ -78,6 +101,7 @@ import CardSection from '@/components/Card/CardSection.vue'
 import ColorMenu from '@/components/Form/ColorMenu.vue'
 import Textfield from '@/components/Form/Textfield.vue'
 import ToggleLabel from '@/components/Form/ToggleLabel.vue'
+import SlideVertical from '@/components/Util/SlideVertical.vue'
 import TabBar from '@/components/TabBar.vue'
 import LabelText from '@/components/LabelText.vue'
 import OverlayDialog from './OverlayDialog.vue'
@@ -100,8 +124,10 @@ const props = withDefaults(
   {
     title: '',
     deletable: false,
-    strict: false,
-    options: () => ({ strict: false })
+    options: () => ({
+      strict: false,
+      merge: false
+    })
   }
 )
 
@@ -119,9 +145,12 @@ const emit = defineEmits<{
 
 const groups = useGroupConfigurations()
 
+const showAdvanced = ref(false)
+
 const editTitle = ref(conflictManager.withoutMarker(props.title))
 const editColor = ref(props.color)
 const editStrict = ref(props.options.strict)
+const editMerge = ref(props.options.merge)
 
 const colorMenu = ref()
 const titleField = ref()
@@ -173,7 +202,10 @@ function save(event: KeyboardEvent) {
   if (!titleField.value.isValid()) return
 
   event.preventDefault()
-  emit('save', editTitle.value, editColor.value, { strict: editStrict.value })
+  emit('save', editTitle.value, editColor.value, {
+    strict: editStrict.value,
+    merge: editMerge.value
+  })
   emit('close')
 }
 
@@ -288,6 +320,10 @@ mwc-dialog {
   box-sizing: border-box;
   margin: 0 calc(-1 * var(--body-padding)) var(--body-padding);
   padding: 8px var(--body-padding) 0 !important;
+}
+
+.toggle-advanced-button {
+  margin-top: var(--body-padding);
 }
 
 .button-delete {

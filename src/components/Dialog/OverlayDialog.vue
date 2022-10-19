@@ -1,12 +1,20 @@
 <script lang="ts" setup>
 import { onMounted, onUnmounted } from 'vue'
+import { useDialog } from '@/stores'
+
+const dialog = useDialog()
 
 onMounted(() => {
+  dialog.counter++
   document.body.classList.add('no-scroll')
 })
 
 onUnmounted(() => {
-  document.body.classList.remove('no-scroll')
+  dialog.counter--
+
+  if (dialog.counter === 0) {
+    document.body.classList.remove('no-scroll')
+  }
 })
 </script>
 

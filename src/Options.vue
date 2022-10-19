@@ -218,7 +218,7 @@ function deleteGroup(group: GroupConfiguration) {
 function addGroup(
   title: string,
   color: chrome.tabGroups.ColorEnum,
-  { strict }: SaveOptions
+  { strict, merge }: SaveOptions
 ) {
   const id = crypto.randomUUID()
 
@@ -228,7 +228,8 @@ function addGroup(
     color: color,
     matchers: [],
     options: {
-      strict
+      strict,
+      merge
     }
   })
 

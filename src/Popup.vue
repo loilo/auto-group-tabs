@@ -134,7 +134,7 @@ async function createFromCurrentGroup(
       title,
       color,
       matchers: [],
-      options: { strict: false }
+      options: { strict: false, merge: false }
     }
   ])
 

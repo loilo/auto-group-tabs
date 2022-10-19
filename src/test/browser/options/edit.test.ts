@@ -25,7 +25,7 @@ test.beforeEach(async ({ page }) => {
       title: 'Test Group',
       color: 'blue',
       matchers: [],
-      options: { strict: true }
+      options: { strict: true, merge: true }
     } as GroupConfigurationWithoutId
   ])
 
@@ -69,8 +69,14 @@ test('Edit and save groups', async ({ page }) => {
   // Click the red radio label to select the color
   await dialogContainer.locator(`text=${msg.colorRed.message}`).click()
 
+  // Show advanced options
+  await dialogContainer.locator('.toggle-advanced-button').click()
+
   // Toggle strict mode off
   await dialogContainer.locator('#edit-dialog-strict').click()
+
+  // Toggle merge mode off
+  await dialogContainer.locator('#edit-dialog-merge').click()
 
   // Expect the preview to have updated
   expect(await previewLabel.textContent()).toBe('Edited Group')
@@ -78,7 +84,7 @@ test('Edit and save groups', async ({ page }) => {
     'rgb(217, 48, 36)'
   )
 
-  // Save the new group
+  // Save the group
   await dialogContainer.locator(`text=${msg.buttonSave.message}`).click()
 
   // Wait for the dialog container to be gone
@@ -99,7 +105,7 @@ test('Edit and save groups', async ({ page }) => {
       title: 'Edited Group',
       color: 'red',
       matchers: [],
-      options: { strict: false }
+      options: { strict: false, merge: false }
     }
   ])
 })
@@ -130,7 +136,7 @@ test('Delete Groups and undo deletion', async ({ page }) => {
       title: 'Test Group',
       color: 'blue',
       matchers: [],
-      options: { strict: true }
+      options: { strict: true, merge: true }
     }
   ])
 })
