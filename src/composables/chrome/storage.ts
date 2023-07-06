@@ -14,7 +14,8 @@ const storageHandles = {
 export type UseStorageOptions<T> = Partial<{
   storage: chrome.storage.AreaName
   throttle: number
-  mapper?: (value: any) => T
+  loadMapper?: (value: any) => T
+  saveMapper?: (value: T) => any
 }>
 
 /**
@@ -27,7 +28,12 @@ export type UseStorageOptions<T> = Partial<{
 export function useStorage<T = any>(
   key: string,
   fallback: T,
-  { storage = 'sync', throttle = 0, mapper }: UseStorageOptions<T> = {}
+  {
+    storage = 'sync',
+    throttle = 0,
+    loadMapper,
+    saveMapper
+  }: UseStorageOptions<T> = {}
 ): {
   loaded: Ref<boolean>
   data: Ref<T>
@@ -42,8 +48,8 @@ export function useStorage<T = any>(
     readStorage(key, storage).then(value => {
       loaded.value = true
 
-      if (typeof mapper === 'function') {
-        value = mapper(value)
+      if (typeof loadMapper === 'function') {
+        value = loadMapper(value)
       }
 
       if (typeof value !== 'undefined') {
@@ -60,8 +66,8 @@ export function useStorage<T = any>(
 
           changedFromStorage.value = true
 
-          if (typeof mapper === 'function') {
-            newValue = mapper(newValue)
+          if (typeof loadMapper === 'function') {
+            newValue = loadMapper(newValue)
           }
 
           data.value = newValue
@@ -72,7 +78,13 @@ export function useStorage<T = any>(
 
     const watcher = <U>(newValue: U) => {
       if (changedFromStorage.value) return
-      writeStorage(key, toRawDeep(newValue), storage)
+      newValue = toRawDeep(newValue)
+
+      if (typeof saveMapper === 'function') {
+        newValue = saveMapper(newValue as unknown as T)
+      }
+
+      writeStorage(key, newValue, storage)
     }
 
     if (throttle > 0) {

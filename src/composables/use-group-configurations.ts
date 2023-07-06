@@ -1,21 +1,35 @@
 import { useStorage } from './chrome'
 import { GroupConfiguration } from '@/util/types'
+import * as lzma from '@/util/lzma'
 
 /**
  * Get configured groups from storage
  */
 export function useGroupConfigurations() {
   return useStorage<GroupConfiguration[]>('groups', [], {
-    mapper(value) {
-      // In very early extension versions, groups were serialied before storing
-      if (typeof value === 'string') {
-        value = JSON.parse(value)
+    saveMapper(groups) {
+      // Since 0.0.19, groups are serialized and compressed to avoid storage size limits
+      return lzma.compressBase64(JSON.stringify(groups))
+    },
+    loadMapper(storedGroups) {
+      // In very early extension versions, groups were serialized as JSON before storing
+      if (typeof storedGroups === 'string' && /^[{[]/.test(storedGroups)) {
+        storedGroups = JSON.parse(storedGroups)
       }
 
-      if (!Array.isArray(value)) return []
+      // Since 0.0.19, groups are serialized and compressed to avoid storage size limits
+      if (typeof storedGroups === 'string') {
+        storedGroups = JSON.parse(lzma.decompressBase64(storedGroups))
+      }
+
+      // Before 0.0.19, groups were stored as an array of objects,
+      // serialization/deserialization was done by Chrome
+
+      // Skip if value is not an array
+      if (!Array.isArray(storedGroups)) return []
 
       // Group options have been added in v0.0.12, add them if missing
-      for (const group of value) {
+      for (const group of storedGroups) {
         if (!('options' in group)) {
           group.options = { strict: false, merge: false }
         }
@@ -25,7 +39,7 @@ export function useGroupConfigurations() {
         }
       }
 
-      return value
+      return storedGroups
     }
   })
 }
