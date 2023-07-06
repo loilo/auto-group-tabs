@@ -18,5 +18,6 @@ import CardSection from './CardSection.vue'
 
 .arrow-right {
   color: var(--dimmed-foreground);
+  flex-shrink: 0;
 }
 </style>
