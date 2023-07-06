@@ -11,6 +11,15 @@
           </template>
         </Text>
       </NavigationCardSection>
+      <NavigationCardSection @click="reloadRuntime()">
+        <Text>
+          Force-Reload Extension
+          <template #secondary>
+            Feel like the extension is stuck or rule changes are not applied
+            properly? Try this.
+          </template>
+        </Text>
+      </NavigationCardSection>
     </Card>
 
     <transition name="from-right">
@@ -34,6 +43,11 @@ const emit = defineEmits<{
 }>()
 
 const step = ref('base')
+
+function reloadRuntime() {
+  chrome.runtime.sendMessage('reload')
+  window.close()
+}
 
 function close() {
   emit('close')

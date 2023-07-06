@@ -580,6 +580,13 @@ chrome.runtime.onUpdateAvailable.addListener(() => {
   chrome.runtime.reload()
 })
 
+// Reload the runtime when manually requested
+chrome.runtime.onMessage.addListener(message => {
+  if (message === 'reload') {
+    chrome.runtime.reload()
+  }
+})
+
 when(groupConfigurations.loaded).then(async () => {
   // Wait for the extension state to initialize
   console.debug('Waiting for extension state to initialize...')
