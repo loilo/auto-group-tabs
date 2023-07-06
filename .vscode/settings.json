@@ -18,5 +18,6 @@
   "path-intellisense.extensionOnImport": false,
   "files.watcherExclude": {
     "**/extension/**": true
-  }
+  },
+  "typescript.tsdk": "node_modules/typescript/lib"
 }
