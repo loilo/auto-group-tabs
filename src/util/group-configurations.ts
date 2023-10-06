@@ -27,12 +27,17 @@ export async function saveGroupConfigurations(groups: GroupConfiguration[]) {
     group.title = titleWithoutConflictMarker
   }
 
+  // In browser environment (dev, testing), don't use compression
+  const shouldCompress = typeof chrome.storage !== 'undefined'
+
   // Since 0.0.19, groups are serialized and compressed to avoid storage size limits
   // There has been an oversight that led to this function being uncompressed,
   // this has been fixed in 0.0.20.
-  const compressedGroupsCopy = lzma.compressBase64(JSON.stringify(groupsCopy))
+  const saveableGroupsCopy = shouldCompress
+    ? lzma.compressBase64(JSON.stringify(groupsCopy))
+    : groupsCopy
 
-  return await writeStorage('groups', compressedGroupsCopy, 'sync')
+  return await writeStorage('groups', saveableGroupsCopy, 'sync')
 }
 
 /**

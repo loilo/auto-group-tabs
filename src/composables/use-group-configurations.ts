@@ -8,6 +8,9 @@ import * as lzma from '@/util/lzma'
 export function useGroupConfigurations() {
   return useStorage<GroupConfiguration[]>('groups', [], {
     saveMapper(groups) {
+      // In browser environment (dev, testing), don't use compression
+      if (typeof chrome.storage === 'undefined') return groups
+
       // Since 0.0.19, groups are serialized and compressed to avoid storage size limits
       return lzma.compressBase64(JSON.stringify(groups))
     },
