@@ -1,4 +1,5 @@
 import { toRawDeep } from '@/composables'
+import * as lzma from '@/util/lzma'
 import * as conflictManager from './conflict-manager'
 import { writeStorage } from './storage'
 import { GroupConfiguration } from './types'
@@ -26,7 +27,12 @@ export async function saveGroupConfigurations(groups: GroupConfiguration[]) {
     group.title = titleWithoutConflictMarker
   }
 
-  return await writeStorage('groups', groupsCopy, 'sync')
+  // Since 0.0.19, groups are serialized and compressed to avoid storage size limits
+  // There has been an oversight that led to this function being uncompressed,
+  // this has been fixed in 0.0.20.
+  const compressedGroupsCopy = lzma.compressBase64(JSON.stringify(groupsCopy))
+
+  return await writeStorage('groups', compressedGroupsCopy, 'sync')
 }
 
 /**
