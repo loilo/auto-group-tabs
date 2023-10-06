@@ -187,6 +187,14 @@
     "message": "Import and export grouping rules",
     "description": "Subtitle of the transfer configuration section"
   },
+  "settingsForceReloadTitle": {
+    "message": "Force-Reload Extension",
+    "description": "Title of the force reload section"
+  },
+  "settingsForceReloadSubtitle": {
+    "message": "Feel like the extension is stuck or rule changes are not applied properly? Try this.",
+    "description": "Subtitle of the force reload section"
+  },
   "settingsReassignTitle": {
     "message": "Neuzuweisung",
     "description": "Name of the reassign section"

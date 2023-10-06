@@ -13,10 +13,9 @@
       </NavigationCardSection>
       <NavigationCardSection @click="reloadRuntime()">
         <Text>
-          Force-Reload Extension
+          {{ msg.settingsForceReloadTitle }}
           <template #secondary>
-            Feel like the extension is stuck or rule changes are not applied
-            properly? Try this.
+            {{ msg.settingsForceReloadSubtitle }}
           </template>
         </Text>
       </NavigationCardSection>

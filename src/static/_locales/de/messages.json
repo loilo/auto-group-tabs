@@ -187,6 +187,14 @@
     "message": "Gruppierungsregeln importieren und exportieren",
     "description": "Subtitle of the transfer configuration section"
   },
+  "settingsForceReloadTitle": {
+    "message": "Erweiterung neu starten",
+    "description": "Title of the force reload section"
+  },
+  "settingsForceReloadSubtitle": {
+    "message": "Die Erweiterung scheint nicht zu reagieren oder neue Regeln nicht anzuwenden? Klicke hier.",
+    "description": "Subtitle of the force reload section"
+  },
   "suggestionTitle": {
     "message": "Vorschläge",
     "description": "Suggestions title for matcher patterns"
