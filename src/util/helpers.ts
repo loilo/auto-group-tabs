@@ -8,7 +8,7 @@ export const matcherPattern =
   '^(?:' +
   // First option: simple cases where just a valid scheme is enforced
     // URI Scheme
-    '(?<simpleScheme>[a-z][a-z0-9+.-]*)' +
+    '(?<simpleScheme>[a-z][a-z0-9+.\\-]*)' +
     
     // Exclude schemes that are reserved for complex cases
     '(?<!https?|ftp|\\*)' +
@@ -26,24 +26,32 @@ export const matcherPattern =
     // Possible schemes are http, https, ftp, and a literal asterisk *
     '(?:(?<scheme>https?|ftp|\\*)://)?' +
 
-    // Hostname
+    // Credentials & Origin
     '(?<host>' +
       // Literal asterisk
       '\\*' +
 
-      // Hostname pattern with optional port
-      '|(?:(?:[^@:/]+(?::[^@:/]+)?@)?(?:' +
-        // Asterisk as subdomain, followed by hostname
-        '\\*\\.[^/*:]+' +
-        '|' +
+      '|(?:' +
+        // Username
+        '(?:[^@:\\/]+(?::[^@:\\/]+)?@)?' +
+        
+        // Origin
+        '(?:' +
+          // Asterisk as subdomain, followed by hostname
+          '\\*\\.[^*:\\/]+' +
+          '|' +
 
-        // Hostname
-        '[^/:]+' +
-        '|' +
+          // Just a hostname
+          '[^:\\/]+' +
+          '|' +
 
-        // IPv6 address
-        '\\[[0-9a-f:]+\\]'+
-      '))(?::[0-9]+)?' +
+          // IPv6 address
+          '\\[[0-9a-f:]+\\]'+
+        ')' +
+      ')' +
+      
+      // Optional port
+      '(?::[0-9]+)?' +
     ')' +
 
     // Path
