@@ -57,7 +57,7 @@
 
 <script setup lang="ts">
 import { noop } from '@vueuse/shared'
-import destr from 'destr'
+import { destr } from 'destr'
 import date from 'php-date'
 import { inject, ref } from 'vue'
 

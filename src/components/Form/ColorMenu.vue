@@ -6,7 +6,7 @@
       :label="label"
     >
       <mwc-radio
-        :ref="el => { colorRefs[color].value = el as HTMLInputElement }"
+        :ref="(el: HTMLInputElement) => { colorRefs[color].value = el as HTMLInputElement }"
         :checked="color === modelValue"
         :style="{
           '--mdc-theme-secondary': `var(--group-${color})`,

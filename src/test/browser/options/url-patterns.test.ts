@@ -48,7 +48,7 @@ test('Add URL patterns via "add link" button and Enter key', async ({
   const urlPatternInput = page.locator('mwc-textfield.textfield')
   await expect(urlPatternInput).toHaveCount(1)
 
-  await urlPatternInput.type('example.com')
+  await urlPatternInput.pressSequentially('example.com')
 
   // Expect a new empty, focused input to appear after pressing enter
   await urlPatternInput.press('Enter')
@@ -113,7 +113,7 @@ test('Report error on invalid pattern and prevent from adding new ones', async (
   await expect(urlPatternInput).toHaveCount(1)
 
   // Insert an invalid pattern and press enter
-  await urlPatternInput.type(':')
+  await urlPatternInput.pressSequentially(':')
   await urlPatternInput.press('Enter')
 
   // Expect the input to be invalid and no other inputs to appear

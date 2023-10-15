@@ -23,7 +23,7 @@ import colorNames from './setup/color-names'
 import Options from './Options.vue'
 import Popup from './Popup.vue'
 
-import { RawTranslation } from './util/types'
+import { RawTranslation, Translation } from './util/types'
 import { isExtensionWorker } from './util/helpers'
 
 const language = /^de-?/.test(
@@ -39,7 +39,7 @@ async function main() {
   )
   const messages = Object.fromEntries(
     Object.entries(rawMessages).map(([key, { message }]) => [key, message])
-  )
+  ) as Translation
 
   const context = new URL(location.href).searchParams.get('context')
   let appComponent: any

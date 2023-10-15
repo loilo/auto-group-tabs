@@ -142,7 +142,7 @@ async function createFromCurrentGroup(
   selectedGroup.value = id
 }
 
-const scrollToGroup = useStorage('scrollToGroup', '', {
+const scrollToGroup = useStorage('scrollToGroup', '' as string, {
   storage: 'local'
 })
 

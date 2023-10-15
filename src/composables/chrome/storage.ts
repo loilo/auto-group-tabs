@@ -1,7 +1,8 @@
 import { tickResetRef, toRawDeep } from '@/composables'
 import { readStorage, watchStorage, writeStorage } from '@/util/storage'
 import { watchThrottled } from '@vueuse/core'
-import { ref, Ref, watch } from 'vue'
+import { JsonValue } from 'type-fest'
+import { ref, Ref, watch, WatchSource } from 'vue'
 import { ignoreChromeRuntimeEvents } from './util'
 
 const storageHandles = {
@@ -25,7 +26,7 @@ export type UseStorageOptions<T> = Partial<{
  * @param {object} options
  * @returns {object}
  */
-export function useStorage<T = any>(
+export function useStorage<T extends JsonValue = any>(
   key: string,
   fallback: T,
   {
@@ -76,7 +77,7 @@ export function useStorage<T = any>(
       )
     })
 
-    const watcher = <U>(newValue: U) => {
+    const watcher = <U extends JsonValue>(newValue: U) => {
       if (changedFromStorage.value) return
       newValue = toRawDeep(newValue)
 
@@ -90,7 +91,7 @@ export function useStorage<T = any>(
     if (throttle > 0) {
       watchThrottled(data, watcher as any, { deep: true, throttle })
     } else {
-      watch(data, watcher, { deep: true })
+      watch(data as unknown as WatchSource<T>, watcher, { deep: true })
     }
 
     storageHandle.set(key, { loaded, data })

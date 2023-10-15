@@ -64,7 +64,7 @@ test('Edit and save groups', async ({ page }) => {
   await page.keyboard.up(primaryKey)
 
   await groupNameInput.press('Backspace')
-  await groupNameInput.type('Edited Group')
+  await groupNameInput.pressSequentially('Edited Group')
 
   // Click the red radio label to select the color
   await dialogContainer.locator(`text=${msg.colorRed.message}`).click()

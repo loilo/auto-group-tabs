@@ -35,7 +35,7 @@ test('Test group creation flow', async ({ page }) => {
   expect(await groupNameInput.evaluate(getValue)).toBe('')
 
   // Fill in a name and pick a color
-  await groupNameInput.type('Test Group')
+  await groupNameInput.pressSequentially('Test Group')
 
   // Click the blue radio label to select the color
   await dialogContainer.locator(`text=${msg.colorBlue.message}`).click()
