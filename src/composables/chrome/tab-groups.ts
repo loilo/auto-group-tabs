@@ -44,7 +44,6 @@ function _useReadonlyChromeTabGroups() {
       })
 
       chrome.tabGroups.onUpdated.addListener(updatedTabGroup => {
-        console.log('UPDATE', updatedTabGroup)
         if (ignoreChromeRuntimeEvents.value) {
           return
         }

@@ -161,13 +161,11 @@ function showNewMatcher() {
 function returnFromMatcherInput(matcherIndex: number) {
   setTimeout(() => {
     if (matcherIndex === -1) {
-      console.log(1)
       showNewMatcher()
       nextTick(() => {
         newMatcher.value.focus()
       })
     } else if (matcherIndex < sortedMatcherRefs.value.length - 1) {
-      console.log(2)
       sortedMatcherRefs.value[matcherIndex + 1]?.focus()
     } else if (localMatchers.value[matcherIndex].value.length > 0) {
       showNewMatcher()
