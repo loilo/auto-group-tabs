@@ -28,10 +28,17 @@ const chromeState = useChromeState()
 const augmentedGroupConfigurations = computed(() =>
   groupConfigurations.data.value.map(group => ({
     ...group,
-    matchers: group.matchers.flatMap(matcher => {
+    matchers: group.matchers.flatMap(matcherObject => {
       try {
-        return generateMatcherRegex(matcher)
-      } catch {
+        // Use pattern and isRegex from the matcherObject
+        return generateMatcherRegex(matcherObject.pattern, matcherObject.isRegex)
+      } catch (e) {
+        // Log error if generateMatcherRegex itself throws for some unexpected reason
+        // though schema validation should catch invalid regex patterns.
+        console.error(
+          `Error generating regex for pattern: ${matcherObject.pattern} (isRegex: ${matcherObject.isRegex})`,
+          e
+        );
         return []
       }
     })

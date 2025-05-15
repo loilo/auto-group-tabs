@@ -65,7 +65,7 @@ test('Test group creation flow', async ({ page }) => {
   await expect(groupsList.locator('.group')).toHaveCount(1)
 
   // Input field for first URL pattern should appear
-  await expect(page.locator('.pattern-list-new mwc-textfield')).toHaveCount(1)
+  await expect(page.locator('.pattern-list-item .pattern-input mwc-textfield')).toHaveCount(1)
 
   // Ensure that groups have been persisted through refresh
   await page.reload()

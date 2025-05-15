@@ -330,5 +330,9 @@
   "popupAddCurrentGroup": {
     "message": "Create configuration for",
     "description": "Add tab group configuration button from a popup"
+  },
+  "regexToggleTooltip": {
+    "message": "Toggle to use Regular Expression. If off, uses Chrome Match Pattern",
+    "description": "Tooltip for the per-pattern regex toggle switch"
   }
 }

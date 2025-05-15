@@ -37,8 +37,8 @@ test('Add URL patterns via "add link" button and Enter key', async ({
   page
 }) => {
   // No inputs should be there initially
-  const urlPatternInputs = page.locator('mwc-textfield.textfield')
-  await expect(urlPatternInputs).toHaveCount(0)
+  const urlPatternInputs = page.locator('.pattern-list-item .pattern-input mwc-textfield')
+  await expect(urlPatternInputs).toHaveCount(1)
 
   // Find "add link" button and click it
   const addLinkButton = page.locator('text=add_link')
@@ -91,7 +91,7 @@ test('Add URL patterns via "add link" button and Enter key', async ({
       id: expect.any(String),
       title: 'Test Group',
       color: 'blue',
-      matchers: ['example.com'],
+      matchers: [{ pattern: 'example.com', isRegex: false }],
       options: { strict: true }
     }
   ])
@@ -101,8 +101,8 @@ test('Report error on invalid pattern and prevent from adding new ones', async (
   page
 }) => {
   // No inputs should be there initially
-  const urlPatternInputs = page.locator('mwc-textfield.textfield')
-  await expect(urlPatternInputs).toHaveCount(0)
+  const urlPatternInputs = page.locator('.pattern-list-item .pattern-input mwc-textfield')
+  await expect(urlPatternInputs).toHaveCount(1)
 
   // Find "add link" button and click it
   const addLinkButton = page.locator('text=add_link')

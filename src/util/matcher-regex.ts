@@ -3,7 +3,17 @@ import { matcherPattern, sanitizeRegex } from '@/util/helpers'
 /**
  * Generate a regular expression from a matcher string
  */
-export function generateMatcherRegex(matcher: string) {
+export function generateMatcherRegex(matcher: string, isRegexMode = false) {
+  if (isRegexMode) {
+    try {
+      return new RegExp(matcher)
+    } catch (e) {
+      console.error(`Invalid regex pattern: ${matcher}`, e)
+      // Return a regex that never matches if the provided regex is invalid
+      return new RegExp('$.' + Math.random()) // Ensure it doesn't match anything by using a random suffix
+    }
+  }
+
   /**
    * Replace asterisks in a regex string
    */
