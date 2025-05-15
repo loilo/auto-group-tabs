@@ -127,6 +127,8 @@ body {
   -moz-osx-font-smoothing: grayscale;
 
   box-sizing: border-box;
+  width: 600px;
+  min-width: 600px;
   height: var(--body-height, auto);
   min-height: max(350px, 100%);
   margin: 0;
