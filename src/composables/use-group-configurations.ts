@@ -32,6 +32,7 @@ export function useGroupConfigurations() {
       if (!Array.isArray(storedGroups)) return []
 
       // Group options have been added in v0.0.12, add them if missing
+      // Matcher format changed from string[] to MatcherObject[]
       for (const group of storedGroups) {
         if (!('options' in group)) {
           group.options = { strict: false, merge: false }
@@ -39,6 +40,20 @@ export function useGroupConfigurations() {
 
         if (!('merge' in group.options)) {
           group.options.merge = false
+        }
+
+        // Transform string matchers to MatcherObject for backward compatibility
+        if (group.matchers && Array.isArray(group.matchers)) {
+          // @ts-expect-error group.matchers could be string[] or MatcherObject[]
+          group.matchers = group.matchers.map(matcher => {
+            if (typeof matcher === 'string') {
+              return { pattern: matcher, isRegex: false };
+            }
+            // If it's already an object, ensure isRegex defaults to false if missing
+            // This is handled by MatcherObjectSchema, but being explicit here doesn't hurt
+            // and handles cases where an object might be malformed from an even older version.
+            return { ...{ isRegex: false }, ...matcher };
+          });
         }
       }
 

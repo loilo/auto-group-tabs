@@ -21,10 +21,10 @@ export const GroupConfigurationSchema = z.object({
   color: z.enum(colors),
   options: SaveOptionsSchema,
   matchers: z
-    .array(MatcherObjectSchema) // Matchers are now an array of MatcherObjectSchema
+    .array(z.union([MatcherObjectSchema, z.string()])) // Allow matchers to be string or MatcherObject
     .refine(
       matchers => {
-        const patternStrings = matchers.map(m => m.pattern);
+        const patternStrings = matchers.map(m => typeof m === 'string' ? m : m.pattern);
         return new Set(patternStrings).size === patternStrings.length;
       },
       'Duplicate URL Patterns are not allowed'
@@ -32,7 +32,7 @@ export const GroupConfigurationSchema = z.object({
 })
 .superRefine((data, ctx) => {
   data.matchers.forEach((matcher, index) => {
-    if (matcher.isRegex) {
+    if (typeof matcher === 'object' && matcher.isRegex) {
       try {
         new RegExp(matcher.pattern); // Try to compile the regex
       } catch (e) {
@@ -42,12 +42,20 @@ export const GroupConfigurationSchema = z.object({
           path: ['matchers', index, 'pattern'] // Path to the specific pattern string
         });
       }
-    } else {
+    } else if (typeof matcher === 'object' && !matcher.isRegex) {
       if (!matcherPatternRegex.test(matcher.pattern)) {
         ctx.addIssue({
           code: z.ZodIssueCode.custom,
           message: 'Invalid URL Pattern (must be a valid glob-like pattern)',
           path: ['matchers', index, 'pattern'] // Path to the specific pattern string
+        });
+      }
+    } else if (typeof matcher === 'string') { // Also validate strings
+      if (!matcherPatternRegex.test(matcher)) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: 'Invalid URL Pattern (must be a valid glob-like pattern)',
+          path: ['matchers', index] // Path to the specific string matcher
         });
       }
     }
