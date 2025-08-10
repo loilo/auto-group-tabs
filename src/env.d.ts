@@ -3,7 +3,7 @@
 import type { DefineComponent } from 'vue'
 import { Translation } from './util/types'
 
-declare module 'vue' {
+declare module '@vue/runtime-core' {
   interface ComponentCustomProperties {
     msg: Translation
     colorNames: Record<chrome.tabGroups.ColorEnum, string>
