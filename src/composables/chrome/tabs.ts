@@ -4,7 +4,7 @@ import { ignoreChromeRuntimeEvents } from './util'
 import { useReadonlyChromeWindows } from './windows'
 
 export type TabUpdate = {
-  changes: chrome.tabs.TabChangeInfo
+  changes: chrome.tabs.OnUpdatedInfo
   tab: chrome.tabs.Tab
   oldTab: chrome.tabs.Tab | undefined
 }

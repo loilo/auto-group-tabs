@@ -1,4 +1,4 @@
-import { expect, it } from 'vitest'
+import { expect, describe, it } from 'vitest'
 import { generateMatcherRegex } from '@/util/matcher-regex'
 
 it('handles no-wildcard domain pattern', () => {
@@ -66,7 +66,7 @@ it('handles scheme wildcard', () => {
   expect(regex.test('https://invalid.com/')).toBe(false)
 })
 
-it('handles host wildcards', () => {
+describe('handles host wildcards', () => {
   it('subdomain wildcard', () => {
     const regex = generateMatcherRegex('*.example.com')
 

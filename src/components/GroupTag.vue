@@ -6,7 +6,7 @@ import { Translation } from '@/util/types'
 const props = withDefaults(
   defineProps<{
     title?: string
-    color: chrome.tabGroups.ColorEnum
+    color: `${chrome.tabGroups.Color}`
     dense?: boolean
   }>(),
   {

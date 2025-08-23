@@ -27,7 +27,7 @@ const colorRefs = Object.fromEntries(
 )
 
 const props = defineProps<{
-  modelValue: chrome.tabGroups.ColorEnum
+  modelValue: `${chrome.tabGroups.Color}`
 }>()
 
 const emit = defineEmits<{

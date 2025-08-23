@@ -48,7 +48,7 @@ import PatternList from './PatternList.vue'
 const props = defineProps<{
   groupId?: string
   title: string
-  color: chrome.tabGroups.ColorEnum
+  color: chrome.tabGroups.Color
   options: SaveOptions
   matchers: string[]
   sortMode?: boolean
@@ -56,7 +56,7 @@ const props = defineProps<{
 
 const emit = defineEmits<{
   (e: 'update:title', title: string): void
-  (e: 'update:color', color: chrome.tabGroups.ColorEnum): void
+  (e: 'update:color', color: `${chrome.tabGroups.Color}`): void
   (e: 'update:options', options: SaveOptions): void
   (e: 'update:matchers', matchers: string[]): void
   (e: 'delete'): void

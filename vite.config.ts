@@ -1,15 +1,18 @@
 // Configuration for bundling the options page
 
-import { resolve } from 'path'
+import { resolve } from 'node:path'
 import { defineConfig } from 'vitest/config'
 import vue from '@vitejs/plugin-vue'
+import { viteStaticCopy } from 'vite-plugin-static-copy'
+
+const __dirname = new URL('.', import.meta.url).pathname
 
 // See https://vitejs.dev/config/
 export default defineConfig({
   resolve: {
     alias: {
       // Ensure that all parties import the exact same Vue build
-      vue: require.resolve('vue/dist/vue.runtime.esm-bundler.js'),
+      vue: import.meta.resolve('vue/dist/vue.runtime.esm-bundler.js'),
       '@': resolve(__dirname, 'src')
     }
   },
@@ -20,8 +23,25 @@ export default defineConfig({
           isCustomElement: tag => tag === 'focus-trap' || tag.startsWith('mwc-')
         }
       }
+    }),
+    viteStaticCopy({
+      targets: [
+        {
+          src: 'locale',
+          dest: '.',
+          rename: '_locales'
+        }
+      ]
     })
   ],
+  css: {
+    preprocessorOptions: {
+      scss: {
+        // Prevent deprecation warnings for order of declarations
+        silenceDeprecations: ['mixed-decls']
+      }
+    }
+  },
 
   // Code that is copied directly to the extension directory
   publicDir: 'static',

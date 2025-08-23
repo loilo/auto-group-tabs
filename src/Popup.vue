@@ -28,7 +28,7 @@ function cancelAddDialog() {
 }
 async function saveAddDialog(
   title: string,
-  color: chrome.tabGroups.ColorEnum,
+  color: `${chrome.tabGroups.Color}`,
   options: SaveOptions
 ) {
   const id = crypto.randomUUID()
@@ -121,7 +121,7 @@ function editGroup(id: string) {
 
 async function createFromCurrentGroup(
   title: string,
-  color: chrome.tabGroups.ColorEnum,
+  color: chrome.tabGroups.Color,
   tabs: chrome.tabs.Tab[]
 ) {
   const id = crypto.randomUUID()

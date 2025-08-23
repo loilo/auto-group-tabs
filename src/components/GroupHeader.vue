@@ -54,7 +54,7 @@ import GroupTag from './GroupTag.vue'
 const props = defineProps<{
   groupId?: string
   title: string
-  color: chrome.tabGroups.ColorEnum
+  color: chrome.tabGroups.Color
   options: SaveOptions
   editable?: boolean
   sortMode?: boolean
@@ -62,7 +62,7 @@ const props = defineProps<{
 
 const emit = defineEmits<{
   (e: 'update:title', title: string): void
-  (e: 'update:color', color: chrome.tabGroups.ColorEnum): void
+  (e: 'update:color', color: `${chrome.tabGroups.Color}`): void
   (e: 'update:options', options: SaveOptions): void
   (e: 'delete'): void
   (e: 'new-matcher'): void
@@ -82,7 +82,7 @@ function edit() {
 
 function save(
   title: string,
-  color: chrome.tabGroups.ColorEnum,
+  color: `${chrome.tabGroups.Color}`,
   options: SaveOptions
 ) {
   emit('update:title', title)

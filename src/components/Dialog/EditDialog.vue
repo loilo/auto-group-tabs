@@ -117,7 +117,7 @@ const props = withDefaults(
   defineProps<{
     id?: string
     title?: string
-    color: chrome.tabGroups.ColorEnum
+    color: `${chrome.tabGroups.Color}`
     options?: SaveOptions
     deletable?: boolean
   }>(),
@@ -135,7 +135,7 @@ const emit = defineEmits<{
   (
     e: 'save',
     title: string,
-    color: chrome.tabGroups.ColorEnum,
+    color: `${chrome.tabGroups.Color}`,
     options: SaveOptions
   ): void
   (e: 'delete'): void

@@ -89,7 +89,6 @@ function onChange(event: Event) {
 
 function isValid() {
   return textfieldRef.value?.checkValidity()
-  textfieldRef.value!.validity
 }
 
 function blur() {

@@ -1,0 +1,12 @@
+{
+  "$schema": "./node_modules/oxlint/configuration_schema.json",
+  "plugins": ["import", "typescript", "unicorn", "vue"],
+  "env": {
+    "browser": true
+  },
+  "globals": {
+    "chrome": "readonly"
+  },
+  "settings": {},
+  "ignorePatterns": ["**/lzma.js"]
+}

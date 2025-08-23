@@ -35,7 +35,7 @@ window.document.documentElement.setAttribute('lang', language)
 
 async function main() {
   const rawMessages: RawTranslation = await import(
-    `./static/_locales/${language}/messages.json`
+    `./locale/${language}/messages.json`
   )
   const messages = Object.fromEntries(
     Object.entries(rawMessages).map(([key, { message }]) => [key, message])

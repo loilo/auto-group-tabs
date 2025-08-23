@@ -48,12 +48,12 @@ const tabGroupConfigured = computed(() =>
   groups.data.value.find(tabGroupPredicate.value)
 )
 
-const options = useSyncedCopy(() => [
-  ...groups.data.value.map(group => ({
+const options = useSyncedCopy(() =>
+  groups.data.value.map(group => ({
     value: group.id,
     label: group.title
   }))
-])
+)
 
 const value = useSyncedCopy(() => props.modelValue)
 

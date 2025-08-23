@@ -1,7 +1,9 @@
-const { createWriteStream } = require('fs')
-const { resolve } = require('path')
-const archiver = require('archiver')
+import { createWriteStream } from 'node:fs'
+import { resolve } from 'node:path'
 
+import archiver from 'archiver'
+
+const __dirname = new URL('.', import.meta.url).pathname
 const output = createWriteStream(resolve(__dirname, 'auto-group-tabs.zip'))
 const archive = archiver('zip')
 

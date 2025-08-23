@@ -1,5 +1,5 @@
 import { expect, test } from '@playwright/test'
-import msg from '../../../static/_locales/en/messages.json'
+import msg from '@/locale/en/messages.json' assert { type: 'json' }
 import {
   getGroups,
   getValue,

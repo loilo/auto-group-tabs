@@ -7,7 +7,7 @@ export type GroupConfiguration = z.infer<
 >
 
 // Use JSON file as typings for messages
-import type Messages from '@/static/_locales/en/messages.json'
+import type Messages from '@/locale/en/messages.json'
 type MessageKey = keyof typeof Messages
 
 export type RawTranslation = {
@@ -20,3 +20,5 @@ export type RawTranslation = {
 export type Translation = {
   [P in MessageKey]: string
 }
+
+export type NonEmptyArray<T> = [T, ...T[]]

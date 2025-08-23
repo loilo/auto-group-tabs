@@ -35,7 +35,7 @@ const emit = defineEmits<{
   (
     e: 'createGroup',
     title: string,
-    color: chrome.tabGroups.ColorEnum,
+    color: chrome.tabGroups.Color,
     tabs: chrome.tabs.Tab[]
   ): void
   (e: 'editGroup', id: string): void

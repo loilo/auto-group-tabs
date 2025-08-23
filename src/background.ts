@@ -14,7 +14,7 @@ import {
 } from '@/util/group-configurations'
 import { GroupCreationTracker } from '@/util/group-creation-tracker'
 import { generateMatcherRegex } from '@/util/matcher-regex'
-import { GroupConfiguration } from '@/util/types'
+import { GroupConfiguration, NonEmptyArray } from '@/util/types'
 import { when } from '@/util/when'
 
 ignoreChromeRuntimeEvents.value = true
@@ -159,7 +159,9 @@ async function assignTabsToGroup(
   // Assign the tabs to the proper tab group
   // If the group does not exist, it is created in the process
   const attemptGroupAssignment = async ({ waitable = true } = {}) => {
-    const tabIds = tabs.flatMap(tab => tab.id ?? [])
+    const uncheckedTabIds = tabs.flatMap(tab => tab.id ?? [])
+    if (uncheckedTabIds.length === 0) return
+    const tabIds = uncheckedTabIds as NonEmptyArray<number>
 
     // We need to query the current tab state because they
     // may have been dragged to a different window
@@ -474,8 +476,14 @@ watch(
         const tabsToUngroup = chromeState.tabs.items.value.filter(
           tab => tab.groupId === groupToDelete.id
         )
+        const uncheckedTabIdsToUngroup = tabsToUngroup.flatMap(
+          tab => tab.id ?? []
+        )
+        if (uncheckedTabIdsToUngroup.length === 0) continue
+        const tabIdsToUngroup =
+          uncheckedTabIdsToUngroup as NonEmptyArray<number>
 
-        chrome.tabs.ungroup(tabsToUngroup.flatMap(tab => tab.id ?? []))
+        chrome.tabs.ungroup(tabIdsToUngroup)
       }
     }
 

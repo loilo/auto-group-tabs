@@ -4,3 +4,5 @@ node_modules
 auto-group-tabs.zip
 /extension
 playwright-report
+/test-results
+.wireit

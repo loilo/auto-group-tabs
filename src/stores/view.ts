@@ -1,9 +1,9 @@
-import { ComponentInternalInstance, computed, ref } from 'vue'
+import { ComponentInternalInstance, computed, shallowRef } from 'vue'
 import { defineStore } from 'pinia'
 import { useEventBus } from '@vueuse/core'
 
 function getEditStore() {
-  const editViews = ref(new Set<ComponentInternalInstance>())
+  const editViews = shallowRef(new Set<ComponentInternalInstance>())
 
   function register(component: ComponentInternalInstance) {
     editViews.value.add(component)
