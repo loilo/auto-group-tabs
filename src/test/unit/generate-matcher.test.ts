@@ -79,17 +79,16 @@ it('handles host wildcards', () => {
     expect(regex.test('https://invalid.com/')).toBe(false)
   })
 
-  it('arbitrary host wildcard', () => {
-    const regex = generateMatcherRegex('ex*.com')
+  it('domain wildcard', () => {
+    const regex = generateMatcherRegex('*.com')
 
     expect(regex.test('http://example.com/')).toBe(true)
     expect(regex.test('https://example.com/')).toBe(true)
-    expect(regex.test('https://exodus.com/')).toBe(true)
     expect(regex.test('https://example.com/with/path/')).toBe(true)
 
     expect(regex.test('ftp://example.com/')).toBe(false)
-    expect(regex.test('http://invalid.com/')).toBe(false)
-    expect(regex.test('https://invalid.com/')).toBe(false)
+    expect(regex.test('http://example.de/')).toBe(false)
+    expect(regex.test('https://example.de/')).toBe(false)
   })
 })
 
