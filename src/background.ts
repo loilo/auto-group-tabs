@@ -5,12 +5,12 @@ import {
   tickResetRef,
   useGroupConfigurations,
   ignoreChromeRuntimeEvents,
-  useChromeState
+  useChromeState,
 } from '@/composables'
 import * as conflictManager from '@/util/conflict-manager'
 import {
   saveGroupConfigurations,
-  createGroupConfigurationMatcher
+  createGroupConfigurationMatcher,
 } from '@/util/group-configurations'
 import { GroupCreationTracker } from '@/util/group-creation-tracker'
 import { generateMatcherRegex } from '@/util/matcher-regex'
@@ -34,8 +34,8 @@ const augmentedGroupConfigurations = computed(() =>
       } catch {
         return []
       }
-    })
-  }))
+    }),
+  })),
 )
 
 const chromeTabsByGroupConfiguration = computed(() => {
@@ -78,8 +78,8 @@ const chromeTabsByWindowIdAndGroupConfiguration = computed(() =>
       }
 
       return { windowId: Number(windowId), tabsByGroups }
-    }
-  )
+    },
+  ),
 )
 
 Object.assign(self, { chromeState })
@@ -118,7 +118,7 @@ const groupCreationTracker = new GroupCreationTracker()
 
 async function assignTabsToGroup(
   tabs: chrome.tabs.Tab[],
-  group: GroupConfiguration
+  group: GroupConfiguration,
 ) {
   if (tabs.length === 0) return
 
@@ -136,10 +136,10 @@ async function assignTabsToGroup(
   let shouldMerge = false
   if (group.options.merge) {
     const sourceWindow = chromeState.windows.items.value.find(
-      window => window.id === windowId
+      window => window.id === windowId,
     )
     const targetWindow = chromeState.windows.items.value.find(
-      window => window.id === targetTabGroup?.windowId
+      window => window.id === targetTabGroup?.windowId,
     )
     const canMerge = sourceWindow?.incognito === targetWindow?.incognito
     shouldMerge = canMerge
@@ -153,7 +153,7 @@ async function assignTabsToGroup(
     tabs.length,
     tabGroupId,
     group.title,
-    group.color
+    group.color,
   )
 
   // Assign the tabs to the proper tab group
@@ -176,7 +176,7 @@ async function assignTabsToGroup(
       if (waitable && groupCreationTracker.isCreating(windowId, group)) {
         tabGroupId = await groupCreationTracker.getCreationPromise(
           windowId,
-          group
+          group,
         )
       }
 
@@ -184,20 +184,20 @@ async function assignTabsToGroup(
         console.debug('Attempt assignment to new group in window %o', windowId)
         const tabCreationPromise = chrome.tabs.group({
           tabIds,
-          createProperties: { windowId }
+          createProperties: { windowId },
         })
 
         groupCreationTracker.queueGroupCreation(
           windowId,
           group,
-          tabCreationPromise
+          tabCreationPromise,
         )
 
         const newGroupId = await tabCreationPromise
 
         await chrome.tabGroups.update(newGroupId, {
           title: group.title,
-          color: group.color
+          color: group.color,
         })
       } else {
         // Change focus if tab has moved to another window
@@ -211,20 +211,20 @@ async function assignTabsToGroup(
         console.debug('Attempt assignment to existing group %o', tabGroupId)
         await chrome.tabs.group({
           tabIds,
-          groupId: tabGroupId
+          groupId: tabGroupId,
         })
 
         if (currentTabId && tabIds.includes(currentTabId)) {
           const targetWindowId = chromeState.tabGroups.items.value.find(
-            tabGroup => tabGroup.id === tabGroupId
+            tabGroup => tabGroup.id === tabGroupId,
           )?.windowId
 
           if (targetWindowId && currentWindowId !== targetWindowId) {
             chrome.windows.update(targetWindowId, {
-              focused: true
+              focused: true,
             })
             chrome.tabs.update(currentTabId, {
-              active: true
+              active: true,
             })
           }
         }
@@ -246,7 +246,7 @@ async function assignTabsToGroup(
         tabIds.forEach(tabId => draggingTabs.add(tabId))
 
         console.debug(
-          'Tab is being dragged, cannot assign it to a group, poll for dragging to be done...'
+          'Tab is being dragged, cannot assign it to a group, poll for dragging to be done...',
         )
         setTimeout(() => {
           const result = attemptGroupAssignment({ waitable: false })
@@ -259,7 +259,7 @@ async function assignTabsToGroup(
 
               // This error should never surface, it's purely a signal for the group creation tracker
               throw new Error('Tab group assignment failed')
-            })
+            }),
           )
         }, 50)
       } else {
@@ -275,7 +275,7 @@ async function ungroupAppropriateTabs(tabs: chrome.tabs.Tab[]) {
   for (const tab of tabs) {
     if (tab.groupId !== chrome.tabGroups.TAB_GROUP_ID_NONE) {
       const assignedGroup = chromeState.tabGroups.items.value.find(
-        tabGroup => tabGroup.id === tab.groupId
+        tabGroup => tabGroup.id === tab.groupId,
       )
       if (!assignedGroup) continue
 
@@ -290,7 +290,7 @@ async function ungroupAppropriateTabs(tabs: chrome.tabs.Tab[]) {
               tab.id,
               tab.groupId,
               groupConfiguration.title,
-              groupConfiguration.color
+              groupConfiguration.color,
             )
 
             await chrome.tabs.ungroup(tab.id!)
@@ -305,7 +305,7 @@ async function groupAllAppropriateTabs() {
   const assignedTabIds = new Set<number>()
 
   for (const {
-    tabsByGroups
+    tabsByGroups,
   } of chromeTabsByWindowIdAndGroupConfiguration.value) {
     for (const [group, tabs] of tabsByGroups) {
       for (const tab of tabs) {
@@ -334,7 +334,7 @@ const stopWatchingGroupConfigurationsLoaded = watch(
       stopWatchingGroupConfigurationsLoaded()
       justLoadedGroupConfigurations.value = true
     }
-  }
+  },
 )
 
 const programmaticallyUpdatingTabGroups = ref(false)
@@ -353,25 +353,25 @@ watch(
       return
 
     const addedGroupConfigurations = newGroups.filter(
-      ({ id }) => !oldGroups!.some(oldGroup => oldGroup.id === id)
+      ({ id }) => !oldGroups!.some(oldGroup => oldGroup.id === id),
     )
 
     const deletedGroupConfigurations = oldGroups!.filter(
-      ({ id }) => !newGroups.some(newGroup => newGroup.id === id)
+      ({ id }) => !newGroups.some(newGroup => newGroup.id === id),
     )
 
     // Superficially changed = just title and/or color changed
     const superficiallyChangedGroupConfigurations = newGroups.filter(
       newGroup => {
         const oldGroup = oldGroups!.find(
-          oldGroup => oldGroup.id === newGroup.id
+          oldGroup => oldGroup.id === newGroup.id,
         )
         if (!oldGroup) return false
 
         return (
           oldGroup.title !== newGroup.title || oldGroup.color !== newGroup.color
         )
-      }
+      },
     )
 
     const deeplyChangedGroupConfigurations = newGroups.filter(newGroup => {
@@ -410,7 +410,7 @@ watch(
     if (superficiallyChangedGroupConfigurations.length > 0) {
       console.debug(
         'Superficially changed tab group configurations:',
-        superficiallyChangedGroupConfigurations
+        superficiallyChangedGroupConfigurations,
       )
 
       // Update superficially changed groups
@@ -419,7 +419,7 @@ watch(
           continue
 
         const oldGroup = oldGroups!.find(
-          oldGroup => oldGroup.id === newGroup.id
+          oldGroup => oldGroup.id === newGroup.id,
         )!
 
         programmaticallyUpdatingTabGroups.value = true
@@ -431,7 +431,7 @@ watch(
             // Wait until updated
             await chrome.tabGroups.update(tabGroup.id, {
               title: newGroup.title,
-              color: newGroup.color
+              color: newGroup.color,
             })
 
             // Wait until reflected in state
@@ -440,8 +440,8 @@ watch(
                 stateTabGroup =>
                   stateTabGroup.id === tabGroup.id &&
                   stateTabGroup.title === newGroup.title &&
-                  stateTabGroup.color === newGroup.color
-              )
+                  stateTabGroup.color === newGroup.color,
+              ),
             )
           }
         }
@@ -452,32 +452,32 @@ watch(
     if (deeplyChangedGroupConfigurations.length > 0) {
       console.debug(
         'Deeply changed tab group configurations:',
-        deeplyChangedGroupConfigurations
+        deeplyChangedGroupConfigurations,
       )
     }
 
     if (deletedGroupConfigurations.length > 0) {
       console.debug(
         'Deleted tab group configurations:',
-        deletedGroupConfigurations
+        deletedGroupConfigurations,
       )
       const groupsToDelete = chromeState.tabGroups.items.value.filter(
         tabGroup =>
           deletedGroupConfigurations.some(
             groupConfiguration =>
               groupConfiguration.title === tabGroup.title &&
-              groupConfiguration.color === tabGroup.color
-          )
+              groupConfiguration.color === tabGroup.color,
+          ),
       )
 
       console.debug('Tab groups to delete: %o', groupsToDelete)
 
       for (const groupToDelete of groupsToDelete) {
         const tabsToUngroup = chromeState.tabs.items.value.filter(
-          tab => tab.groupId === groupToDelete.id
+          tab => tab.groupId === groupToDelete.id,
         )
         const uncheckedTabIdsToUngroup = tabsToUngroup.flatMap(
-          tab => tab.id ?? []
+          tab => tab.id ?? [],
         )
         if (uncheckedTabIdsToUngroup.length === 0) continue
         const tabIdsToUngroup =
@@ -495,14 +495,14 @@ watch(
       await groupAllAppropriateTabs()
     }
   },
-  { immediate: true }
+  { immediate: true },
 )
 
 const tabGroupsHistory = useRefHistory(chromeState.tabGroups.items, {
-  capacity: 2
+  capacity: 2,
 })
 const removedTabGroups = useRefHistory(chromeState.tabGroups.lastRemoved, {
-  capacity: 10
+  capacity: 10,
 })
 
 // When manually updating a group name/color, sync that back to the configuration
@@ -511,7 +511,7 @@ watch(chromeState.tabGroups.lastUpdated, async tabGroup => {
   if (programmaticallyUpdatingTabGroups.value) return
 
   const oldTabGroup = tabGroupsHistory.history.value[0].snapshot.find(
-    stateTabGroup => stateTabGroup.id === tabGroup!.id
+    stateTabGroup => stateTabGroup.id === tabGroup!.id,
   )
   if (!oldTabGroup) return
   if (
@@ -525,7 +525,7 @@ watch(chromeState.tabGroups.lastUpdated, async tabGroup => {
 
   if (groupConfigurations.data.value.some(matchesOldGroup)) {
     const groupsCopy: GroupConfiguration[] = JSON.parse(
-      JSON.stringify(groupConfigurations.data.value)
+      JSON.stringify(groupConfigurations.data.value),
     )
 
     const conflictingItem = groupsCopy.find(matchesNewGroup)
@@ -563,12 +563,12 @@ watch(chromeState.tabGroups.lastUpdated, async tabGroup => {
         chromeState.tabGroups.lastUpdated,
         updatedTabGroup =>
           updatedTabGroup!.id === tabGroup.id &&
-          updatedTabGroup!.title === unconflictingTitle
+          updatedTabGroup!.title === unconflictingTitle,
       )
 
       // Revert the edited tab group's title
       await chrome.tabGroups.update(tabGroup.id, {
-        title: tabGroup.title
+        title: tabGroup.title,
       })
 
       // Wait for the reverted title to be reflected in the extension state
@@ -576,7 +576,7 @@ watch(chromeState.tabGroups.lastUpdated, async tabGroup => {
         chromeState.tabGroups.lastUpdated,
         updatedTabGroup =>
           updatedTabGroup!.id === tabGroup.id &&
-          updatedTabGroup!.title === tabGroup.title
+          updatedTabGroup!.title === tabGroup.title,
       )
       programmaticallyUpdatingTabGroups.value = false
     }
@@ -601,12 +601,12 @@ when(groupConfigurations.loaded).then(async () => {
   await when(chromeState.tabs.loaded)
 
   console.debug(
-    'Extension state initialized, grouping all appropriate tabs now...'
+    'Extension state initialized, grouping all appropriate tabs now...',
   )
   await groupAllAppropriateTabs()
 
   console.debug(
-    'Initial grouping done, begin listening to chrome runtime events...'
+    'Initial grouping done, begin listening to chrome runtime events...',
   )
   ignoreChromeRuntimeEvents.value = false
 
@@ -624,7 +624,7 @@ when(groupConfigurations.loaded).then(async () => {
         'Removed tab %o (%o) from tab group %o. Looking up the group now...',
         update.tab.title,
         update.tab.id,
-        update.oldTab?.groupId
+        update.oldTab?.groupId,
       )
 
       try {
@@ -632,11 +632,11 @@ when(groupConfigurations.loaded).then(async () => {
         console.debug('Group found, it still exists.')
       } catch {
         console.debug(
-          'Group of removed tab no longer found. Waiting for extension state to reflect the removal...'
+          'Group of removed tab no longer found. Waiting for extension state to reflect the removal...',
         )
 
         await when(removedTabGroups.history, history =>
-          history.some(item => item.snapshot?.id === update.oldTab?.groupId)
+          history.some(item => item.snapshot?.id === update.oldTab?.groupId),
         )
 
         console.debug('Reflected tab group removal in extension state')
@@ -650,7 +650,7 @@ when(groupConfigurations.loaded).then(async () => {
       'Reassigning tab %o (%o) due to change %o',
       update.tab.title,
       update.tab.id,
-      update.changes
+      update.changes,
     )
 
     // Fetch current data for tab instead of reusing update.tab

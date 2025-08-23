@@ -12,14 +12,14 @@ function b64ToUint6(nChr: number) {
   return nChr > 64 && nChr < 91
     ? nChr - 65
     : nChr > 96 && nChr < 123
-    ? nChr - 71
-    : nChr > 47 && nChr < 58
-    ? nChr + 4
-    : nChr === 43
-    ? 62
-    : nChr === 47
-    ? 63
-    : 0
+      ? nChr - 71
+      : nChr > 47 && nChr < 58
+        ? nChr + 4
+        : nChr === 43
+          ? 62
+          : nChr === 47
+            ? 63
+            : 0
 }
 
 export function decodeToArray(base64string: string, blockSize: number) {
@@ -52,14 +52,14 @@ function uint6ToB64(nUint6: number) {
   return nUint6 < 26
     ? nUint6 + 65
     : nUint6 < 52
-    ? nUint6 + 71
-    : nUint6 < 62
-    ? nUint6 - 4
-    : nUint6 === 62
-    ? 43
-    : nUint6 === 63
-    ? 47
-    : 65
+      ? nUint6 + 71
+      : nUint6 < 62
+        ? nUint6 - 4
+        : nUint6 === 62
+          ? 43
+          : nUint6 === 63
+            ? 47
+            : 65
 }
 
 export function encodeFromArray(bytes: Uint8Array) {
@@ -82,7 +82,7 @@ export function encodeFromArray(bytes: Uint8Array) {
         uint6ToB64((nUint24 >>> 18) & 63),
         uint6ToB64((nUint24 >>> 12) & 63),
         uint6ToB64((nUint24 >>> 6) & 63),
-        uint6ToB64(nUint24 & 63)
+        uint6ToB64(nUint24 & 63),
       )
       nUint24 = 0
     }

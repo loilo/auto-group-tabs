@@ -5,9 +5,9 @@ import { getGroups, getValue } from '../util/evaluations'
 test.use({
   viewport: {
     width: 400,
-    height: 600
+    height: 600,
   },
-  headless: false
+  headless: false,
 })
 
 test('Test group creation flow', async ({ page }) => {
@@ -26,7 +26,7 @@ test('Test group creation flow', async ({ page }) => {
 
   const getPreviewColor = () =>
     previewLabel.evaluate(
-      previewLabel => getComputedStyle(previewLabel).backgroundColor
+      previewLabel => getComputedStyle(previewLabel).backgroundColor,
     )
   expect(await getPreviewColor()).toBe('rgb(95, 99, 105)')
 
@@ -81,7 +81,7 @@ test('Test group creation flow', async ({ page }) => {
       title: 'Test Group',
       color: 'blue',
       matchers: [],
-      options: { strict: true, merge: true }
-    }
+      options: { strict: true, merge: true },
+    },
   ])
 })

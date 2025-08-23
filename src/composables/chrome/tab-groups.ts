@@ -16,8 +16,8 @@ function _useReadonlyChromeTabGroups() {
     whenever(chromeWindows.loaded, async () => {
       const queriedTabGroups = await Promise.all(
         chromeWindows.items.value.map(window =>
-          chrome.tabGroups.query({ windowId: window.id })
-        )
+          chrome.tabGroups.query({ windowId: window.id }),
+        ),
       )
 
       tabGroups.value = queriedTabGroups.flat()
@@ -39,7 +39,7 @@ function _useReadonlyChromeTabGroups() {
 
         lastRemoved.value = removedTabGroup
         tabGroups.value = tabGroups.value.filter(
-          Tab => Tab.id !== removedTabGroup.id
+          Tab => Tab.id !== removedTabGroup.id,
         )
       })
 
@@ -50,12 +50,12 @@ function _useReadonlyChromeTabGroups() {
 
         lastUpdated.value = updatedTabGroup
         const index = tabGroups.value.findIndex(
-          tabGroup => tabGroup.id === updatedTabGroup.id
+          tabGroup => tabGroup.id === updatedTabGroup.id,
         )
         tabGroups.value = [
           ...tabGroups.value.slice(0, index),
           updatedTabGroup,
-          ...tabGroups.value.slice(index + 1)
+          ...tabGroups.value.slice(index + 1),
         ]
       })
     })
@@ -68,7 +68,7 @@ function _useReadonlyChromeTabGroups() {
     loaded: readonly(loaded),
     lastCreated: readonly(lastCreated),
     lastUpdated: readonly(lastUpdated),
-    lastRemoved: readonly(lastRemoved)
+    lastRemoved: readonly(lastRemoved),
   }
 }
 
@@ -91,9 +91,9 @@ export function useChromeTabGroupsByWindowId() {
       chromeWindows.items.value.map(window => [
         window.id,
         chromeTabGroups.items.value.filter(
-          tabGroup => tabGroup.windowId === window.id
-        )
-      ])
-    )
+          tabGroup => tabGroup.windowId === window.id,
+        ),
+      ]),
+    ),
   )
 }

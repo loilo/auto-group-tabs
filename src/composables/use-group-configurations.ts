@@ -43,6 +43,6 @@ export function useGroupConfigurations() {
       }
 
       return storedGroups
-    }
+    },
   })
 }

@@ -6,11 +6,15 @@
       :label="label"
     >
       <mwc-radio
-        :ref="(el: HTMLInputElement) => { colorRefs[color].value = el as HTMLInputElement }"
+        :ref="
+          (el: HTMLInputElement) => {
+            colorRefs[color].value = el as HTMLInputElement
+          }
+        "
         :checked="color === modelValue"
         :style="{
           '--mdc-theme-secondary': `var(--group-${color})`,
-          '--mdc-radio-unchecked-color': `var(--group-${color})`
+          '--mdc-radio-unchecked-color': `var(--group-${color})`,
         }"
         @change="emit('update:modelValue', color)"
       />
@@ -23,7 +27,7 @@ import { ref } from 'vue'
 import { colors } from '@/util/resources'
 
 const colorRefs = Object.fromEntries(
-  colors.map(color => [color, ref<HTMLInputElement>()])
+  colors.map(color => [color, ref<HTMLInputElement>()]),
 )
 
 const props = defineProps<{
@@ -41,7 +45,7 @@ defineExpose({
     for (const color of colors) {
       colorRefs[color].value!.checked = color === props.modelValue
     }
-  }
+  },
 })
 </script>
 

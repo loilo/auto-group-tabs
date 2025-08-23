@@ -27,7 +27,7 @@ import { RawTranslation, Translation } from './util/types'
 import { isExtensionWorker } from './util/helpers'
 
 const language = /^de-?/.test(
-  isExtensionWorker ? chrome.i18n.getUILanguage() : navigator.language
+  isExtensionWorker ? chrome.i18n.getUILanguage() : navigator.language,
 )
   ? 'de'
   : 'en'
@@ -38,7 +38,7 @@ async function main() {
     `./locale/${language}/messages.json`
   )
   const messages = Object.fromEntries(
-    Object.entries(rawMessages).map(([key, { message }]) => [key, message])
+    Object.entries(rawMessages).map(([key, { message }]) => [key, message]),
   ) as Translation
 
   const context = new URL(location.href).searchParams.get('context')

@@ -9,7 +9,7 @@ import { GroupConfiguration } from './types'
  */
 export async function saveGroupConfigurations(groups: GroupConfiguration[]) {
   const groupsCopy: GroupConfiguration[] = JSON.parse(
-    JSON.stringify(toRawDeep(groups))
+    JSON.stringify(toRawDeep(groups)),
   )
 
   for (const group of groupsCopy) {
@@ -18,7 +18,7 @@ export async function saveGroupConfigurations(groups: GroupConfiguration[]) {
     if (!conflictManager.hasMarker(group.title)) continue
 
     const titleWithoutConflictMarker = conflictManager.withoutMarker(
-      group.title
+      group.title,
     )
 
     if (groupsCopy.some(group => group.title === titleWithoutConflictMarker))
@@ -45,7 +45,7 @@ export async function saveGroupConfigurations(groups: GroupConfiguration[]) {
  * another group configuration if it has the same title and color
  */
 export function createGroupConfigurationMatcher(
-  group: Partial<Pick<GroupConfiguration, 'title' | 'color'>>
+  group: Partial<Pick<GroupConfiguration, 'title' | 'color'>>,
 ) {
   return (tabGroup: Partial<Pick<GroupConfiguration, 'title' | 'color'>>) =>
     tabGroup.title === group.title && tabGroup.color === group.color

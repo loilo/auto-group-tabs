@@ -8,7 +8,7 @@ export type MatcherOptions = {
 function deriveChromeMatcherOptions(
   rawUrl: string,
   url: URL,
-  msg: Translation
+  msg: Translation,
 ) {
   const options: MatcherOptions[] = []
 
@@ -17,7 +17,7 @@ function deriveChromeMatcherOptions(
 
   const initialGroupPatterns = [
     `chrome://${initialGroup}`,
-    `chrome://${initialGroup}/*`
+    `chrome://${initialGroup}/*`,
   ]
 
   const wellKnownInitialGroupNames = {
@@ -26,7 +26,7 @@ function deriveChromeMatcherOptions(
     history: msg.derivedNameChromeHistory,
     bookmarks: msg.derivedNameChromeBookmarks,
     apps: msg.derivedNameChromeApps,
-    flags: msg.derivedNameChromeFlags
+    flags: msg.derivedNameChromeFlags,
   }
 
   if (initialGroup in wellKnownInitialGroupNames) {
@@ -35,44 +35,44 @@ function deriveChromeMatcherOptions(
       description:
         wellKnownInitialGroupNames[
           initialGroup as keyof typeof wellKnownInitialGroupNames
-        ]
+        ],
     })
   } else if (initialGroup === 'settings') {
     if (secondaryGroup) {
       options.push({
         patterns: [
           `chrome://settings/${secondaryGroup}`,
-          `chrome://settings/${secondaryGroup}/*`
+          `chrome://settings/${secondaryGroup}/*`,
         ],
-        description: msg.derivedNameChromeSettingsSection
+        description: msg.derivedNameChromeSettingsSection,
       })
     }
 
     options.push({
       patterns: initialGroupPatterns,
-      description: msg.derivedNameChromeSettings
+      description: msg.derivedNameChromeSettings,
     })
   } else if (initialGroup === 'newtab') {
     options.push({
       patterns: [rawUrl],
-      description: msg.derivedNameChromeNewtab
+      description: msg.derivedNameChromeNewtab,
     })
   } else {
     options.push({
       patterns: initialGroupPatterns,
-      description: `${msg.derivedNameChromePage} "${initialGroup}"`
+      description: `${msg.derivedNameChromePage} "${initialGroup}"`,
     })
   }
 
   options.push({
     patterns: ['chrome://*'],
-    description: msg.derivedNameChromeAll
+    description: msg.derivedNameChromeAll,
   })
 
   if (!options.some(({ patterns }) => patterns.includes(rawUrl))) {
     options.push({
       patterns: [rawUrl],
-      description: msg.derivedNameChromeExactUrl
+      description: msg.derivedNameChromeExactUrl,
     })
   }
 
@@ -82,24 +82,24 @@ function deriveChromeMatcherOptions(
 function deriveExtensionMatcherOptions(
   rawUrl: string,
   url: URL,
-  msg: Translation
+  msg: Translation,
 ) {
   return [
     {
       patterns: [
         `${url.protocol}//${url.host || url.pathname.slice(2)}`,
-        `${url.protocol}//${url.host || url.pathname.slice(2)}/*`
+        `${url.protocol}//${url.host || url.pathname.slice(2)}/*`,
       ],
-      description: msg.derivedNameExtensionHost
+      description: msg.derivedNameExtensionHost,
     },
     {
       patterns: [`${url.protocol}//*`],
-      description: msg.derivedNameExtensionAll
+      description: msg.derivedNameExtensionAll,
     },
     {
       patterns: [rawUrl],
-      description: msg.derivedNameExtensionExactUrl
-    }
+      description: msg.derivedNameExtensionExactUrl,
+    },
   ]
 }
 
@@ -113,7 +113,7 @@ function deriveFileMatcherOptions(rawUrl: string, url: URL, msg: Translation) {
 
   options.push({
     patterns: ['file://*'],
-    description: msg.derivedNameFileAll
+    description: msg.derivedNameFileAll,
   })
 
   if (dirnamePath) {
@@ -121,7 +121,7 @@ function deriveFileMatcherOptions(rawUrl: string, url: URL, msg: Translation) {
       patterns: [`file://${dirnamePath}/*`],
       description: basename
         ? msg.derivedNameFileDirname.replace('%s', dirname!)
-        : msg.derivedNameFileThisFolder
+        : msg.derivedNameFileThisFolder,
     })
   }
 
@@ -129,7 +129,7 @@ function deriveFileMatcherOptions(rawUrl: string, url: URL, msg: Translation) {
     patterns: [rawUrl],
     description: basename
       ? msg.derivedNameFileExactFileUrl
-      : msg.derivedNameFileExactFolderUrl
+      : msg.derivedNameFileExactFolderUrl,
   })
 
   return options
@@ -139,22 +139,22 @@ function deriveHttpMatcherOptions(rawUrl: string, url: URL, msg: Translation) {
   return [
     {
       patterns: [`${url.host}`],
-      description: msg.derivedNameHttpDomain
+      description: msg.derivedNameHttpDomain,
     },
     {
       patterns: [`*.${url.host}`],
-      description: msg.derivedNameHttpSubdomain
+      description: msg.derivedNameHttpSubdomain,
     },
     {
       patterns: [rawUrl],
-      description: msg.derivedNameGenericExactUrl
-    }
+      description: msg.derivedNameGenericExactUrl,
+    },
   ]
 }
 
 export function deriveMatcherOptions(
   rawUrl: string,
-  msg: Translation
+  msg: Translation,
 ): MatcherOptions[] {
   let url: URL
   try {
@@ -187,7 +187,7 @@ export function deriveMatcherOptions(
   return [
     {
       patterns: [rawUrl],
-      description: msg.derivedNameGenericExactUrl
-    }
+      description: msg.derivedNameGenericExactUrl,
+    },
   ]
 }

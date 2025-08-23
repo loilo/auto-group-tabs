@@ -6,7 +6,7 @@
       'card-section-ghost': ghost,
       'card-section-seamless': seamless,
       'card-section-tight': tight,
-      'card-section-collapse': collapse
+      'card-section-collapse': collapse,
     }"
   >
     <slot />
@@ -23,8 +23,8 @@ withDefaults(
     collapse?: boolean
   }>(),
   {
-    tag: 'div'
-  }
+    tag: 'div',
+  },
 )
 </script>
 

@@ -64,7 +64,7 @@ const emit = defineEmits<{
 }>()
 
 defineExpose({
-  showNewMatcher
+  showNewMatcher,
 })
 
 // Create a copy of the matchers prop for easier local mutability

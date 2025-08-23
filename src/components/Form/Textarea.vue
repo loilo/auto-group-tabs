@@ -7,7 +7,7 @@
       v-bind="$attrs"
       :value="modelValue"
       @input="
-        emit('update:modelValue', $event.target.value), emit('input', $event)
+        (emit('update:modelValue', $event.target.value), emit('input', $event))
       "
       @change="onChange"
       @focus="emit('focus', $event)"
@@ -20,7 +20,7 @@
 
 <script lang="ts">
 export default {
-  inheritAttrs: false
+  inheritAttrs: false,
 }
 </script>
 
@@ -51,13 +51,13 @@ const validityTransform = computed(() =>
         if (!customValidationResult) {
           return {
             valid: false,
-            customError: true
+            customError: true,
           }
         }
 
         return {}
       }
-    : undefined
+    : undefined,
 )
 
 onBeforeUnmount(() => {
@@ -95,7 +95,7 @@ defineExpose({
   focus,
   select,
   isValid,
-  validate
+  validate,
 })
 </script>
 

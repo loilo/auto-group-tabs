@@ -8,7 +8,7 @@ import { createGroupConfigurationMatcher } from '@/util/group-configurations'
 
 const [currentTab] = await chrome.tabs.query({
   active: true,
-  lastFocusedWindow: true
+  lastFocusedWindow: true,
 })
 
 const groups = useGroupConfigurations()
@@ -18,17 +18,19 @@ const chromeState = useChromeState()
 const tabGroup = computed(() =>
   currentTab && currentTab.groupId !== chrome.tabGroups.TAB_GROUP_ID_NONE
     ? chromeState.tabGroups.items.value.find(
-        tabGroup => tabGroup.id === currentTab!.groupId
+        tabGroup => tabGroup.id === currentTab!.groupId,
       )
-    : undefined
+    : undefined,
 )
 
 const tabGroupPredicate = computed(() =>
-  tabGroup.value ? createGroupConfigurationMatcher(tabGroup.value) : () => false
+  tabGroup.value
+    ? createGroupConfigurationMatcher(tabGroup.value)
+    : () => false,
 )
 
 const tabGroupConfigured = computed(() =>
-  groups.data.value.find(tabGroupPredicate.value)
+  groups.data.value.find(tabGroupPredicate.value),
 )
 
 const emit = defineEmits<{
@@ -36,7 +38,7 @@ const emit = defineEmits<{
     e: 'createGroup',
     title: string,
     color: chrome.tabGroups.Color,
-    tabs: chrome.tabs.Tab[]
+    tabs: chrome.tabs.Tab[],
   ): void
   (e: 'editGroup', id: string): void
 }>()

@@ -9,7 +9,7 @@ const storageHandles = {
   sync: new Map(),
   local: new Map(),
   managed: new Map(),
-  session: new Map()
+  session: new Map(),
 }
 
 export type UseStorageOptions<T> = Partial<{
@@ -33,8 +33,8 @@ export function useStorage<T extends JsonValue = any>(
     storage = 'sync',
     throttle = 0,
     loadMapper,
-    saveMapper
-  }: UseStorageOptions<T> = {}
+    saveMapper,
+  }: UseStorageOptions<T> = {},
 ): {
   loaded: Ref<boolean>
   data: Ref<T>
@@ -73,7 +73,7 @@ export function useStorage<T extends JsonValue = any>(
 
           data.value = newValue
         },
-        storage
+        storage,
       )
     })
 

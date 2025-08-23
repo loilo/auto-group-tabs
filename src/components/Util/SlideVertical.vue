@@ -23,7 +23,7 @@ const props = withDefaults(
     disabled?: boolean
     duration?: number
   }>(),
-  { duration: 0.6 }
+  { duration: 0.6 },
 )
 
 const emit = defineEmits<{
@@ -33,7 +33,7 @@ const emit = defineEmits<{
 function cancel(el: Element) {
   gsap.killTweensOf(el)
   gsap.set(el, {
-    height: ''
+    height: '',
   })
 }
 
@@ -41,7 +41,7 @@ function beforeEnter(el: Element) {
   if (props.disabled) return
 
   gsap.set(el, {
-    opacity: 0
+    opacity: 0,
   })
 }
 
@@ -66,7 +66,7 @@ function enter(el: Element, done: () => void) {
 
   let duration = Math.max(
     MINIMUM_DURATION_FRACTION * props.duration,
-    effectiveHeightFraction * props.duration
+    effectiveHeightFraction * props.duration,
   )
   let effectiveDuration = duration
   if (effectiveHeight < rect.height) {
@@ -76,13 +76,13 @@ function enter(el: Element, done: () => void) {
   }
 
   gsap.set(el, {
-    overflow: 'hidden'
+    overflow: 'hidden',
   })
 
   if (effectiveDuration > duration) {
     gsap.set(el, {
       opacity: '',
-      height: `${effectiveHeight}px`
+      height: `${effectiveHeight}px`,
     })
 
     gsap.from(el, {
@@ -95,11 +95,11 @@ function enter(el: Element, done: () => void) {
       paddingBottom: 0,
       onComplete() {
         done()
-      }
+      },
     })
   } else {
     gsap.set(el, {
-      opacity: ''
+      opacity: '',
     })
 
     gsap.from(el, {
@@ -112,7 +112,7 @@ function enter(el: Element, done: () => void) {
       paddingBottom: 0,
       onComplete() {
         done()
-      }
+      },
     })
   }
 }
@@ -131,16 +131,16 @@ function leave(el: Element, done: () => void) {
 
   let duration = Math.max(
     MINIMUM_DURATION_FRACTION * props.duration,
-    effectiveHeightFraction * props.duration
+    effectiveHeightFraction * props.duration,
   )
 
   gsap.set(el, {
-    overflow: 'hidden'
+    overflow: 'hidden',
   })
 
   if (effectiveHeight < rect.height) {
     gsap.set(el, {
-      height: `${effectiveHeight}px`
+      height: `${effectiveHeight}px`,
     })
   }
 
@@ -154,7 +154,7 @@ function leave(el: Element, done: () => void) {
     paddingBottom: 0,
     onComplete() {
       done()
-    }
+    },
   })
 }
 
@@ -168,7 +168,7 @@ function reset(el: Element) {
     marginBottom: '',
     paddingTop: '',
     paddingBottom: '',
-    overflow: ''
+    overflow: '',
   })
 }
 

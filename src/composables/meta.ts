@@ -15,7 +15,7 @@ export function tickResetRef<T>(initialValue: T) {
       nextTick(() => {
         value.value = initialValue as UnwrapRef<T>
       })
-    }
+    },
   })
 }
 
@@ -32,8 +32,8 @@ export function toRawDeep<T extends JsonValue>(value: T): T {
     return Object.fromEntries(
       Object.entries(rawValue).map(([key, value]) => [
         key,
-        toRawDeep(value as JsonValue)
-      ])
+        toRawDeep(value as JsonValue),
+      ]),
     ) as T
   }
 }

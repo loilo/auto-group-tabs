@@ -6,13 +6,15 @@
       class="pattern-list-new"
     >
       <Textfield
-        :ref="(component: any) => {
+        :ref="
+          (component: any) => {
             if (component === null) {
               delete matcherRefs[matcher.id]
             } else {
-              matcherRefs[matcher.id] = {component, index}
+              matcherRefs[matcher.id] = { component, index }
             }
-          }"
+          }
+        "
         :modelValue="matcher.value"
         @update:modelValue="matcher.value = $event"
         :pattern="inputPattern"
@@ -112,14 +114,14 @@ const matcherRefs = ref<Record<string, { component: any; index: number }>>({})
 const sortedMatcherRefs = computed(() =>
   Object.values(matcherRefs.value)
     .sort((a, b) => a.index - b.index)
-    .map(({ component }) => component)
+    .map(({ component }) => component),
 )
 
 // Create a copy of the matchers prop for easier local mutability
 const localMatchers = useSyncedCopy(() => {
   const items = props.modelValue.map(matcher => ({
     id: crypto.randomUUID(),
-    value: matcher
+    value: matcher,
   }))
 
   if (items.length === 0 && props.keepOne) {
@@ -133,7 +135,7 @@ defineExpose({
   focus(index: number) {
     matcherRefs.value[localMatchers.value[index].id].component.focus()
   },
-  showNewMatcher
+  showNewMatcher,
 })
 
 const justCreatedNewMatcher = tickResetRef(false)

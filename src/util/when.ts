@@ -9,7 +9,7 @@ const defaultPredicate = <T>(value: T) => Boolean(value)
  */
 export function when<T>(
   container: Ref<T>,
-  predicate: (value: T) => boolean = defaultPredicate
+  predicate: (value: T) => boolean = defaultPredicate,
 ) {
   return new Promise<void>(resolve => {
     const stop = watch(
@@ -23,7 +23,7 @@ export function when<T>(
           resolve()
         }
       },
-      { deep: true, immediate: true }
+      { deep: true, immediate: true },
     )
   })
 }

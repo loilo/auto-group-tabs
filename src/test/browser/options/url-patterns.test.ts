@@ -5,15 +5,15 @@ import {
   GroupConfigurationWithoutId,
   isFocused,
   isValid,
-  setGroups
+  setGroups,
 } from '../util/evaluations'
 
 test.use({
   viewport: {
     width: 400,
-    height: 600
+    height: 600,
   },
-  headless: false
+  headless: false,
 })
 
 test.beforeEach(async ({ page }) => {
@@ -25,8 +25,8 @@ test.beforeEach(async ({ page }) => {
       title: 'Test Group',
       color: 'blue',
       matchers: [],
-      options: { strict: true, merge: false }
-    } as GroupConfigurationWithoutId
+      options: { strict: true, merge: false },
+    } as GroupConfigurationWithoutId,
   ])
 
   // Reload the page to apply localStorage changes
@@ -34,7 +34,7 @@ test.beforeEach(async ({ page }) => {
 })
 
 test('Add URL patterns via "add link" button and Enter key', async ({
-  page
+  page,
 }) => {
   // No inputs should be there initially
   const urlPatternInputs = page.locator('mwc-textfield.textfield')
@@ -57,7 +57,7 @@ test('Add URL patterns via "add link" button and Enter key', async ({
 
   const lasturlPatternInputAfterEnter = urlPatternInputsAfterEnter.last()
   await expect(await lasturlPatternInputAfterEnter.evaluate(isFocused)).toBe(
-    true
+    true,
   )
 
   // Expect the new input to disappear again ater pressing Backspace
@@ -66,7 +66,7 @@ test('Add URL patterns via "add link" button and Enter key', async ({
   const urlPatternInputsAfterBackspace = page.locator('mwc-textfield.textfield')
   await expect(urlPatternInputsAfterBackspace).toHaveCount(1)
   await expect(await urlPatternInputsAfterBackspace.evaluate(getValue)).toBe(
-    'example.com'
+    'example.com',
   )
 
   // Expect a new empty, focused input to appear after clicking the "add link" button
@@ -77,7 +77,7 @@ test('Add URL patterns via "add link" button and Enter key', async ({
 
   const lasturlPatternInputAfterAddLink = urlPatternInputsAfterAddLink.last()
   await expect(await lasturlPatternInputAfterAddLink.evaluate(isFocused)).toBe(
-    true
+    true,
   )
 
   // Expect the new empty input to disappear again when focusing anything else
@@ -92,13 +92,13 @@ test('Add URL patterns via "add link" button and Enter key', async ({
       title: 'Test Group',
       color: 'blue',
       matchers: ['example.com'],
-      options: { strict: true }
-    }
+      options: { strict: true },
+    },
   ])
 })
 
 test('Report error on invalid pattern and prevent from adding new ones', async ({
-  page
+  page,
 }) => {
   // No inputs should be there initially
   const urlPatternInputs = page.locator('mwc-textfield.textfield')
@@ -140,7 +140,7 @@ test('Report error on invalid pattern and prevent from adding new ones', async (
       title: 'Test Group',
       color: 'blue',
       matchers: [],
-      options: { strict: true }
-    }
+      options: { strict: true },
+    },
   ])
 })

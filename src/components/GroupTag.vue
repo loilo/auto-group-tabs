@@ -10,14 +10,14 @@ const props = withDefaults(
     dense?: boolean
   }>(),
   {
-    dense: false
-  }
+    dense: false,
+  },
 )
 
 const msg = inject<Translation>('msg')!
 
 const hasConflictingTitle = computed(() =>
-  conflictManager.hasMarker(props.title ?? '')
+  conflictManager.hasMarker(props.title ?? ''),
 )
 
 const displayTitle = computed(() => {
@@ -35,11 +35,11 @@ const displayTitle = computed(() => {
     :class="{
       'no-title': !title && displayTitle,
       dot: !displayTitle,
-      dense: dense && displayTitle
+      dense: dense && displayTitle,
     }"
     :style="{
       '--tag-color': `var(--group-${color})`,
-      '--tag-foreground-color': `var(--group-${color}-foreground)`
+      '--tag-foreground-color': `var(--group-${color}-foreground)`,
     }"
   >
     <span class="tag-label" v-if="displayTitle">{{ displayTitle }}</span>

@@ -3,15 +3,15 @@ import {
   getGroups,
   GroupConfigurationWithoutId,
   setGroups,
-  waitAnimationsFinished
+  waitAnimationsFinished,
 } from '../util/evaluations'
 
 test.use({
   viewport: {
     width: 400,
-    height: 600
+    height: 600,
   },
-  headless: false
+  headless: false,
 })
 
 test('Drag and drop groups', async ({ page }) => {
@@ -21,26 +21,26 @@ test('Drag and drop groups', async ({ page }) => {
     title: 'Test Group 1',
     color: 'blue',
     matchers: [],
-    options: { strict: true, merge: false }
+    options: { strict: true, merge: false },
   }
   const group2 = {
     title: 'Test Group 2',
     color: 'red',
     matchers: ['example.com', 'example.org'],
-    options: { strict: true, merge: false }
+    options: { strict: true, merge: false },
   }
   const group3 = {
     title: 'Test Group 3',
     color: 'green',
     matchers: ['github.com'],
-    options: { strict: true, merge: false }
+    options: { strict: true, merge: false },
   }
 
   // Define groups programmatically
   await page.evaluate(setGroups, [
     group1,
     group2,
-    group3
+    group3,
   ] as GroupConfigurationWithoutId[])
 
   // Reload the page to apply localStorage changes
@@ -58,13 +58,13 @@ test('Drag and drop groups', async ({ page }) => {
 
   await page.dragAndDrop(
     '.group:not(.group + .group) .drag-handle',
-    '.group:last-child .drag-handle'
+    '.group:last-child .drag-handle',
   )
 
   // Validate groups structure in storage
   expect(await page.evaluate(getGroups)).toMatchObject([
     { id: expect.any(String), ...group2 },
     { id: expect.any(String), ...group3 },
-    { id: expect.any(String), ...group1 }
+    { id: expect.any(String), ...group1 },
   ])
 })

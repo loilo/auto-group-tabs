@@ -10,7 +10,7 @@ export default {
 
     // For usage in templates without inject()
     app.mixin({
-      computed: { msg: () => messages }
+      computed: { msg: () => messages },
     })
-  }
+  },
 }

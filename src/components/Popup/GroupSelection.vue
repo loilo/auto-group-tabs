@@ -7,24 +7,24 @@ import { until } from '@vueuse/core'
 import {
   useChromeState,
   useGroupConfigurations,
-  useSyncedCopy
+  useSyncedCopy,
 } from '@/composables'
 import {
   createGroupConfigurationMatcher,
-  saveGroupConfigurations
+  saveGroupConfigurations,
 } from '@/util/group-configurations'
 import { isExtensionWorker } from '@/util/helpers'
 
 const groups = useGroupConfigurations()
 
 const groupColors = computed(() =>
-  Object.fromEntries(groups.data.value.map(group => [group.id, group.color]))
+  Object.fromEntries(groups.data.value.map(group => [group.id, group.color])),
 )
 
 const [currentTab] = isExtensionWorker
   ? await chrome.tabs.query({
       active: true,
-      lastFocusedWindow: true
+      lastFocusedWindow: true,
     })
   : []
 
@@ -36,23 +36,25 @@ await until(() => chromeState.tabGroups.loaded.value).toBeTruthy()
 const tabGroup = computed(() =>
   currentTab && currentTab.groupId !== chrome.tabGroups.TAB_GROUP_ID_NONE
     ? chromeState.tabGroups.items.value.find(
-        tabGroup => tabGroup.id === currentTab!.groupId
+        tabGroup => tabGroup.id === currentTab!.groupId,
       )
-    : undefined
+    : undefined,
 )
 
 const tabGroupPredicate = computed(() =>
-  tabGroup.value ? createGroupConfigurationMatcher(tabGroup.value) : () => false
+  tabGroup.value
+    ? createGroupConfigurationMatcher(tabGroup.value)
+    : () => false,
 )
 const tabGroupConfigured = computed(() =>
-  groups.data.value.find(tabGroupPredicate.value)
+  groups.data.value.find(tabGroupPredicate.value),
 )
 
 const options = useSyncedCopy(() =>
   groups.data.value.map(group => ({
     value: group.id,
-    label: group.title
-  }))
+    label: group.title,
+  })),
 )
 
 const value = useSyncedCopy(() => props.modelValue)
@@ -87,8 +89,8 @@ watch(value, async value => {
         title: tabGroup.value!.title ?? '',
         color: tabGroup.value!.color,
         matchers: [],
-        options: { strict: false, merge: false }
-      }
+        options: { strict: false, merge: false },
+      },
     ])
     await groupsChanged
 

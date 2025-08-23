@@ -21,7 +21,7 @@ function _useReadonlyChromeWindows() {
       chrome.windows.onRemoved.addListener(removedWindowId => {
         lastRemoved.value = removedWindowId
         windows.value = windows.value.filter(
-          window => window.id !== removedWindowId
+          window => window.id !== removedWindowId,
         )
       })
     })
@@ -33,7 +33,7 @@ function _useReadonlyChromeWindows() {
     items: readonly(windows),
     loaded: readonly(loaded),
     lastCreated: readonly(lastCreated),
-    lastRemoved: readonly(lastRemoved)
+    lastRemoved: readonly(lastRemoved),
   }
 }
 

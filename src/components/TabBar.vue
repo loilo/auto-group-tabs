@@ -89,7 +89,7 @@ watch(
     nextTick(() => {
       updateOverflowing()
     })
-  }
+  },
 )
 </script>
 
@@ -109,8 +109,9 @@ watch(
     --group-foreground: #202124;
   }
 
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica,
-    Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';
+  font-family:
+    -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial,
+    sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';
   background-color: var(--tab-bar-background);
   border-top: 1px solid var(--tab-bar-border);
 

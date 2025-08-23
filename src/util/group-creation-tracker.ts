@@ -38,14 +38,14 @@ export class GroupCreationTracker {
     }
 
     throw new Error(
-      'Cannot get group creation Promise for a group that is not currently being created.'
+      'Cannot get group creation Promise for a group that is not currently being created.',
     )
   }
 
   queueGroupCreation(
     windowId: number,
     group: GroupConfiguration,
-    creationPromise: Promise<number>
+    creationPromise: Promise<number>,
   ) {
     if (this.isCreating(windowId, group)) {
       this.#groupsInTheMaking

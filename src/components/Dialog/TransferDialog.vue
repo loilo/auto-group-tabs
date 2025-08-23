@@ -84,12 +84,12 @@ const groupConfigurations = useGroupConfigurations()
 
 function exportToFile() {
   const serializedGroupConfigurations = JSON.stringify(
-    toRawDeep(groupConfigurations.data.value)
+    toRawDeep(groupConfigurations.data.value),
   )
   const filename = `auto-group-tabs-export--${date('Y-m-d_H:i:s')}.json`
 
   const blob = new Blob([serializedGroupConfigurations], {
-    type: 'application/json'
+    type: 'application/json',
   })
   const url = URL.createObjectURL(blob)
   const a = document.createElement('a')

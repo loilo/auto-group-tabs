@@ -23,8 +23,8 @@ function _useReadonlyChromeTabs() {
     whenever(chromeWindows.loaded, async () => {
       const queriedTabs = await Promise.all(
         chromeWindows.items.value.map(window =>
-          chrome.tabs.query({ windowId: window.id })
-        )
+          chrome.tabs.query({ windowId: window.id }),
+        ),
       )
 
       tabs.value = queriedTabs.flat()
@@ -62,7 +62,7 @@ function _useReadonlyChromeTabs() {
         }
 
         detachedTabs.value = detachedTabs.value.filter(
-          tabId => tabId !== attachedTabId
+          tabId => tabId !== attachedTabId,
         )
       })
 
@@ -74,14 +74,14 @@ function _useReadonlyChromeTabs() {
         lastUpdated.value = {
           changes: changeInfo,
           tab: updatedTab,
-          oldTab: tabs.value.find(tab => tab.id === tabId)
+          oldTab: tabs.value.find(tab => tab.id === tabId),
         }
 
         const index = tabs.value.findIndex(tab => tab.id === updatedTab.id)
         tabs.value = [
           ...tabs.value.slice(0, index),
           updatedTab,
-          ...tabs.value.slice(index + 1)
+          ...tabs.value.slice(index + 1),
         ]
       })
     })
@@ -95,7 +95,7 @@ function _useReadonlyChromeTabs() {
     loaded: readonly(loaded),
     lastCreated: readonly(lastCreated),
     lastUpdated: readonly(lastUpdated),
-    lastRemoved: readonly(lastRemoved)
+    lastRemoved: readonly(lastRemoved),
   }
 }
 
@@ -125,8 +125,8 @@ export function useChromeTabsByWindowId() {
     Object.fromEntries(
       chromeWindows.items.value.map(window => [
         window.id,
-        chromeTabs.items.value.filter(tab => tab.windowId === window.id)
-      ])
-    )
+        chromeTabs.items.value.filter(tab => tab.windowId === window.id),
+      ]),
+    ),
   )
 }

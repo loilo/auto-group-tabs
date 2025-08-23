@@ -4,7 +4,7 @@
  */
 export async function readStorage(
   key: string,
-  storage: chrome.storage.AreaName
+  storage: chrome.storage.AreaName,
 ) {
   if (typeof chrome.storage === 'undefined') {
     const result = window.localStorage.getItem(key)
@@ -16,7 +16,7 @@ export async function readStorage(
 
 export type WatchStorageCallback<T> = (
   newValue: T,
-  oldValue: T | undefined
+  oldValue: T | undefined,
 ) => void
 
 /**
@@ -26,7 +26,7 @@ export type WatchStorageCallback<T> = (
 export function watchStorage<T = any>(
   key: string,
   callback: WatchStorageCallback<T>,
-  storage: chrome.storage.AreaName = 'sync'
+  storage: chrome.storage.AreaName = 'sync',
 ) {
   if (typeof chrome.storage === 'undefined') {
     const handler = (event: StorageEvent) => {
@@ -47,7 +47,7 @@ export function watchStorage<T = any>(
   } else {
     const handler = (
       changes: { [key: string]: any },
-      area: chrome.storage.AreaName
+      area: chrome.storage.AreaName,
     ) => {
       if (area !== storage || !(key in changes)) return
       const { newValue, oldValue } = changes[key]
@@ -68,7 +68,7 @@ export function watchStorage<T = any>(
 export async function writeStorage<T = any>(
   key: string,
   value: T,
-  storage: chrome.storage.AreaName = 'sync'
+  storage: chrome.storage.AreaName = 'sync',
 ) {
   return await new Promise<void>(resolve => {
     if (typeof chrome.storage === 'undefined') {
@@ -85,8 +85,8 @@ export async function writeStorage<T = any>(
           newValue,
           oldValue,
           storageArea: window.localStorage,
-          url: window.location.href
-        })
+          url: window.location.href,
+        }),
       )
       resolve()
     } else {

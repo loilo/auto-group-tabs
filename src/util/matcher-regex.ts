@@ -3,7 +3,7 @@ import {
   isRegexPattern,
   isValidRegexPattern,
   matcherPattern,
-  sanitizeRegex
+  sanitizeRegex,
 } from '@/util/helpers'
 
 /**
@@ -42,8 +42,8 @@ export function generateMatcherRegex(matcher: string): RegExp {
   const schemePattern = simpleScheme
     ? simpleScheme
     : typeof scheme === 'string'
-    ? generatePatternString(scheme, 'https?')
-    : 'https?'
+      ? generatePatternString(scheme, 'https?')
+      : 'https?'
 
   let hostPattern: string
   if (simpleScheme) {

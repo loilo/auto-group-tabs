@@ -14,7 +14,7 @@ export type Queue<T> = {
  * the queue will wait for a new Promise to be added and continue evaluating.
  */
 export function queueUntilResolve<T>(
-  initialPromise: Promise<T> = Promise.reject()
+  initialPromise: Promise<T> = Promise.reject(),
 ) {
   const list = [initialPromise]
   const [publishNewPromise, subscribeNewPromise] = monomitter()

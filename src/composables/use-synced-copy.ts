@@ -9,13 +9,13 @@ import { nextTick, ref, Ref, UnwrapRef, watch } from 'vue'
  */
 export function useSyncedCopy<T>(
   original: Ref<T> | (() => T),
-  localChangeCallback?: (value: T) => void
+  localChangeCallback?: (value: T) => void,
 ) {
   const get = (): T =>
     JSON.parse(
       JSON.stringify(
-        typeof original === 'function' ? original() : original.value
-      )
+        typeof original === 'function' ? original() : original.value,
+      ),
     )
   const syncedCopy = ref(get())
   const externalChange = ref(false)
@@ -30,7 +30,7 @@ export function useSyncedCopy<T>(
         externalChange.value = false
       })
     },
-    { deep: true }
+    { deep: true },
   )
 
   watch(
@@ -40,7 +40,7 @@ export function useSyncedCopy<T>(
         localChangeCallback?.(copyValue as T)
       }
     },
-    { deep: true }
+    { deep: true },
   )
 
   return syncedCopy

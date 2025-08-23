@@ -237,7 +237,9 @@ hr {
 
 .from-right-leave-active,
 .from-right-enter-active {
-  transition: transform 450ms, opacity 300ms;
+  transition:
+    transform 450ms,
+    opacity 300ms;
 }
 
 .from-right-leave-to,

@@ -24,7 +24,7 @@ export function withoutMarker(title: string) {
 
 export function withMarker(
   title: string,
-  { recreate = false }: { recreate?: boolean } = {}
+  { recreate = false }: { recreate?: boolean } = {},
 ): string {
   if (hasMarker(title)) {
     if (recreate) {

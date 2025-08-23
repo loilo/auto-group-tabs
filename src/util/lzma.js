@@ -34,7 +34,7 @@ function and(a, b) {
   return makeFromBits(
     ~~Math.max(Math.min(a[1] / __4294967296, 2147483647), -2147483648) &
       ~~Math.max(Math.min(b[1] / __4294967296, 2147483647), -2147483648),
-    lowBits_0(a) & lowBits_0(b)
+    lowBits_0(a) & lowBits_0(b),
   )
 }
 function compare(a, b) {
@@ -257,7 +257,7 @@ function $LZMAByteArrayCompressor(this$static, data, mode, enableEndMark) {
     this$static.output,
     fromInt(data.length),
     mode,
-    enableEndMark
+    enableEndMark,
   )
   return this$static
 }
@@ -306,7 +306,7 @@ function $init_0(this$static, input, output) {
     decoder,
     input,
     output,
-    this$static.length_0
+    this$static.length_0,
   )
 }
 
@@ -397,7 +397,7 @@ function $ReadBlock(this$static) {
       this$static._stream,
       this$static._bufferBase,
       this$static._bufferOffset + this$static._streamPos,
-      size
+      size,
     )
     if (numReadBytes == -1) {
       this$static._posLimit = this$static._streamPos
@@ -450,7 +450,7 @@ function $Create_3(
   historySize,
   keepAddBufferBefore,
   matchMaxLen,
-  keepAddBufferAfter
+  keepAddBufferAfter,
 ) {
   var cyclicBufferSize, hs, windowReservSize
   if (historySize < 1073741567) {
@@ -464,13 +464,13 @@ function $Create_3(
       this$static,
       historySize + keepAddBufferBefore,
       matchMaxLen + keepAddBufferAfter,
-      windowReservSize
+      windowReservSize,
     )
     this$static._matchMaxLen = matchMaxLen
     cyclicBufferSize = historySize + 1
     if (this$static._cyclicBufferSize != cyclicBufferSize) {
       this$static._son = initDim(
-        (this$static._cyclicBufferSize = cyclicBufferSize) * 2
+        (this$static._cyclicBufferSize = cyclicBufferSize) * 2,
       )
     }
 
@@ -676,7 +676,7 @@ function $MovePos_0(this$static) {
     $NormalizeLinks(
       this$static._son,
       this$static._cyclicBufferSize * 2,
-      subValue
+      subValue,
     )
     $NormalizeLinks(this$static._hash, this$static._hashSizeSum, subValue)
     $ReduceOffsets(this$static, subValue)
@@ -850,7 +850,7 @@ function $Flush_0(this$static) {
     this$static._stream,
     this$static._buffer,
     this$static._streamPos,
-    size
+    size,
   )
   if (this$static._pos >= this$static._windowSize) {
     this$static._pos = 0
@@ -942,7 +942,7 @@ function $processEncoderChunk(this$static) {
     this$static.encoder,
     this$static.encoder.processedInSize,
     this$static.encoder.processedOutSize,
-    this$static.encoder.finished
+    this$static.encoder.finished,
   )
   this$static.inBytesProcessed = this$static.encoder.processedInSize[0]
   if (this$static.encoder.finished[0]) {
@@ -973,13 +973,13 @@ function $CodeOneChunk(this$static) {
     !$DecodeBit(
       this$static.m_RangeDecoder,
       this$static.m_IsMatchDecoders,
-      (this$static.state << 4) + posState
+      (this$static.state << 4) + posState,
     )
   ) {
     decoder2 = $GetDecoder(
       this$static.m_LiteralDecoder,
       lowBits_0(this$static.nowPos64),
-      this$static.prevByte
+      this$static.prevByte,
     )
     if (this$static.state < 7) {
       this$static.prevByte = $DecodeNormal(decoder2, this$static.m_RangeDecoder)
@@ -987,7 +987,7 @@ function $CodeOneChunk(this$static) {
       this$static.prevByte = $DecodeWithMatchByte(
         decoder2,
         this$static.m_RangeDecoder,
-        $GetByte(this$static.m_OutWindow, this$static.rep0)
+        $GetByte(this$static.m_OutWindow, this$static.rep0),
       )
     }
     $PutByte(this$static.m_OutWindow, this$static.prevByte)
@@ -998,7 +998,7 @@ function $CodeOneChunk(this$static) {
       $DecodeBit(
         this$static.m_RangeDecoder,
         this$static.m_IsRepDecoders,
-        this$static.state
+        this$static.state,
       )
     ) {
       len = 0
@@ -1006,14 +1006,14 @@ function $CodeOneChunk(this$static) {
         !$DecodeBit(
           this$static.m_RangeDecoder,
           this$static.m_IsRepG0Decoders,
-          this$static.state
+          this$static.state,
         )
       ) {
         if (
           !$DecodeBit(
             this$static.m_RangeDecoder,
             this$static.m_IsRep0LongDecoders,
-            (this$static.state << 4) + posState
+            (this$static.state << 4) + posState,
           )
         ) {
           this$static.state = this$static.state < 7 ? 9 : 11
@@ -1024,7 +1024,7 @@ function $CodeOneChunk(this$static) {
           !$DecodeBit(
             this$static.m_RangeDecoder,
             this$static.m_IsRepG1Decoders,
-            this$static.state
+            this$static.state,
           )
         ) {
           distance = this$static.rep1
@@ -1033,7 +1033,7 @@ function $CodeOneChunk(this$static) {
             !$DecodeBit(
               this$static.m_RangeDecoder,
               this$static.m_IsRepG2Decoders,
-              this$static.state
+              this$static.state,
             )
           ) {
             distance = this$static.rep2
@@ -1051,7 +1051,7 @@ function $CodeOneChunk(this$static) {
           $Decode(
             this$static.m_RepLenDecoder,
             this$static.m_RangeDecoder,
-            posState
+            posState,
           ) + 2
         this$static.state = this$static.state < 7 ? 8 : 11
       }
@@ -1065,7 +1065,7 @@ function $CodeOneChunk(this$static) {
       this$static.state = this$static.state < 7 ? 7 : 10
       posSlot = $Decode_0(
         this$static.m_PosSlotDecoder[GetLenToPosState(len)],
-        this$static.m_RangeDecoder
+        this$static.m_RangeDecoder,
       )
       if (posSlot >= 4) {
         numDirectBits = (posSlot >> 1) - 1
@@ -1075,7 +1075,7 @@ function $CodeOneChunk(this$static) {
             this$static.m_PosDecoders,
             this$static.rep0 - posSlot - 1,
             this$static.m_RangeDecoder,
-            numDirectBits
+            numDirectBits,
           )
         } else {
           this$static.rep0 +=
@@ -1083,7 +1083,7 @@ function $CodeOneChunk(this$static) {
             4
           this$static.rep0 += $ReverseDecode(
             this$static.m_PosAlignDecoder,
-            this$static.m_RangeDecoder
+            this$static.m_RangeDecoder,
           )
           if (this$static.rep0 < 0) {
             if (this$static.rep0 == -1) {
@@ -1175,11 +1175,11 @@ function $SetDictionarySize(this$static, dictionarySize) {
     this$static.m_DictionarySize = dictionarySize
     this$static.m_DictionarySizeCheck = Math.max(
       this$static.m_DictionarySize,
-      1
+      1,
     )
     $Create_5(
       this$static.m_OutWindow,
-      Math.max(this$static.m_DictionarySizeCheck, 4096)
+      Math.max(this$static.m_DictionarySizeCheck, 4096),
     )
   }
   return 1
@@ -1290,7 +1290,7 @@ function $DecodeWithMatchByte(this$static, rangeDecoder, matchByte) {
     bit = $DecodeBit(
       rangeDecoder,
       this$static.m_Decoders,
-      ((1 + matchBit) << 8) + symbol
+      ((1 + matchBit) << 8) + symbol,
     )
     symbol = (symbol << 1) | bit
     if (matchBit != bit) {
@@ -1401,21 +1401,21 @@ function $CodeOneBlock(this$static, inSize, outSize, finished) {
       this$static._rangeEncoder,
       this$static._isMatch,
       (this$static._state << 4) + posState,
-      0
+      0,
     )
     this$static._state = StateUpdateChar(this$static._state)
     curByte = $GetIndexByte(
       this$static._matchFinder,
-      -this$static._additionalOffset
+      -this$static._additionalOffset,
     )
     $Encode_1(
       $GetSubCoder(
         this$static._literalEncoder,
         lowBits_0(this$static.nowPos64),
-        this$static._previousByte
+        this$static._previousByte,
       ),
       this$static._rangeEncoder,
-      curByte
+      curByte,
     )
     this$static._previousByte = curByte
     --this$static._additionalOffset
@@ -1435,23 +1435,23 @@ function $CodeOneBlock(this$static, inSize, outSize, finished) {
         this$static._rangeEncoder,
         this$static._isMatch,
         complexState,
-        0
+        0,
       )
       curByte = $GetIndexByte(
         this$static._matchFinder,
-        -this$static._additionalOffset
+        -this$static._additionalOffset,
       )
       subCoder = $GetSubCoder(
         this$static._literalEncoder,
         lowBits_0(this$static.nowPos64),
-        this$static._previousByte
+        this$static._previousByte,
       )
       if (this$static._state < 7) {
         $Encode_1(subCoder, this$static._rangeEncoder, curByte)
       } else {
         matchByte = $GetIndexByte(
           this$static._matchFinder,
-          -this$static._repDistances[0] - 1 - this$static._additionalOffset
+          -this$static._repDistances[0] - 1 - this$static._additionalOffset,
         )
         $EncodeMatched(subCoder, this$static._rangeEncoder, matchByte, curByte)
       }
@@ -1462,35 +1462,35 @@ function $CodeOneBlock(this$static, inSize, outSize, finished) {
         this$static._rangeEncoder,
         this$static._isMatch,
         complexState,
-        1
+        1,
       )
       if (pos < 4) {
         $Encode_3(
           this$static._rangeEncoder,
           this$static._isRep,
           this$static._state,
-          1
+          1,
         )
         if (!pos) {
           $Encode_3(
             this$static._rangeEncoder,
             this$static._isRepG0,
             this$static._state,
-            0
+            0,
           )
           if (len == 1) {
             $Encode_3(
               this$static._rangeEncoder,
               this$static._isRep0Long,
               complexState,
-              0
+              0,
             )
           } else {
             $Encode_3(
               this$static._rangeEncoder,
               this$static._isRep0Long,
               complexState,
-              1
+              1,
             )
           }
         } else {
@@ -1498,27 +1498,27 @@ function $CodeOneBlock(this$static, inSize, outSize, finished) {
             this$static._rangeEncoder,
             this$static._isRepG0,
             this$static._state,
-            1
+            1,
           )
           if (pos == 1) {
             $Encode_3(
               this$static._rangeEncoder,
               this$static._isRepG1,
               this$static._state,
-              0
+              0,
             )
           } else {
             $Encode_3(
               this$static._rangeEncoder,
               this$static._isRepG1,
               this$static._state,
-              1
+              1,
             )
             $Encode_3(
               this$static._rangeEncoder,
               this$static._isRepG2,
               this$static._state,
-              pos - 2
+              pos - 2,
             )
           }
         }
@@ -1529,7 +1529,7 @@ function $CodeOneBlock(this$static, inSize, outSize, finished) {
             this$static._repMatchLenEncoder,
             this$static._rangeEncoder,
             len - 2,
-            posState
+            posState,
           )
           this$static._state = this$static._state < 7 ? 8 : 11
         }
@@ -1545,14 +1545,14 @@ function $CodeOneBlock(this$static, inSize, outSize, finished) {
           this$static._rangeEncoder,
           this$static._isRep,
           this$static._state,
-          0
+          0,
         )
         this$static._state = this$static._state < 7 ? 7 : 10
         $Encode_0(
           this$static._lenEncoder,
           this$static._rangeEncoder,
           len - 2,
-          posState
+          posState,
         )
         pos -= 4
         posSlot = GetPosSlot(pos)
@@ -1560,7 +1560,7 @@ function $CodeOneBlock(this$static, inSize, outSize, finished) {
         $Encode_2(
           this$static._posSlotEncoder[lenToPosState],
           this$static._rangeEncoder,
-          posSlot
+          posSlot,
         )
         if (posSlot >= 4) {
           footerBits = (posSlot >> 1) - 1
@@ -1572,18 +1572,18 @@ function $CodeOneBlock(this$static, inSize, outSize, finished) {
               baseVal - posSlot - 1,
               this$static._rangeEncoder,
               footerBits,
-              posReduced
+              posReduced,
             )
           } else {
             $EncodeDirectBits(
               this$static._rangeEncoder,
               posReduced >> 4,
-              footerBits - 4
+              footerBits - 4,
             )
             $ReverseEncode(
               this$static._posAlignEncoder,
               this$static._rangeEncoder,
-              posReduced & 15
+              posReduced & 15,
             )
             ++this$static._alignPriceCount
           }
@@ -1597,7 +1597,7 @@ function $CodeOneBlock(this$static, inSize, outSize, finished) {
       }
       this$static._previousByte = $GetIndexByte(
         this$static._matchFinder,
-        len - 1 - this$static._additionalOffset
+        len - 1 - this$static._additionalOffset,
       )
     }
     this$static._additionalOffset -= len
@@ -1640,7 +1640,7 @@ function $Create_2(this$static) {
   $Create_1(
     this$static._literalEncoder,
     this$static._numLiteralPosStateBits,
-    this$static._numLiteralContextBits
+    this$static._numLiteralContextBits,
   )
   if (
     this$static._dictionarySize == this$static._dictionarySizePrev &&
@@ -1653,7 +1653,7 @@ function $Create_2(this$static) {
     this$static._dictionarySize,
     4096,
     this$static._numFastBytes,
-    274
+    274,
   )
   this$static._dictionarySizePrev = this$static._dictionarySize
   this$static._numFastBytesPrev = this$static._numFastBytes
@@ -1705,7 +1705,7 @@ function $FillAlignPrices(this$static) {
   for (var i = 0; i < 16; ++i) {
     this$static._alignPrices[i] = $ReverseGetPrice(
       this$static._posAlignEncoder,
-      i
+      i,
     )
   }
   this$static._alignPriceCount = 0
@@ -1721,7 +1721,7 @@ function $FillDistancesPrices(this$static) {
       this$static._posEncoders,
       baseVal - posSlot - 1,
       footerBits,
-      i - baseVal
+      i - baseVal,
     )
   }
   for (lenToPosState = 0; lenToPosState < 4; ++lenToPosState) {
@@ -1838,7 +1838,7 @@ function $GetOptimum(this$static, position) {
       this$static._matchFinder,
       -1,
       this$static.reps[i],
-      273
+      273,
     )
     if (this$static.repLens[i] > this$static.repLens[repMaxIndex]) {
       repMaxIndex = i
@@ -1858,7 +1858,7 @@ function $GetOptimum(this$static, position) {
   currentByte = $GetIndexByte(this$static._matchFinder, -1)
   matchByte = $GetIndexByte(
     this$static._matchFinder,
-    -this$static._repDistances[0] - 1 - 1
+    -this$static._repDistances[0] - 1 - 1,
   )
   if (
     lenMain < 2 &&
@@ -1878,11 +1878,11 @@ function $GetOptimum(this$static, position) {
       $GetSubCoder(
         this$static._literalEncoder,
         position,
-        this$static._previousByte
+        this$static._previousByte,
       ),
       this$static._state >= 7,
       matchByte,
-      currentByte
+      currentByte,
     )
   $MakeAsChar(this$static._optimum[1])
   matchPrice =
@@ -2058,7 +2058,7 @@ function $GetOptimum(this$static, position) {
     currentByte = $GetIndexByte(this$static._matchFinder, -1)
     matchByte = $GetIndexByte(
       this$static._matchFinder,
-      -this$static.reps[0] - 1 - 1
+      -this$static.reps[0] - 1 - 1,
     )
     posState = position & this$static._posStateMask
     curAnd1Price =
@@ -2068,11 +2068,11 @@ function $GetOptimum(this$static, position) {
         $GetSubCoder(
           this$static._literalEncoder,
           position,
-          $GetIndexByte(this$static._matchFinder, -2)
+          $GetIndexByte(this$static._matchFinder, -2),
         ),
         state >= 7,
         matchByte,
-        currentByte
+        currentByte,
       )
     nextOptimum = this$static._optimum[cur + 1]
     nextIsChar = 0
@@ -2120,7 +2120,7 @@ function $GetOptimum(this$static, position) {
         this$static._matchFinder,
         0,
         this$static.reps[0],
-        t
+        t,
       )
       if (lenTest2 >= 2) {
         state2 = StateUpdateChar(state)
@@ -2140,7 +2140,7 @@ function $GetOptimum(this$static, position) {
           ((price = $GetPrice(
             this$static._repMatchLenEncoder,
             lenTest2 - 2,
-            posStateNext
+            posStateNext,
           )),
           price + $GetPureRepPrice(this$static, 0, state2, posStateNext))
         optimum = this$static._optimum[offset]
@@ -2159,7 +2159,7 @@ function $GetOptimum(this$static, position) {
         this$static._matchFinder,
         -1,
         this$static.reps[repIndex],
-        numAvailableBytes
+        numAvailableBytes,
       )
       if (lenTest < 2) {
         continue
@@ -2174,7 +2174,7 @@ function $GetOptimum(this$static, position) {
           ((price_0 = $GetPrice(
             this$static._repMatchLenEncoder,
             lenTest - 2,
-            posState
+            posState,
           )),
           price_0 + $GetPureRepPrice(this$static, repIndex, state, posState))
         optimum = this$static._optimum[cur + lenTest]
@@ -2192,13 +2192,13 @@ function $GetOptimum(this$static, position) {
       if (lenTest < numAvailableBytesFull) {
         t = Math.min(
           numAvailableBytesFull - 1 - lenTest,
-          this$static._numFastBytes
+          this$static._numFastBytes,
         )
         lenTest2 = $GetMatchLen(
           this$static._matchFinder,
           lenTest,
           this$static.reps[repIndex],
-          t
+          t,
         )
         if (lenTest2 >= 2) {
           state2 = state < 7 ? 8 : 11
@@ -2208,7 +2208,7 @@ function $GetOptimum(this$static, position) {
             ((price_1 = $GetPrice(
               this$static._repMatchLenEncoder,
               lenTest - 2,
-              posState
+              posState,
             )),
             price_1 +
               $GetPureRepPrice(this$static, repIndex, state, posState)) +
@@ -2219,14 +2219,14 @@ function $GetOptimum(this$static, position) {
               $GetSubCoder(
                 this$static._literalEncoder,
                 position + lenTest,
-                $GetIndexByte(this$static._matchFinder, lenTest - 1 - 1)
+                $GetIndexByte(this$static._matchFinder, lenTest - 1 - 1),
               ),
               1,
               $GetIndexByte(
                 this$static._matchFinder,
-                lenTest - 1 - (this$static.reps[repIndex] + 1)
+                lenTest - 1 - (this$static.reps[repIndex] + 1),
               ),
-              $GetIndexByte(this$static._matchFinder, lenTest - 1)
+              $GetIndexByte(this$static._matchFinder, lenTest - 1),
             )
           state2 = StateUpdateChar(state2)
           posStateNext = (position + lenTest + 1) & this$static._posStateMask
@@ -2247,7 +2247,7 @@ function $GetOptimum(this$static, position) {
             ((price_2 = $GetPrice(
               this$static._repMatchLenEncoder,
               lenTest2 - 2,
-              posStateNext
+              posStateNext,
             )),
             price_2 + $GetPureRepPrice(this$static, 0, state2, posStateNext))
           optimum = this$static._optimum[cur + offset]
@@ -2299,13 +2299,13 @@ function $GetOptimum(this$static, position) {
           if (lenTest < numAvailableBytesFull) {
             t = Math.min(
               numAvailableBytesFull - 1 - lenTest,
-              this$static._numFastBytes
+              this$static._numFastBytes,
             )
             lenTest2 = $GetMatchLen(
               this$static._matchFinder,
               lenTest,
               curBack,
-              t
+              t,
             )
             if (lenTest2 >= 2) {
               state2 = state < 7 ? 7 : 10
@@ -2319,14 +2319,14 @@ function $GetOptimum(this$static, position) {
                   $GetSubCoder(
                     this$static._literalEncoder,
                     position + lenTest,
-                    $GetIndexByte(this$static._matchFinder, lenTest - 1 - 1)
+                    $GetIndexByte(this$static._matchFinder, lenTest - 1 - 1),
                   ),
                   1,
                   $GetIndexByte(
                     this$static._matchFinder,
-                    lenTest - (curBack + 1) - 1
+                    lenTest - (curBack + 1) - 1,
                   ),
-                  $GetIndexByte(this$static._matchFinder, lenTest - 1)
+                  $GetIndexByte(this$static._matchFinder, lenTest - 1),
                 )
               state2 = StateUpdateChar(state2)
               posStateNext =
@@ -2350,7 +2350,7 @@ function $GetOptimum(this$static, position) {
                 ((price_3 = $GetPrice(
                   this$static._repMatchLenEncoder,
                   lenTest2 - 2,
-                  posStateNext
+                  posStateNext,
                 )),
                 price_3 +
                   $GetPureRepPrice(this$static, 0, state2, posStateNext))
@@ -2448,7 +2448,7 @@ function $ReadMatchDistances(this$static) {
   var lenRes = 0
   this$static._numDistancePairs = $GetMatches(
     this$static._matchFinder,
-    this$static._matchDistances
+    this$static._matchDistances,
   )
   if (this$static._numDistancePairs > 0) {
     lenRes = this$static._matchDistances[this$static._numDistancePairs - 2]
@@ -2457,7 +2457,7 @@ function $ReadMatchDistances(this$static) {
         this$static._matchFinder,
         lenRes - 1,
         this$static._matchDistances[this$static._numDistancePairs - 1],
-        273 - lenRes
+        273 - lenRes,
       )
   }
   ++this$static._additionalOffset
@@ -2516,13 +2516,13 @@ function $WriteEndMarker(this$static, posState) {
     this$static._rangeEncoder,
     this$static._isMatch,
     (this$static._state << 4) + posState,
-    1
+    1,
   )
   $Encode_3(
     this$static._rangeEncoder,
     this$static._isRep,
     this$static._state,
-    0
+    0,
   )
   this$static._state = this$static._state < 7 ? 7 : 10
   $Encode_0(this$static._lenEncoder, this$static._rangeEncoder, 0, posState)
@@ -2530,7 +2530,7 @@ function $WriteEndMarker(this$static, posState) {
   $Encode_2(
     this$static._posSlotEncoder[lenToPosState],
     this$static._rangeEncoder,
-    63
+    63,
   )
   $EncodeDirectBits(this$static._rangeEncoder, 67108863, 26)
   $ReverseEncode(this$static._posAlignEncoder, this$static._rangeEncoder, 15)
@@ -2622,7 +2622,7 @@ function $Encode_0(this$static, rangeEncoder, symbol, posState) {
       posState,
       this$static._tableSize,
       this$static._prices,
-      posState * 272
+      posState * 272,
     )
     this$static._counters[posState] = this$static._tableSize
   }
@@ -2646,7 +2646,7 @@ function $UpdateTables(this$static, numPosStates) {
       posState,
       this$static._tableSize,
       this$static._prices,
-      posState * 272
+      posState * 272,
     )
     this$static._counters[posState] = this$static._tableSize
   }
@@ -2734,7 +2734,7 @@ function $GetPrice_0(this$static, matchMode, matchByte, symbol) {
       bit = (symbol >> i) & 1
       price += GetPrice(
         this$static.m_Encoders[((1 + matchBit) << 8) + context],
-        bit
+        bit,
       )
       context = (context << 1) | bit
       if (matchBit != bit) {
@@ -2964,7 +2964,7 @@ function $Encode_3(this$static, probs, index, symbol) {
   } else {
     this$static.Low = add(
       this$static.Low,
-      and(fromInt(newBound), [4294967295, 0])
+      and(fromInt(newBound), [4294967295, 0]),
     )
     this$static.Range -= newBound
     probs[index] = ((prob - (prob >>> 5)) << 16) >> 16
@@ -2991,7 +2991,7 @@ function $EncodeDirectBits(this$static, v, numTotalBits) {
 function $GetProcessedSizeAdd(this$static) {
   return add(
     add(fromInt(this$static._cacheSize), this$static._position),
-    [4, 0]
+    [4, 0],
   )
 }
 
@@ -3009,7 +3009,7 @@ function $ShiftLow(this$static) {
   if (LowHi != 0 || compare(this$static.Low, [4278190080, 0]) < 0) {
     this$static._position = add(
       this$static._position,
-      fromInt(this$static._cacheSize)
+      fromInt(this$static._cacheSize),
     )
     temp = this$static._cache
     do {
@@ -3141,7 +3141,7 @@ const modes = [
   { s: 22, f: 128, m: 1 },
   { s: 23, f: 128, m: 1 },
   { s: 24, f: 255, m: 1 },
-  { s: 25, f: 255, m: 1 }
+  { s: 25, f: 255, m: 1 },
 ]
 
 function get_mode_obj(mode) {
@@ -3164,7 +3164,7 @@ export function compress(value, { mode = 7, enableEndMark = true } = {}) {
     {},
     encode(value),
     get_mode_obj(mode),
-    enableEndMark
+    enableEndMark,
   )
   while ($processChunk(this$static.c.chunker));
   return $toByteArray(this$static.c.output)
@@ -3181,7 +3181,7 @@ export function compress(value, { mode = 7, enableEndMark = true } = {}) {
  */
 export function compressBase64(
   string,
-  { mode = 7, enableEndMark = true } = {}
+  { mode = 7, enableEndMark = true } = {},
 ) {
   const compressedString = compress(string, { mode, enableEndMark })
   const compressedBytes = new Uint8Array(compressedString)

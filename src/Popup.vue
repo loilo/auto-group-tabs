@@ -29,7 +29,7 @@ function cancelAddDialog() {
 async function saveAddDialog(
   title: string,
   color: `${chrome.tabGroups.Color}`,
-  options: SaveOptions
+  options: SaveOptions,
 ) {
   const id = crypto.randomUUID()
 
@@ -40,8 +40,8 @@ async function saveAddDialog(
       title,
       color,
       matchers: [],
-      options
-    }
+      options,
+    },
   ])
 
   selectedGroup.value = id
@@ -82,7 +82,7 @@ function savePatterns() {
     if (group.id === selectedGroup.value) {
       return {
         ...group,
-        matchers: [...new Set([...group.matchers, ...patterns.value])]
+        matchers: [...new Set([...group.matchers, ...patterns.value])],
       }
     } else {
       return group
@@ -122,7 +122,7 @@ function editGroup(id: string) {
 async function createFromCurrentGroup(
   title: string,
   color: chrome.tabGroups.Color,
-  tabs: chrome.tabs.Tab[]
+  tabs: chrome.tabs.Tab[],
 ) {
   const id = crypto.randomUUID()
   scrollToGroup.data.value = id
@@ -134,8 +134,8 @@ async function createFromCurrentGroup(
       title,
       color,
       matchers: [],
-      options: { strict: false, merge: false }
-    }
+      options: { strict: false, merge: false },
+    },
   ])
 
   patterns.value = tabs.map(tab => tab.url!)
@@ -143,7 +143,7 @@ async function createFromCurrentGroup(
 }
 
 const scrollToGroup = useStorage('scrollToGroup', '' as string, {
-  storage: 'local'
+  storage: 'local',
 })
 
 onMounted(() => {
@@ -151,7 +151,7 @@ onMounted(() => {
     if (document.body.scrollWidth > document.body.clientWidth) {
       document.documentElement.style.setProperty(
         '--popup-width',
-        `${document.body.clientWidth - 2 * 15}px`
+        `${document.body.clientWidth - 2 * 15}px`,
       )
     }
   }, 0)

@@ -5,15 +5,15 @@ import {
   getValue,
   GroupConfigurationWithoutId,
   isMacOS,
-  setGroups
+  setGroups,
 } from '../util/evaluations'
 
 test.use({
   viewport: {
     width: 400,
-    height: 600
+    height: 600,
   },
-  headless: false
+  headless: false,
 })
 
 test.beforeEach(async ({ page }) => {
@@ -25,8 +25,8 @@ test.beforeEach(async ({ page }) => {
       title: 'Test Group',
       color: 'blue',
       matchers: [],
-      options: { strict: true, merge: true }
-    } as GroupConfigurationWithoutId
+      options: { strict: true, merge: true },
+    } as GroupConfigurationWithoutId,
   ])
 
   // Reload the page to apply localStorage changes
@@ -48,7 +48,7 @@ test('Edit and save groups', async ({ page }) => {
   const getBackgroundColor = (element: HTMLElement | SVGElement) =>
     getComputedStyle(element).backgroundColor
   expect(await previewLabel.evaluate(getBackgroundColor)).toBe(
-    'rgb(25, 116, 232)'
+    'rgb(25, 116, 232)',
   )
 
   // Expect initial group name input to be empty
@@ -81,7 +81,7 @@ test('Edit and save groups', async ({ page }) => {
   // Expect the preview to have updated
   expect(await previewLabel.textContent()).toBe('Edited Group')
   expect(await previewLabel.evaluate(getBackgroundColor)).toBe(
-    'rgb(218, 48, 37)'
+    'rgb(218, 48, 37)',
   )
 
   // Save the group
@@ -95,7 +95,7 @@ test('Edit and save groups', async ({ page }) => {
   await expect(groupsListTag).toHaveCount(1)
   expect(await groupsListTag.textContent()).toBe('Edited Group')
   expect(await groupsListTag.evaluate(getBackgroundColor)).toBe(
-    'rgb(218, 48, 37)'
+    'rgb(218, 48, 37)',
   )
 
   // Validate groups structure in storage
@@ -105,8 +105,8 @@ test('Edit and save groups', async ({ page }) => {
       title: 'Edited Group',
       color: 'red',
       matchers: [],
-      options: { strict: false, merge: false }
-    }
+      options: { strict: false, merge: false },
+    },
   ])
 })
 
@@ -136,7 +136,7 @@ test('Delete Groups and undo deletion', async ({ page }) => {
       title: 'Test Group',
       color: 'blue',
       matchers: [],
-      options: { strict: true, merge: true }
-    }
+      options: { strict: true, merge: true },
+    },
   ])
 })

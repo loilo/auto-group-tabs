@@ -33,7 +33,7 @@ function getEditStore() {
     isRegistered,
     hasAny,
     sendCloseSignal,
-    onCloseSignal
+    onCloseSignal,
   }
 }
 

@@ -21,7 +21,7 @@ export type GroupConfigurationWithoutId = Omit<GroupConfiguration, 'id'>
 export function setGroups(groups: GroupConfigurationWithoutId[]) {
   const supplementedGroups = groups.map(group => ({
     ...group,
-    id: crypto.randomUUID()
+    id: crypto.randomUUID(),
   }))
   localStorage.groups = JSON.stringify(supplementedGroups)
 }
@@ -34,6 +34,6 @@ export function waitAnimationsFinished(element: HTMLElement | SVGElement) {
   return Promise.all(
     element
       .getAnimations({ subtree: true })
-      .map(animation => animation.finished)
+      .map(animation => animation.finished),
   )
 }

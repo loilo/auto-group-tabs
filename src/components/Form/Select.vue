@@ -22,7 +22,7 @@
             v-bind="{
               value: option.value,
               label: option.label,
-              selected: option.value === modelValue
+              selected: option.value === modelValue,
             }"
           >
             {{ option.label }}
@@ -37,7 +37,7 @@
 
 <script lang="ts">
 export default {
-  inheritAttrs: false
+  inheritAttrs: false,
 }
 </script>
 
@@ -68,13 +68,13 @@ const validityTransform = computed(() =>
         if (!customValidationResult) {
           return {
             valid: false,
-            customError: true
+            customError: true,
           }
         }
 
         return {}
       }
-    : undefined
+    : undefined,
 )
 
 onBeforeUnmount(() => {
@@ -108,7 +108,7 @@ defineExpose({
   blur,
   focus,
   isValid,
-  validate
+  validate,
 })
 
 onMounted(() => {

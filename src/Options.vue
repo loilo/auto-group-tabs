@@ -27,13 +27,15 @@
             </template>
             <template #item="{ element: group }">
               <Group
-                :ref="(component: any) => {
-                if (component === null) {
-                  delete groupRefs[group.id]
-                } else {
-                  groupRefs[group.id] = component
-                }
-              }"
+                :ref="
+                  (component: any) => {
+                    if (component === null) {
+                      delete groupRefs[group.id]
+                    } else {
+                      groupRefs[group.id] = component
+                    }
+                  }
+                "
                 :id="`group-${group.id}`"
                 :group-id="group.id"
                 v-model:title="group.title"
@@ -117,7 +119,7 @@ import Draggable from 'vuedraggable'
 import {
   useGroupConfigurations,
   useStorage,
-  useSyncedCopy
+  useSyncedCopy,
 } from '@/composables'
 import { useViewStore } from '@/stores'
 import { saveGroupConfigurations } from '@/util/group-configurations'
@@ -170,12 +172,12 @@ function toggleSortMode() {
     // Prevent options dialog height from collapsing
     document.documentElement.style.setProperty(
       '--body-height',
-      `${Math.min(document.body.clientHeight, window.innerHeight)}px`
+      `${Math.min(document.body.clientHeight, window.innerHeight)}px`,
     )
 
     window.scrollTo({
       top: 0,
-      behavior: 'smooth'
+      behavior: 'smooth',
     })
   }
 }
@@ -193,14 +195,14 @@ const resetBodyHeight = useDebounceFn(() => {
 function scrollGroupIntoView(id: string) {
   document.getElementById(`group-${id}`)?.scrollIntoView({
     behavior: 'smooth',
-    block: 'start'
+    block: 'start',
   })
 }
 Object.assign(window, { scrollGroupIntoView })
 
 function deleteGroup(group: GroupConfiguration) {
   const index = groupsCopy.value.findIndex(
-    searchedGroup => searchedGroup.id === group.id
+    searchedGroup => searchedGroup.id === group.id,
   )
 
   undoStack.push(() => {
@@ -218,7 +220,7 @@ function deleteGroup(group: GroupConfiguration) {
 function addGroup(
   title: string,
   color: `${chrome.tabGroups.Color}`,
-  { strict, merge }: SaveOptions
+  { strict, merge }: SaveOptions,
 ) {
   const id = crypto.randomUUID()
 
@@ -229,8 +231,8 @@ function addGroup(
     matchers: [],
     options: {
       strict,
-      merge
-    }
+      merge,
+    },
   })
 
   nextTick(() => {
@@ -243,7 +245,7 @@ function addGroup(
 }
 
 const scrollToGroup = useStorage('scrollToGroup', '', {
-  storage: 'local'
+  storage: 'local',
 })
 
 const viewStore = useViewStore()
@@ -325,8 +327,9 @@ onMounted(() => {
 }
 
 .secondary-button {
-  --mdc-fab-box-shadow: 0 3px 5px -1px rgb(0 0 0 / 12%),
-    0 6px 10px 0 rgb(0 0 0 / 6%), 0 1px 18px 0 rgb(0 0 0 / 4%);
+  --mdc-fab-box-shadow:
+    0 3px 5px -1px rgb(0 0 0 / 12%), 0 6px 10px 0 rgb(0 0 0 / 6%),
+    0 1px 18px 0 rgb(0 0 0 / 4%);
   --mdc-theme-on-secondary: var(--dimmed);
   --mdc-theme-secondary: var(--white);
 

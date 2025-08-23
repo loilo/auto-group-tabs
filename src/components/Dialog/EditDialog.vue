@@ -6,7 +6,7 @@
       class="preview"
       :style="{
         '--group-color': `var(--group-${editColor})`,
-        '--group-foreground-color': `var(--group-${editColor}-foreground)`
+        '--group-foreground-color': `var(--group-${editColor}-foreground)`,
       }"
     />
 
@@ -126,9 +126,9 @@ const props = withDefaults(
     deletable: false,
     options: () => ({
       strict: false,
-      merge: false
-    })
-  }
+      merge: false,
+    }),
+  },
 )
 
 const emit = defineEmits<{
@@ -136,7 +136,7 @@ const emit = defineEmits<{
     e: 'save',
     title: string,
     color: `${chrome.tabGroups.Color}`,
-    options: SaveOptions
+    options: SaveOptions,
   ): void
   (e: 'delete'): void
   (e: 'cancel'): void
@@ -182,7 +182,7 @@ onUnmounted(() => {
 
 function checkForDuplicates() {
   const conflictingGroup = groups.data.value.find(
-    group => group.color === editColor.value && group.title === editTitle.value
+    group => group.color === editColor.value && group.title === editTitle.value,
   )
 
   if (!conflictingGroup) return true
@@ -194,7 +194,7 @@ function checkForDuplicates() {
 function save(event: KeyboardEvent) {
   if (!groups.loaded.value) {
     alert(
-      'Groups could not be loaded. This should never happen. Please report this bug to the extension author.'
+      'Groups could not be loaded. This should never happen. Please report this bug to the extension author.',
     )
     return
   }
@@ -204,7 +204,7 @@ function save(event: KeyboardEvent) {
   event.preventDefault()
   emit('save', editTitle.value, editColor.value, {
     strict: editStrict.value,
-    merge: editMerge.value
+    merge: editMerge.value,
   })
   emit('close')
 }
@@ -306,8 +306,9 @@ function remove() {
 
 mwc-dialog {
   @media (prefers-color-scheme: dark) {
-    --mdc-dialog-box-shadow: 0px 11px 15px -7px rgba(0, 0, 0, 1),
-      0px 24px 38px 3px rgba(0, 0, 0, 1), 0px 9px 46px 8px rgba(0, 0, 0, 1);
+    --mdc-dialog-box-shadow:
+      0px 11px 15px -7px rgba(0, 0, 0, 1), 0px 24px 38px 3px rgba(0, 0, 0, 1),
+      0px 9px 46px 8px rgba(0, 0, 0, 1);
   }
 }
 

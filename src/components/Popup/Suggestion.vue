@@ -4,7 +4,7 @@ import { inject, ref } from 'vue'
 
 import {
   deriveMatcherOptions,
-  MatcherOptions
+  MatcherOptions,
 } from '@/util/derive-matcher-options'
 import { Translation } from '@/util/types'
 import { useSyncedCopy } from '@/composables'
@@ -18,7 +18,7 @@ defineExpose({
   },
   showNewMatcher() {
     return patternListRef.value!.showNewMatcher()
-  }
+  },
 })
 
 const options = ref<MatcherOptions[]>([])
@@ -27,7 +27,7 @@ const msg = inject<Translation>('msg')!
 if (isExtensionWorker) {
   const [tab] = await chrome.tabs.query({
     active: true,
-    lastFocusedWindow: true
+    lastFocusedWindow: true,
   })
 
   if (tab) {
@@ -36,7 +36,7 @@ if (isExtensionWorker) {
 } else {
   options.value = deriveMatcherOptions(
     new URL(location.href).searchParams.get('url') ?? 'chrome://newtab/',
-    msg
+    msg,
   )
 }
 
@@ -50,7 +50,7 @@ const emit = defineEmits<{
 
 const patterns = useSyncedCopy(
   () => props.modelValue,
-  newValue => emit('update:modelValue', newValue)
+  newValue => emit('update:modelValue', newValue),
 )
 </script>
 
