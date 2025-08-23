@@ -47,6 +47,10 @@
     "message": "Ungültiges URL-Muster",
     "description": "Error message for invalid URL pattern"
   },
+  "invalidRegex": {
+    "message": "Ungültiger regulärer Ausdruck",
+    "description": "Error message for invalid regex pattern"
+  },
   "matchPatternInfo": {
     "message": "Mehr über URL-Muster erfahren (englisch)",
     "description": "Match pattern info link"

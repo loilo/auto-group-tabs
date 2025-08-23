@@ -1,14 +1,29 @@
-import { matcherPattern, sanitizeRegex } from '@/util/helpers'
+import {
+  createRegexFromRegexPattern,
+  isRegexPattern,
+  isValidRegexPattern,
+  matcherPattern,
+  sanitizeRegex
+} from '@/util/helpers'
+
+/**
+ * Replace asterisks in a regex string
+ */
+function generatePatternString(string: string, asteriskReplacement: string) {
+  return string.split('*').map(sanitizeRegex).join(asteriskReplacement)
+}
 
 /**
  * Generate a regular expression from a matcher string
  */
-export function generateMatcherRegex(matcher: string) {
-  /**
-   * Replace asterisks in a regex string
-   */
-  function generatePatternString(string: string, asteriskReplacement: string) {
-    return string.split('*').map(sanitizeRegex).join(asteriskReplacement)
+export function generateMatcherRegex(matcher: string): RegExp {
+  // Handle regex patterns
+  if (isRegexPattern(matcher)) {
+    if (!isValidRegexPattern(matcher)) {
+      throw new Error('Invalid regex pattern: ' + matcher)
+    }
+
+    return createRegexFromRegexPattern(matcher)
   }
 
   const matcherPatternRegex = new RegExp(matcherPattern)

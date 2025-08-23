@@ -14,7 +14,11 @@
       @blur="emit('blur', $event)"
       :validityTransform.prop="validityTransform"
     />
-    <div class="invalid-matcher" v-if="isInvalid" v-html="validationMessage" />
+    <div
+      class="invalid-matcher"
+      v-if="isInvalid"
+      v-html="validityMessageString"
+    />
   </div>
 </template>
 
@@ -29,7 +33,7 @@ import { computed, nextTick, onBeforeUnmount, onMounted, ref } from 'vue'
 
 const props = defineProps<{
   modelValue: string
-  validationMessage?: string
+  validationMessage?: string | ((validity: ValidityState) => string)
   validator?: (value: string) => boolean
 }>()
 
@@ -42,7 +46,16 @@ const emit = defineEmits<{
 }>()
 
 const isInvalid = ref(false)
+const validity = ref<ValidityState | undefined>()
 const textfieldRef = ref()
+
+const validityMessageString = computed(() =>
+  props.validationMessage
+    ? typeof props.validationMessage === 'string'
+      ? props.validationMessage
+      : props.validationMessage(validity.value!)
+    : ''
+)
 
 const validityTransform = computed(() =>
   props.validator
@@ -64,13 +77,19 @@ onBeforeUnmount(() => {
   delete textfieldRef.value.validityTransform
 })
 
-function onChange(event: Event) {
+function updateValidity() {
   isInvalid.value = !isValid()
+  validity.value = textfieldRef.value.validity
+}
+
+function onChange(event: Event) {
+  updateValidity()
   emit('change', event)
 }
 
 function isValid() {
   return textfieldRef.value?.checkValidity()
+  textfieldRef.value!.validity
 }
 
 function blur() {
@@ -86,7 +105,7 @@ function select() {
 }
 
 function validate() {
-  isInvalid.value = !isValid()
+  updateValidity()
   textfieldRef.value.reportValidity()
 }
 
@@ -112,7 +131,7 @@ onMounted(() => {
   textfieldRef.value.shadowRoot.adoptedStyleSheets.push(sheet)
 
   nextTick(() => {
-    isInvalid.value = !isValid()
+    updateValidity()
     textfieldRef.value.reportValidity()
   })
 })

@@ -58,16 +58,56 @@ export const matcherPattern =
     '(?:/(?<path>.*))?' +
   ')$'
 
+export const regexPattern = '^/(?<source>.*)/(?<flags>[dgimsuvy]*)$'
+
+export const inputPattern = `(${matcherPattern}|${regexPattern})`
+
+/**
+ * Check whether the given matcher input should be interpreted as a regex pattern
+ */
+export function isRegexPattern(input: string): boolean {
+  return input.startsWith('/')
+}
+
+const regexPatternRegex = new RegExp(regexPattern)
+
+/**
+ * Create a regex from a regex pattern
+ */
+export function createRegexFromRegexPattern(input: string): RegExp {
+  const result = input.match(regexPatternRegex)
+  if (!result) {
+    throw new Error('Invalid regex pattern: ' + input)
+  }
+
+  return new RegExp(result.groups!.source, result.groups!.flags)
+}
+
+/**
+ * Check whether the given input is a valid regex pattern
+ */
+export function isValidRegexPattern(input: string): boolean {
+  if (!isRegexPattern(input)) return false
+
+  try {
+    createRegexFromRegexPattern(input)
+    return true
+  } catch {
+    return false
+  }
+}
+
 /**
  * Capitalize a string
  */
-export const capitalize = (string: string) =>
-  string.slice(0, 1).toUpperCase() + string.slice(1)
+export function capitalize(string: string): string {
+  return string.slice(0, 1).toUpperCase() + string.slice(1)
+}
 
 /**
  * Escape special characters in a regex string
  */
-export function sanitizeRegex(string: string) {
+export function sanitizeRegex(string: string): string {
   return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
 }
 

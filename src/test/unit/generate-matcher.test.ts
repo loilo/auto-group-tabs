@@ -119,3 +119,14 @@ it('handles simple scheme', () => {
   expect(regex.test('http://invalid.com/foo/')).toBe(false)
   expect(regex.test('https://invalid.com/foo/')).toBe(false)
 })
+
+it('allows for regular expressions', () => {
+  const regex = generateMatcherRegex('/^fo.?/i')
+
+  expect(regex.test('foo')).toBe(true)
+  expect(regex.test('Foo')).toBe(true)
+  expect(regex.test('fo')).toBe(true)
+
+  expect(regex.test('iFoo')).toBe(false)
+  expect(regex.test('ufo')).toBe(false)
+})

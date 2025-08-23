@@ -15,7 +15,7 @@
           }"
         :modelValue="matcher.value"
         @update:modelValue="matcher.value = $event"
-        :pattern="matcherPattern"
+        :pattern="inputPattern"
         :placeholder="msg.urlInputPlaceholder"
         @change="updateMatchers"
         @keydown.backspace="
@@ -23,7 +23,11 @@
         "
         @keydown.enter="returnFromMatcherInput(index)"
         @keydown.escape="triggerBlur"
-        :validation-message="msg.invalidUrlPattern"
+        :validation-message="
+          isRegexPattern(matcher.value)
+            ? msg.invalidRegex
+            : msg.invalidUrlPattern
+        "
       />
       <!--
           The production build partly eradicates the info icon when used as a
@@ -51,7 +55,7 @@
         <Textfield
           ref="newMatcher"
           v-model="newMatcherValue"
-          :pattern="matcherPattern"
+          :pattern="inputPattern"
           :placeholder="msg.urlInputPlaceholder"
           @change="handleNewMatcher"
           @keydown.backspace="
@@ -59,7 +63,11 @@
           "
           @keydown.enter="returnFromMatcherInput(-1)"
           @keydown.escape="triggerBlur"
-          :validation-message="msg.invalidUrlPattern"
+          :validation-message="
+            isRegexPattern(newMatcherValue)
+              ? msg.invalidRegex
+              : msg.invalidUrlPattern
+          "
           auto-validate
         />
 
@@ -88,7 +96,7 @@ import Textfield from './Form/Textfield.vue'
 import SlideVertical from './Util/SlideVertical.vue'
 
 import { tickResetRef, useSyncedCopy } from '@/composables'
-import { matcherPattern } from '@/util/helpers'
+import { inputPattern, isRegexPattern } from '@/util/helpers'
 import { computed, nextTick, ref } from 'vue'
 
 const props = defineProps<{
