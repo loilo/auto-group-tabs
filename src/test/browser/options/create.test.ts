@@ -28,7 +28,7 @@ test('Test group creation flow', async ({ page }) => {
     previewLabel.evaluate(
       previewLabel => getComputedStyle(previewLabel).backgroundColor
     )
-  expect(await getPreviewColor()).toBe('rgb(95, 99, 104)')
+  expect(await getPreviewColor()).toBe('rgb(95, 99, 105)')
 
   // Expect initial group name input to be empty
   const groupNameInput = dialogContainer.locator('mwc-textfield.group-title')
@@ -51,7 +51,7 @@ test('Test group creation flow', async ({ page }) => {
 
   // Expect the preview to have updated
   expect(await previewLabel.textContent()).toBe('Test Group')
-  expect(await getPreviewColor()).toBe('rgb(62, 115, 232)')
+  expect(await getPreviewColor()).toBe('rgb(25, 116, 232)')
 
   // Save the new group
   await dialogContainer.locator(`text=${msg.buttonSave.message}`).click()

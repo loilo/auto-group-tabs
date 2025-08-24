@@ -48,7 +48,7 @@ test('Edit and save groups', async ({ page }) => {
   const getBackgroundColor = (element: HTMLElement | SVGElement) =>
     getComputedStyle(element).backgroundColor
   expect(await previewLabel.evaluate(getBackgroundColor)).toBe(
-    'rgb(62, 115, 232)'
+    'rgb(25, 116, 232)'
   )
 
   // Expect initial group name input to be empty
@@ -81,7 +81,7 @@ test('Edit and save groups', async ({ page }) => {
   // Expect the preview to have updated
   expect(await previewLabel.textContent()).toBe('Edited Group')
   expect(await previewLabel.evaluate(getBackgroundColor)).toBe(
-    'rgb(217, 48, 36)'
+    'rgb(218, 48, 37)'
   )
 
   // Save the group
@@ -95,7 +95,7 @@ test('Edit and save groups', async ({ page }) => {
   await expect(groupsListTag).toHaveCount(1)
   expect(await groupsListTag.textContent()).toBe('Edited Group')
   expect(await groupsListTag.evaluate(getBackgroundColor)).toBe(
-    'rgb(217, 48, 36)'
+    'rgb(218, 48, 37)'
   )
 
   // Validate groups structure in storage

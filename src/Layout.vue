@@ -57,16 +57,16 @@
   --super-dimmed: hsla(210, 4%, 39%, 0.133);
 
   --group-foreground: var(--white);
-  --group-grey: #5f6368;
-  --group-blue: #3e73e8;
-  --group-red: #d93024;
-  --group-yellow: #f3ab03;
+  --group-grey: #5f6369;
+  --group-blue: #1974e8;
+  --group-red: #da3025;
+  --group-yellow: #f9ab04;
   --group-yellow-foreground: var(--black);
-  --group-green: #2e8038;
-  --group-pink: #d01c84;
-  --group-purple: #a042f4;
-  --group-cyan: #327c83;
-  --group-orange: #f1903e;
+  --group-green: #198139;
+  --group-pink: #d01984;
+  --group-purple: #a143f5;
+  --group-cyan: #027b84;
+  --group-orange: #fa913e;
   --group-orange-foreground: var(--black);
 
   --mdc-theme-success: #2e8038;
@@ -88,12 +88,12 @@
     --group-grey: #dadce0;
     --group-blue: #8ab3f8;
     --group-red: #f18b82;
-    --group-yellow: #f7d563;
-    --group-green: #81c895;
-    --group-pink: #f38bcb;
-    --group-purple: #c48af8;
-    --group-cyan: #78d9ec;
-    --group-orange: #f4ac70;
+    --group-yellow: #fdd664;
+    --group-green: #81ca95;
+    --group-pink: #ff8bcc;
+    --group-purple: #c58afa;
+    --group-cyan: #78d9ed;
+    --group-orange: #fcad70;
 
     --separator: rgb(255 255 255 / 10%);
 

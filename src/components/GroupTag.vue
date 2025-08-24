@@ -50,7 +50,7 @@ const displayTitle = computed(() => {
 .tag {
   position: relative;
   display: inline-block;
-  border-radius: 5px;
+  border-radius: 6px;
   padding: 0.35em 0.6em;
   font-size: var(--tag-font-size, 14px);
   font-weight: 400;

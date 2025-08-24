@@ -13,40 +13,58 @@
       <svg
         class="tab-image"
         width="19"
-        height="33"
-        viewBox="0 0 19 33"
+        height="34"
+        viewBox="0 0 19 34"
+        fill="none"
         xmlns="http://www.w3.org/2000/svg"
       >
-        <path
-          d="M20 1v40h-48v-9H1a6.977 6.977 0 0 0 4.871-1.973 6.978 6.978 0 0 0 2.125-4.794L8 7c0-1.657.672-3.157 1.757-4.243A5.981 5.981 0 0 1 14 1h6Z"
-          style="fill: var(--tab-background)"
-          stroke="currentColor"
-          stroke-width="2"
-          fill-rule="evenodd"
-        />
+        <g :clip-path="`url(#${id}-open)`">
+          <path
+            d="M20 1v34H0v-2a9 9 0 0 0 9-9V11A10 10 0 0 1 19 1h1Z"
+            style="fill: var(--tab-background)"
+            stroke="currentColor"
+            stroke-width="2"
+          />
+        </g>
+        <defs>
+          <clipPath :id="`${id}-open`">
+            <rect width="19" height="34" style="fill: var(--tab-background)" />
+          </clipPath>
+        </defs>
       </svg>
-      <span class="tab-title">{{ tabTitle }}</span>
+
+      <div class="tab-title-wrapper">
+        <span class="tab-title">{{ tabTitle }}</span>
+      </div>
+
       <svg
-        class="tab-image"
+        class="tab-image tab-image-close"
         width="19"
-        height="33"
-        viewBox="0 0 19 33"
+        height="34"
+        viewBox="0 0 19 34"
+        fill="none"
         xmlns="http://www.w3.org/2000/svg"
       >
-        <path
-          d="M5 1c1.657 0 3.157.672 4.243 1.757A5.981 5.981 0 0 1 11 7v17.985c.063 1.988.856 3.739 2.112 4.995A6.875 6.875 0 0 0 18 32h29v9H-1V1Z"
-          style="fill: var(--tab-background)"
-          stroke="currentColor"
-          stroke-width="2"
-          fill-rule="evenodd"
-        />
+        <g :clip-path="`url(#${id}-open)`">
+          <path
+            d="M20 1v34H0v-2a9 9 0 0 0 9-9V11A10 10 0 0 1 19 1h1Z"
+            style="fill: var(--tab-background)"
+            stroke="currentColor"
+            stroke-width="2"
+          />
+        </g>
+        <defs>
+          <clipPath :id="`${id}-open`">
+            <rect width="19" height="34" style="fill: var(--tab-background)" />
+          </clipPath>
+        </defs>
       </svg>
     </div>
   </div>
 </template>
 
 <script lang="ts" setup>
-import { nextTick, onMounted, ref, watch } from 'vue'
+import { nextTick, onMounted, ref, watch, useId } from 'vue'
 
 const props = defineProps<{
   groupTitle: string
@@ -59,6 +77,8 @@ function updateOverflowing() {
   overflowing.value =
     groupLabelRef.value!.scrollWidth > groupLabelRef.value!.clientWidth
 }
+
+const id = useId()
 
 onMounted(() => {
   updateOverflowing()
@@ -75,10 +95,10 @@ watch(
 
 <style lang="scss" scoped>
 .tab-bar {
-  --tab-bar-background: #dfe1e5;
+  --tab-bar-background: #e3e3e3;
   --tab-bar-border: #caced6;
   --tab-background: #ffffff;
-  --tab-foreground: #4e5055;
+  --tab-foreground: #1f1f1f;
   --group-foreground: #ffffff;
 
   @media (prefers-color-scheme: dark) {
@@ -100,17 +120,20 @@ watch(
 
   .group {
     display: grid;
-    grid-template-rows: auto 22px 2px;
-    gap: 4px;
-    height: 33px;
+    grid-template-rows: auto 20px 8px 2px;
+    grid-template-areas: '.' 'label' '.' 'underline';
+    height: 34px;
     overflow: hidden;
     max-width: 131px;
 
     .group-label {
-      grid-row: 2 / span 1;
+      grid-area: label;
+      display: flex;
+      align-items: center;
       position: relative;
-      border-radius: 5px;
-      padding: 5px 7px;
+      margin-right: 5px;
+      border-radius: 6px;
+      padding: 0 6px;
       font-size: 12px;
       font-weight: 500;
       letter-spacing: -0.1px;
@@ -138,16 +161,13 @@ watch(
 
       &.empty {
         padding: 0;
-        width: 14px;
-        height: 14px;
-        border-radius: 7px;
-        margin-top: 4px;
-        margin-right: 4px;
+        width: 20px;
+        height: 20px;
       }
     }
 
     .group-underline {
-      grid-row: 3 / span 1;
+      grid-area: underline;
       height: 4px;
       background-color: var(--group-color);
       border-top-left-radius: 2px;
@@ -156,24 +176,28 @@ watch(
 
   .tab {
     width: 176px;
-    height: 33px;
+    height: 34px;
     margin-left: -3px;
     overflow: hidden;
     display: flex;
     align-items: stretch;
 
+    .tab-title-wrapper {
+      background: var(--tab-background);
+    }
+
     .tab-title {
       display: flex;
       align-items: center;
       min-width: 120px;
-      padding: 0 10px 0 4px;
+      height: 24px;
+      padding: 0 10px 0 0;
 
       font-size: 12px;
       font-weight: 500;
       letter-spacing: 0;
       line-height: 1;
 
-      background: var(--tab-background);
       color: var(--tab-foreground);
       border-top: 2px solid var(--group-color);
 
@@ -182,6 +206,10 @@ watch(
 
     .tab-image {
       color: var(--group-color);
+
+      &.tab-image-close {
+        transform: scaleX(-1);
+      }
     }
   }
 }
