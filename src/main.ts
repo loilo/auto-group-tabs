@@ -34,32 +34,66 @@ const language = /^de-?/.test(
 window.document.documentElement.setAttribute('lang', language)
 
 async function main() {
-  const rawMessages: RawTranslation = await import(
-    `./static/_locales/${language}/messages.json`
-  )
-  const messages = Object.fromEntries(
-    Object.entries(rawMessages).map(([key, { message }]) => [key, message])
-  ) as Translation
+  try {
+    const rawMessages: RawTranslation = await import(
+      `./static/_locales/${language}/messages.json`
+    )
+    const messages = Object.fromEntries(
+      Object.entries(rawMessages).map(([key, { message }]) => [key, message])
+    ) as Translation
 
-  const context = new URL(location.href).searchParams.get('context')
-  let appComponent: any
-  switch (context) {
-    case 'popup':
-      appComponent = Popup
-      break
+    const context = new URL(location.href).searchParams.get('context')
+    let appComponent: any
+    switch (context) {
+      case 'popup':
+        appComponent = Popup
+        break
 
-    default:
-      appComponent = Options
-      break
+      default:
+        appComponent = Options
+        break
+    }
+
+    const pinia = createPinia()
+    const app = createApp(appComponent)
+    app.use(pinia)
+    app.use(i18n, messages)
+    app.use(colorNames, messages)
+
+    app.mount('#app')
+  } catch (error) {
+    console.error('Failed to initialize application:', error)
+    // Fallback to English if language loading fails
+    if (language !== 'en') {
+      console.warn('Falling back to English locale')
+      try {
+        const rawMessages: RawTranslation = await import(
+          './static/_locales/en/messages.json'
+        )
+        const messages = Object.fromEntries(
+          Object.entries(rawMessages).map(([key, { message }]) => [key, message])
+        ) as Translation
+
+        const context = new URL(location.href).searchParams.get('context')
+        const appComponent = context === 'popup' ? Popup : Options
+
+        const pinia = createPinia()
+        const app = createApp(appComponent)
+        app.use(pinia)
+        app.use(i18n, messages)
+        app.use(colorNames, messages)
+
+        app.mount('#app')
+      } catch (fallbackError) {
+        console.error('Failed to load fallback locale:', fallbackError)
+        document.body.innerHTML = '<div style="padding: 20px; color: red;">Failed to load extension. Please reload the page.</div>'
+      }
+    } else {
+      document.body.innerHTML = '<div style="padding: 20px; color: red;">Failed to load extension. Please reload the page.</div>'
+    }
   }
-
-  const pinia = createPinia()
-  const app = createApp(appComponent)
-  app.use(pinia)
-  app.use(i18n, messages)
-  app.use(colorNames, messages)
-
-  app.mount('#app')
 }
 
-main()
+main().catch(error => {
+  console.error('Unhandled error in main():', error)
+})
