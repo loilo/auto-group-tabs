@@ -10,40 +10,40 @@ const mockMsg = {
 
 describe('deriveMatcherOptions for www subdomain handling', () => {
   it('suggests smart wildcard patterns for non-www URLs', () => {
-    const options = deriveMatcherOptions('https://haaretz.co.il/news', mockMsg)
+    const options = deriveMatcherOptions('https://cnn.com/news', mockMsg)
 
     // Should include patterns that handle www variations with smart wildcards
     const patterns = options.flatMap(option => option.patterns)
 
-    // With smart wildcards, haaretz.co.il automatically includes www
-    expect(patterns).toContain('haaretz.co.il')
+    // With smart wildcards, cnn.com automatically includes www
+    expect(patterns).toContain('cnn.com')
     // Should also suggest path-based patterns
-    expect(patterns).toContain('haaretz.co.il/news/*')
+    expect(patterns).toContain('cnn.com/news/*')
 
-    console.log('Patterns for haaretz.co.il:', patterns)
+    console.log('Patterns for cnn.com:', patterns)
   })
 
   it('suggests smart patterns for www URLs', () => {
-    const options = deriveMatcherOptions('https://www.haaretz.co.il/news', mockMsg)
+    const options = deriveMatcherOptions('https://www.cnn.com/news', mockMsg)
 
     const patterns = options.flatMap(option => option.patterns)
 
     // Should suggest base domain (which includes www with smart wildcards)
-    expect(patterns).toContain('haaretz.co.il') // base domain (includes www automatically)
-    expect(patterns).toContain('www.haaretz.co.il') // exact www
+    expect(patterns).toContain('cnn.com') // base domain (includes www automatically)
+    expect(patterns).toContain('www.cnn.com') // exact www
 
-    console.log('Patterns for www.haaretz.co.il:', patterns)
+    console.log('Patterns for www.cnn.com:', patterns)
   })
 
   it('generates hierarchical GitHub patterns with smart wildcards', () => {
-    const options = deriveMatcherOptions('https://github.com/adarbahar/repo/issues', mockMsg)
+    const options = deriveMatcherOptions('https://github.com/name/repo/issues', mockMsg)
 
     const patterns = options.flatMap(option => option.patterns)
 
     // Should include hierarchical patterns
-    expect(patterns).toContain('github.com/adarbahar/repo/issues/*')
-    expect(patterns).toContain('github.com/adarbahar/repo/*')
-    expect(patterns).toContain('github.com/adarbahar/*')
+    expect(patterns).toContain('github.com/name/repo/issues/*')
+    expect(patterns).toContain('github.com/name/repo/*')
+    expect(patterns).toContain('github.com/name/*')
     expect(patterns).toContain('github.com') // Smart wildcard includes subdomains automatically
 
     console.log('Patterns for GitHub URL:', patterns)

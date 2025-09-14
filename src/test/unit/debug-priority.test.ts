@@ -4,7 +4,7 @@ import { findBestMatch, calculateMatchScore, calculatePatternSpecificity } from 
 import { GroupConfiguration } from '@/util/types'
 
 describe('Debug Priority Matching Issues', () => {
-  it('debugs github.com/* vs github.com/adarbahar/* priority issue', () => {
+  it('debugs github.com/* vs github.com/name/* priority issue', () => {
     // Simulate the exact scenario from the user's test
     const groups: GroupConfiguration[] = [
       {
@@ -18,44 +18,44 @@ describe('Debug Priority Matching Issues', () => {
         id: '2',
         title: 'My Code',
         color: 'green',
-        matchers: ['github.com/adarbahar/*'],
+        matchers: ['github.com/name/*'],
         options: { strict: false, merge: true, priority: 20 }
       }
     ]
 
-    const testUrl = 'https://github.com/adarbahar/repo'
+    const testUrl = 'https://github.com/name/repo'
     
     // Test that both patterns match
     const regex1 = generateMatcherRegex('github.com/*')
-    const regex2 = generateMatcherRegex('github.com/adarbahar/*')
-    
+    const regex2 = generateMatcherRegex('github.com/name/*')
+
     console.log('Pattern 1 (github.com/*):', regex1)
-    console.log('Pattern 2 (github.com/adarbahar/*):', regex2)
+    console.log('Pattern 2 (github.com/name/*):', regex2)
     console.log('Test URL:', testUrl)
     console.log('Pattern 1 matches:', regex1.test(testUrl))
     console.log('Pattern 2 matches:', regex2.test(testUrl))
-    
+
     expect(regex1.test(testUrl)).toBe(true)
     expect(regex2.test(testUrl)).toBe(true)
-    
+
     // Calculate specificity scores
     const spec1 = calculatePatternSpecificity('github.com/*')
-    const spec2 = calculatePatternSpecificity('github.com/adarbahar/*')
-    
+    const spec2 = calculatePatternSpecificity('github.com/name/*')
+
     console.log('Specificity github.com/*:', spec1)
-    console.log('Specificity github.com/adarbahar/*:', spec2)
-    
+    console.log('Specificity github.com/name/*:', spec2)
+
     // Calculate match scores
     const score1 = calculateMatchScore('github.com/*', 0)
-    const score2 = calculateMatchScore('github.com/adarbahar/*', 20)
-    
+    const score2 = calculateMatchScore('github.com/name/*', 20)
+
     console.log('Score github.com/* (priority 0):', score1)
-    console.log('Score github.com/adarbahar/* (priority 20):', score2)
-    
+    console.log('Score github.com/name/* (priority 20):', score2)
+
     // Test findBestMatch
     const matches = [
       { group: groups[0], pattern: 'github.com/*' },
-      { group: groups[1], pattern: 'github.com/adarbahar/*' }
+      { group: groups[1], pattern: 'github.com/name/*' }
     ]
     
     const bestMatch = findBestMatch(matches)
@@ -71,8 +71,8 @@ describe('Debug Priority Matching Issues', () => {
     // and need to be moved to a higher priority group
     
     const generalPattern = 'github.com/*'
-    const specificPattern = 'github.com/adarbahar/*'
-    const testUrl = 'https://github.com/adarbahar/repo'
+    const specificPattern = 'github.com/name/*'
+    const testUrl = 'https://github.com/name/repo'
     
     // Both patterns should match
     const generalRegex = generateMatcherRegex(generalPattern)
@@ -98,8 +98,8 @@ describe('Debug Priority Matching Issues', () => {
     const patterns = [
       'github.com',
       'github.com/*',
-      'github.com/adarbahar/*',
-      'github.com/adarbahar/repo/*'
+      'github.com/name/*',
+      'github.com/name/repo/*'
     ]
     
     console.log('\nPattern specificity breakdown:')
@@ -129,12 +129,12 @@ describe('Debug Priority Matching Issues', () => {
         id: '2',
         title: 'My Code',
         color: 'green',
-        matchers: ['github.com/adarbahar/*'],
+        matchers: ['github.com/name/*'],
         options: { strict: false, merge: true, priority: 20 }
       }
     ]
 
-    const testUrl = 'https://github.com/adarbahar/repo'
+    const testUrl = 'https://github.com/name/repo'
     const matches: Array<{ group: GroupConfiguration, pattern: string }> = []
     
     // Simulate the matching logic from background.ts

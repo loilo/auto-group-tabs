@@ -3,22 +3,22 @@ import { generateMatcherRegex } from '@/util/matcher-regex'
 
 describe('Smart Wildcard Host Matching', () => {
   describe('Base domains automatically include subdomains', () => {
-    it('matches haaretz.co.il with and without www', () => {
-      const regex = generateMatcherRegex('haaretz.co.il')
-      
+    it('matches cnn.com with and without www', () => {
+      const regex = generateMatcherRegex('cnn.com')
+
       // Should match both www and non-www
-      expect(regex.test('https://haaretz.co.il/')).toBe(true)
-      expect(regex.test('https://www.haaretz.co.il/')).toBe(true)
-      expect(regex.test('http://haaretz.co.il/')).toBe(true)
-      expect(regex.test('http://www.haaretz.co.il/')).toBe(true)
-      
+      expect(regex.test('https://cnn.com/')).toBe(true)
+      expect(regex.test('https://www.cnn.com/')).toBe(true)
+      expect(regex.test('http://cnn.com/')).toBe(true)
+      expect(regex.test('http://www.cnn.com/')).toBe(true)
+
       // Should also match other subdomains
-      expect(regex.test('https://m.haaretz.co.il/')).toBe(true)
-      expect(regex.test('https://mobile.haaretz.co.il/')).toBe(true)
-      
+      expect(regex.test('https://m.cnn.com/')).toBe(true)
+      expect(regex.test('https://mobile.cnn.com/')).toBe(true)
+
       // Should not match different domains
-      expect(regex.test('https://ynet.co.il/')).toBe(false)
-      expect(regex.test('https://haaretz.com/')).toBe(false)
+      expect(regex.test('https://bbc.com/')).toBe(false)
+      expect(regex.test('https://cnn.co.uk/')).toBe(false)
     })
 
     it('matches github.com with and without www', () => {
@@ -65,17 +65,17 @@ describe('Smart Wildcard Host Matching', () => {
       expect(regex.test('https://support.github.com/')).toBe(false)
     })
 
-    it('keeps test.haaretz.co.il exact', () => {
-      const regex = generateMatcherRegex('test.haaretz.co.il')
-      
+    it('keeps test.cnn.com exact', () => {
+      const regex = generateMatcherRegex('test.cnn.com')
+
       // Should match the exact subdomain
-      expect(regex.test('https://test.haaretz.co.il/')).toBe(true)
-      
+      expect(regex.test('https://test.cnn.com/')).toBe(true)
+
       // Should NOT match other subdomains or the base domain
-      expect(regex.test('https://haaretz.co.il/')).toBe(false)
-      expect(regex.test('https://www.haaretz.co.il/')).toBe(false)
-      expect(regex.test('https://m.haaretz.co.il/')).toBe(false)
-      expect(regex.test('https://staging.haaretz.co.il/')).toBe(false)
+      expect(regex.test('https://cnn.com/')).toBe(false)
+      expect(regex.test('https://www.cnn.com/')).toBe(false)
+      expect(regex.test('https://m.cnn.com/')).toBe(false)
+      expect(regex.test('https://staging.cnn.com/')).toBe(false)
     })
 
     it('handles complex subdomains', () => {
@@ -140,27 +140,27 @@ describe('Smart Wildcard Host Matching', () => {
   })
 
   describe('Real-world scenarios', () => {
-    it('solves the original haaretz problem', () => {
-      // User creates group with pattern: haaretz.co.il
+    it('solves the original cnn problem', () => {
+      // User creates group with pattern: cnn.com
       // Should now work for both www and non-www automatically
-      const regex = generateMatcherRegex('haaretz.co.il')
-      
-      expect(regex.test('https://haaretz.co.il/news/politics')).toBe(true)
-      expect(regex.test('https://www.haaretz.co.il/news/politics')).toBe(true)
-      
-      console.log('✅ Haaretz problem solved! Pattern "haaretz.co.il" now matches both www and non-www')
+      const regex = generateMatcherRegex('cnn.com')
+
+      expect(regex.test('https://cnn.com/news/politics')).toBe(true)
+      expect(regex.test('https://www.cnn.com/news/politics')).toBe(true)
+
+      console.log('✅ CNN problem solved! Pattern "cnn.com" now matches both www and non-www')
     })
 
     it('handles GitHub user patterns correctly', () => {
       // Base domain should include all subdomains
       const githubRegex = generateMatcherRegex('github.com')
-      expect(githubRegex.test('https://github.com/user/repo')).toBe(true)
+      expect(githubRegex.test('https://github.com/name/repo')).toBe(true)
       expect(githubRegex.test('https://api.github.com/users')).toBe(true)
-      
+
       // Specific subdomain should be exact
       const apiRegex = generateMatcherRegex('api.github.com')
       expect(apiRegex.test('https://api.github.com/users')).toBe(true)
-      expect(apiRegex.test('https://github.com/user/repo')).toBe(false)
+      expect(apiRegex.test('https://github.com/name/repo')).toBe(false)
     })
 
     it('handles news sites with country TLDs', () => {

@@ -2,19 +2,18 @@ import { expect, it, describe } from 'vitest'
 import { generateMatcherRegex } from '@/util/matcher-regex'
 
 describe('Case-Insensitive URL Matching', () => {
-  it('matches adarbahar variations case-insensitively', () => {
-    const regex = generateMatcherRegex('github.com/adarbahar/*')
+  it('matches name variations case-insensitively', () => {
+    const regex = generateMatcherRegex('github.com/name/*')
 
     // Test all the variations mentioned in the requirement
     const variations = [
-      'https://github.com/adarbahar/repo',
-      'https://github.com/AdarBahar/repo', 
-      'https://github.com/adarBahar/repo',
-      'https://github.com/ADARBAHAR/repo',
-      'https://github.com/AdArBaHaR/repo',
-      'https://github.com/adarbahar/repo',
-      'https://GITHUB.COM/adarbahar/repo',
-      'https://GitHub.Com/AdarBahar/repo'
+      'https://github.com/name/repo',
+      'https://github.com/Name/repo',
+      'https://github.com/NAME/repo',
+      'https://github.com/NaMe/repo',
+      'https://github.com/name/repo',
+      'https://GITHUB.COM/name/repo',
+      'https://GitHub.Com/Name/repo'
     ]
 
     for (const url of variations) {
@@ -57,11 +56,11 @@ describe('Case-Insensitive URL Matching', () => {
   })
 
   it('still distinguishes between different users regardless of case', () => {
-    const regex = generateMatcherRegex('github.com/adarbahar/*')
+    const regex = generateMatcherRegex('github.com/name/*')
 
-    // Should match adarbahar in any case
-    expect(regex.test('https://github.com/ADARBAHAR/repo')).toBe(true)
-    expect(regex.test('https://github.com/AdarBahar/repo')).toBe(true)
+    // Should match name in any case
+    expect(regex.test('https://github.com/NAME/repo')).toBe(true)
+    expect(regex.test('https://github.com/Name/repo')).toBe(true)
 
     // Should NOT match different usernames
     expect(regex.test('https://github.com/microsoft/repo')).toBe(false)
@@ -104,13 +103,13 @@ describe('Case-Insensitive URL Matching', () => {
   it('demonstrates real-world GitHub username matching', () => {
     // Create patterns for different case styles that users might enter
     const patterns = [
-      'github.com/adarbahar/*',
-      'GitHub.com/AdarBahar/*', 
-      'GITHUB.COM/ADARBAHAR/*'
+      'github.com/name/*',
+      'GitHub.com/Name/*',
+      'GITHUB.COM/NAME/*'
     ]
 
     // All patterns should match the same URLs regardless of how they were entered
-    const testUrl = 'https://github.com/AdarBahar/auto-group-tabs/issues'
+    const testUrl = 'https://github.com/Name/auto-group-tabs/issues'
 
     for (const pattern of patterns) {
       const regex = generateMatcherRegex(pattern)

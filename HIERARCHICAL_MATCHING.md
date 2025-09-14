@@ -36,10 +36,10 @@ Auto-Group Tabs now supports hierarchical URL matching where you can create gene
 
 ### 5. **Smart Wildcard Matching** 🆕
 - Base domains automatically include subdomains (no need for `*.` prefix)
-- `haaretz.co.il` automatically matches:
-  - `https://haaretz.co.il/` (base domain)
-  - `https://www.haaretz.co.il/` (www subdomain)
-  - `https://m.haaretz.co.il/` (mobile subdomain)
+- `cnn.com` automatically matches:
+  - `https://cnn.com/` (base domain)
+  - `https://www.cnn.com/` (www subdomain)
+  - `https://m.cnn.com/` (mobile subdomain)
 - Specific subdomains remain exact:
   - `api.github.com` only matches `api.github.com` (not `github.com`)
 - Explicit wildcards (`*.domain.com`) require subdomains (don't match base domain)
@@ -56,29 +56,29 @@ Auto-Group Tabs now supports hierarchical URL matching where you can create gene
 
 **More Specific Second:**
 - Group: "My GitHub"
-- Pattern: `github.com/adarbahar/*` (matches any case: AdarBahar, ADARBAHAR, etc.)
+- Pattern: `github.com/name/*` (matches any case: Name, NAME, etc.)
 - Color: Green
 - Priority: 10
 
 **Most Specific Last:**
 - Group: "Auto-Group-Tabs Project"
-- Pattern: `github.com/adarbahar/auto-group-tabs/*`
+- Pattern: `github.com/name/auto-group-tabs/*`
 - Color: Red
 - Priority: 20
 
 ### Step 2: How Matching Works
 
-For URL: `https://github.com/adarbahar/auto-group-tabs/issues`
+For URL: `https://github.com/name/auto-group-tabs/issues`
 
 1. **All matching patterns are found:**
    - `github.com` (matches)
-   - `github.com/adarbahar/*` (matches)
-   - `github.com/adarbahar/auto-group-tabs/*` (matches)
+   - `github.com/name/*` (matches)
+   - `github.com/name/auto-group-tabs/*` (matches)
 
 2. **Scores are calculated:**
    - `github.com`: specificity=15 + priority=0×10 = 15
-   - `github.com/adarbahar/*`: specificity=18 + priority=10×10 = 118
-   - `github.com/adarbahar/auto-group-tabs/*`: specificity=21 + priority=20×10 = 221
+   - `github.com/name/*`: specificity=18 + priority=10×10 = 118
+   - `github.com/name/auto-group-tabs/*`: specificity=21 + priority=20×10 = 221
 
 3. **Highest score wins:** "Auto-Group-Tabs Project" (score: 221)
 
@@ -106,7 +106,7 @@ Sometimes you want a general rule to take precedence over specific ones:
 
 **Low Priority Specific Rule:**
 - Group: "Personal Project"
-- Pattern: `github.com/adarbahar/personal-project/*`
+- Pattern: `github.com/name/personal-project/*`
 - Priority: 0
 - Result: This won't match because the general rule has higher priority
 
@@ -138,8 +138,8 @@ The system calculates specificity based on:
 ### Example Debug Output
 ```
 Tab 'Auto-Group-Tabs Issues' (123) matches pattern 'github.com' from group 'GitHub General' (priority: 0)
-Tab 'Auto-Group-Tabs Issues' (123) matches pattern 'github.com/adarbahar/*' from group 'My GitHub' (priority: 10)
-Tab 'Auto-Group-Tabs Issues' (123) matches pattern 'github.com/adarbahar/auto-group-tabs/*' from group 'Auto-Group-Tabs Project' (priority: 20)
+Tab 'Auto-Group-Tabs Issues' (123) matches pattern 'github.com/name/*' from group 'My GitHub' (priority: 10)
+Tab 'Auto-Group-Tabs Issues' (123) matches pattern 'github.com/name/auto-group-tabs/*' from group 'Auto-Group-Tabs Project' (priority: 20)
 Tab 'Auto-Group-Tabs Issues' (123) had 3 matches, selected 'Auto-Group-Tabs Project' based on priority
 ```
 
@@ -152,20 +152,20 @@ Tab 'Auto-Group-Tabs Issues' (123) had 3 matches, selected 'Auto-Group-Tabs Proj
 
 ## Troubleshooting Common Issues
 
-### Issue 1: "haaretz.co.il doesn't match www.haaretz.co.il" ✅ SOLVED
+### Issue 1: "cnn.com doesn't match www.cnn.com" ✅ SOLVED
 
 **Problem**: Exact domain patterns didn't match www subdomains
 **Solution**: Smart wildcards now handle this automatically!
 
 ```
-✅ Now works: haaretz.co.il
-✅ Also works: *.haaretz.co.il (if you want explicit wildcard)
+✅ Now works: cnn.com
+✅ Also works: *.cnn.com (if you want explicit wildcard)
 ```
 
-The pattern `haaretz.co.il` now automatically matches:
-- `https://haaretz.co.il/` (base domain)
-- `https://www.haaretz.co.il/` (www subdomain)
-- `https://m.haaretz.co.il/` (mobile subdomain)
+The pattern `cnn.com` now automatically matches:
+- `https://cnn.com/` (base domain)
+- `https://www.cnn.com/` (www subdomain)
+- `https://m.cnn.com/` (mobile subdomain)
 
 **No action needed** - existing patterns now work better!
 
@@ -176,7 +176,7 @@ The pattern `haaretz.co.il` now automatically matches:
 
 **Steps to verify it's working:**
 1. Create a general group: `github.com/*` (priority: 0)
-2. Create a specific group: `github.com/adarbahar/*` (priority: 20)
+2. Create a specific group: `github.com/name/*` (priority: 20)
 3. Open GitHub tabs - they should go to the higher priority group
 4. Check browser console for debug messages
 
@@ -193,7 +193,7 @@ The pattern `haaretz.co.il` now automatically matches:
 2. Find "Auto-Group Tabs" → "Inspect views: background page"
 3. Watch for messages like:
    ```
-   Tab 'My Repo' matches pattern 'github.com/adarbahar/*' from group 'My Code' (priority: 20)
+   Tab 'My Repo' matches pattern 'github.com/name/*' from group 'My Code' (priority: 20)
    Tab 'My Repo' had 2 matches, selected 'My Code' based on priority
    ```
 

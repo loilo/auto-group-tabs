@@ -14,17 +14,17 @@ describe('Hierarchical Matching Integration', () => {
       options: { strict: false, merge: true, priority: 0 }
     },
     {
-      id: '2', 
+      id: '2',
       title: 'My GitHub',
       color: 'green',
-      matchers: ['github.com/adarbahar/*'],
+      matchers: ['github.com/name/*'],
       options: { strict: false, merge: true, priority: 10 }
     },
     {
       id: '3',
       title: 'Auto-Group-Tabs Project',
-      color: 'red', 
-      matchers: ['github.com/adarbahar/auto-group-tabs/*'],
+      color: 'red',
+      matchers: ['github.com/name/auto-group-tabs/*'],
       options: { strict: true, merge: true, priority: 20 }
     }
   ]
@@ -49,16 +49,16 @@ describe('Hierarchical Matching Integration', () => {
   }
 
   it('routes specific project URLs to project group', () => {
-    const url = 'https://github.com/adarbahar/auto-group-tabs/issues'
+    const url = 'https://github.com/name/auto-group-tabs/issues'
     const result = simulateTabMatching(url, githubGroups)
-    
+
     expect(result?.title).toBe('Auto-Group-Tabs Project')
   })
 
   it('routes user URLs to user group', () => {
-    const url = 'https://github.com/adarbahar/other-repo'
+    const url = 'https://github.com/name/other-repo'
     const result = simulateTabMatching(url, githubGroups)
-    
+
     expect(result?.title).toBe('My GitHub')
   })
 
@@ -82,12 +82,12 @@ describe('Hierarchical Matching Integration', () => {
         id: '2',
         title: 'Low Priority Specific',
         color: 'red',
-        matchers: ['github.com/adarbahar/specific-project/*'],
+        matchers: ['github.com/name/specific-project/*'],
         options: { strict: false, merge: true, priority: 0 }
       }
     ]
 
-    const url = 'https://github.com/adarbahar/specific-project/issues'
+    const url = 'https://github.com/name/specific-project/issues'
     const result = simulateTabMatching(url, priorityGroups)
     
     // High priority general rule should win
@@ -178,25 +178,24 @@ describe('Hierarchical Matching Integration', () => {
       },
       {
         id: '2',
-        title: 'AdarBahar Projects',
+        title: 'Name Projects',
         color: 'green',
-        matchers: ['github.com/AdarBahar/*'],
+        matchers: ['github.com/Name/*'],
         options: { strict: false, merge: true, priority: 10 }
       }
     ]
 
     // Test various case combinations of the username
     const testUrls = [
-      'https://github.com/adarbahar/repo',
-      'https://github.com/ADARBAHAR/repo',
-      'https://github.com/AdarBahar/repo',
-      'https://github.com/adarBahar/repo',
-      'https://github.com/AdArBaHaR/repo'
+      'https://github.com/name/repo',
+      'https://github.com/NAME/repo',
+      'https://github.com/Name/repo',
+      'https://github.com/NaMe/repo'
     ]
 
     for (const url of testUrls) {
       const result = simulateTabMatching(url, caseGroups)
-      expect(result?.title).toBe('AdarBahar Projects')
+      expect(result?.title).toBe('Name Projects')
     }
 
     // Different user should still go to general

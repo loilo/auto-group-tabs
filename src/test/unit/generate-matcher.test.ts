@@ -152,25 +152,25 @@ it('handles case-insensitive domain matching', () => {
 })
 
 it('handles www subdomain matching with smart wildcards', () => {
-  // With smart wildcards, haaretz.co.il now automatically includes www
-  const regex1 = generateMatcherRegex('haaretz.co.il')
+  // With smart wildcards, cnn.com now automatically includes www
+  const regex1 = generateMatcherRegex('cnn.com')
 
-  expect(regex1.test('https://haaretz.co.il/')).toBe(true)
-  expect(regex1.test('http://haaretz.co.il/')).toBe(true)
+  expect(regex1.test('https://cnn.com/')).toBe(true)
+  expect(regex1.test('http://cnn.com/')).toBe(true)
   // Smart wildcard: now matches www automatically
-  expect(regex1.test('https://www.haaretz.co.il/')).toBe(true)
+  expect(regex1.test('https://www.cnn.com/')).toBe(true)
 
   // Explicit wildcard still works but requires subdomain
-  const regex2 = generateMatcherRegex('*.haaretz.co.il')
-  expect(regex2.test('https://haaretz.co.il/')).toBe(false) // Explicit wildcard requires subdomain
-  expect(regex2.test('https://www.haaretz.co.il/')).toBe(true)
+  const regex2 = generateMatcherRegex('*.cnn.com')
+  expect(regex2.test('https://cnn.com/')).toBe(false) // Explicit wildcard requires subdomain
+  expect(regex2.test('https://www.cnn.com/')).toBe(true)
 })
 
 it('handles github path matching correctly', () => {
   const generalRegex = generateMatcherRegex('github.com/*')
-  const specificRegex = generateMatcherRegex('github.com/adarbahar/*')
+  const specificRegex = generateMatcherRegex('github.com/name/*')
 
-  const testUrl = 'https://github.com/adarbahar/repo'
+  const testUrl = 'https://github.com/name/repo'
 
   // Both should match
   expect(generalRegex.test(testUrl)).toBe(true)
@@ -182,18 +182,18 @@ it('handles github path matching correctly', () => {
 
 it('demonstrates smart wildcard solution for www subdomain matching', () => {
   // With smart wildcards, the user's issue is automatically solved
-  // haaretz.co.il now matches www.haaretz.co.il automatically
+  // cnn.com now matches www.cnn.com automatically
 
-  const smartRegex = generateMatcherRegex('haaretz.co.il')
-  const explicitWildcardRegex = generateMatcherRegex('*.haaretz.co.il')
+  const smartRegex = generateMatcherRegex('cnn.com')
+  const explicitWildcardRegex = generateMatcherRegex('*.cnn.com')
 
   // Smart wildcard: base domain now includes subdomains
-  expect(smartRegex.test('https://haaretz.co.il/')).toBe(true)
-  expect(smartRegex.test('https://www.haaretz.co.il/')).toBe(true)
-  expect(smartRegex.test('https://m.haaretz.co.il/')).toBe(true)
+  expect(smartRegex.test('https://cnn.com/')).toBe(true)
+  expect(smartRegex.test('https://www.cnn.com/')).toBe(true)
+  expect(smartRegex.test('https://m.cnn.com/')).toBe(true)
 
   // Explicit wildcard requires subdomain (doesn't match base domain)
-  expect(explicitWildcardRegex.test('https://haaretz.co.il/')).toBe(false)
-  expect(explicitWildcardRegex.test('https://www.haaretz.co.il/')).toBe(true)
-  expect(explicitWildcardRegex.test('https://m.haaretz.co.il/')).toBe(true)
+  expect(explicitWildcardRegex.test('https://cnn.com/')).toBe(false)
+  expect(explicitWildcardRegex.test('https://www.cnn.com/')).toBe(true)
+  expect(explicitWildcardRegex.test('https://m.cnn.com/')).toBe(true)
 })
