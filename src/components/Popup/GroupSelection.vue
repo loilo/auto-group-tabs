@@ -87,7 +87,7 @@ watch(value, async value => {
         title: tabGroup.value!.title ?? '',
         color: tabGroup.value!.color,
         matchers: [],
-        options: { strict: false, merge: false }
+        options: { strict: false, merge: false, priority: 0 }
       }
     ])
     await groupsChanged

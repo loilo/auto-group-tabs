@@ -15,6 +15,7 @@ import {
 import { GroupCreationTracker } from '@/util/group-creation-tracker'
 import { generateMatcherRegex } from '@/util/matcher-regex'
 import { GroupConfiguration } from '@/util/types'
+import { findBestMatch } from '@/util/pattern-specificity'
 import { when } from '@/util/when'
 
 ignoreChromeRuntimeEvents.value = true
@@ -85,7 +86,7 @@ const chromeTabsByWindowIdAndGroupConfiguration = computed(() =>
 Object.assign(self, { chromeState })
 
 /**
- * Get a matching configuration group for a tab
+ * Get a matching configuration group for a tab using priority-based matching
  */
 function getGroupConfigurationForTab(tab: chrome.tabs.Tab) {
   // Ignore pinned tabs
@@ -100,18 +101,54 @@ function getGroupConfigurationForTab(tab: chrome.tabs.Tab) {
     return
   }
 
-  // Iterate tab group configurations
+  // Collect all matching groups with their patterns
+  const matches: Array<{ group: GroupConfiguration, pattern: string }> = []
+
   let groupIndex = 0
-  for (const group of augmentedGroupConfigurations.value) {
-    for (const matcher of group.matchers) {
-      if (matcher.test(tab.url))
-        return groupConfigurations.data.value[groupIndex]
+  for (const augmentedGroup of augmentedGroupConfigurations.value) {
+    const originalGroup = groupConfigurations.data.value[groupIndex]
+
+    for (let matcherIndex = 0; matcherIndex < augmentedGroup.matchers.length; matcherIndex++) {
+      const matcher = augmentedGroup.matchers[matcherIndex]
+      if (matcher.test(tab.url)) {
+        const originalPattern = originalGroup.matchers[matcherIndex]
+        matches.push({
+          group: originalGroup,
+          pattern: originalPattern
+        })
+
+        console.debug(
+          'Tab %o (%o) matches pattern %o from group %o (priority: %o)',
+          tab.title,
+          tab.id,
+          originalPattern,
+          originalGroup.title,
+          originalGroup.options.priority || 0
+        )
+      }
     }
     groupIndex++
   }
 
-  // No matching group found
-  return
+  // Return the best match based on priority and specificity
+  if (matches.length === 0) {
+    console.debug('Tab %o (%o) has no matching groups', tab.title, tab.id)
+    return
+  }
+
+  const bestMatch = findBestMatch(matches)
+
+  if (matches.length > 1) {
+    console.debug(
+      'Tab %o (%o) had %o matches, selected %o based on priority',
+      tab.title,
+      tab.id,
+      matches.length,
+      bestMatch.title
+    )
+  }
+
+  return bestMatch
 }
 
 const groupCreationTracker = new GroupCreationTracker()
@@ -387,6 +424,9 @@ watch(
 
       // Group's 'merge' option changed
       if (oldGroup.options.merge !== newGroup.options.merge) return true
+
+      // Group's 'priority' option changed
+      if ((oldGroup.options.priority || 0) !== (newGroup.options.priority || 0)) return true
 
       // Group has different matchers than before
       if (oldGroup.matchers.length !== newGroup.matchers.length) return true

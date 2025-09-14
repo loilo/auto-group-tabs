@@ -1,7 +1,7 @@
 import { expect, it } from 'vitest'
 import { generateMatcherRegex } from '@/util/matcher-regex'
 
-it('handles no-wildcard domain pattern', () => {
+it('handles no-wildcard domain pattern with smart wildcards', () => {
   const regex = generateMatcherRegex('example.com')
 
   expect(regex.test('http://example.com/')).toBe(true)
@@ -9,11 +9,12 @@ it('handles no-wildcard domain pattern', () => {
 
   expect(regex.test('ftp://example.com/')).toBe(false)
   expect(regex.test('file:///example.com/')).toBe(false)
-  expect(regex.test('https://www.example.com/')).toBe(false)
+  // Smart wildcard: base domains now include subdomains automatically
+  expect(regex.test('https://www.example.com/')).toBe(true)
   expect(regex.test('http://invalid.com/')).toBe(false)
 })
 
-it('handles no-wildcard scheme + host', () => {
+it('handles no-wildcard scheme + host with smart wildcards', () => {
   const regex = generateMatcherRegex('https://example.com')
 
   expect(regex.test('https://example.com/')).toBe(true)
@@ -21,11 +22,12 @@ it('handles no-wildcard scheme + host', () => {
   expect(regex.test('http://example.com/')).toBe(false)
   expect(regex.test('ftp://example.com/')).toBe(false)
   expect(regex.test('ws://example.com/')).toBe(false)
-  expect(regex.test('https://www.example.com/')).toBe(false)
+  // Smart wildcard: base domains now include subdomains automatically
+  expect(regex.test('https://www.example.com/')).toBe(true)
   expect(regex.test('http://invalid.com/')).toBe(false)
 })
 
-it('handles no-wildcard scheme + host + root path', () => {
+it('handles no-wildcard scheme + host + root path with smart wildcards', () => {
   const regex = generateMatcherRegex('https://example.com/')
 
   expect(regex.test('https://example.com/')).toBe(true)
@@ -33,7 +35,8 @@ it('handles no-wildcard scheme + host + root path', () => {
   expect(regex.test('http://example.com/')).toBe(false)
   expect(regex.test('ftp://example.com/')).toBe(false)
   expect(regex.test('ws://example.com/')).toBe(false)
-  expect(regex.test('https://www.example.com/')).toBe(false)
+  // Smart wildcard: base domains now include subdomains automatically
+  expect(regex.test('https://www.example.com/')).toBe(true)
   expect(regex.test('http://invalid.com/')).toBe(false)
 })
 
@@ -118,4 +121,79 @@ it('handles simple scheme', () => {
   expect(regex.test('ftp://example.com/bar/')).toBe(false)
   expect(regex.test('http://invalid.com/foo/')).toBe(false)
   expect(regex.test('https://invalid.com/foo/')).toBe(false)
+})
+
+it('handles case-insensitive matching', () => {
+  const regex = generateMatcherRegex('GitHub.com/AdarBahar/*')
+
+  // Test various case combinations
+  expect(regex.test('https://github.com/adarbahar/repo')).toBe(true)
+  expect(regex.test('https://GITHUB.COM/ADARBAHAR/repo')).toBe(true)
+  expect(regex.test('https://GitHub.Com/AdarBahar/repo')).toBe(true)
+  expect(regex.test('https://github.com/AdarBahar/repo')).toBe(true)
+  expect(regex.test('https://github.com/adarbahar/repo')).toBe(true)
+  expect(regex.test('https://GITHUB.com/adarBahar/repo')).toBe(true)
+
+  // Should still not match different users
+  expect(regex.test('https://github.com/microsoft/repo')).toBe(false)
+  expect(regex.test('https://github.com/otheruser/repo')).toBe(false)
+})
+
+it('handles case-insensitive domain matching', () => {
+  const regex = generateMatcherRegex('Example.Com')
+
+  expect(regex.test('https://example.com/')).toBe(true)
+  expect(regex.test('https://EXAMPLE.COM/')).toBe(true)
+  expect(regex.test('https://Example.Com/')).toBe(true)
+  expect(regex.test('https://EXAMPLE.com/')).toBe(true)
+  expect(regex.test('http://example.COM/')).toBe(true)
+
+  expect(regex.test('https://other.com/')).toBe(false)
+})
+
+it('handles www subdomain matching with smart wildcards', () => {
+  // With smart wildcards, haaretz.co.il now automatically includes www
+  const regex1 = generateMatcherRegex('haaretz.co.il')
+
+  expect(regex1.test('https://haaretz.co.il/')).toBe(true)
+  expect(regex1.test('http://haaretz.co.il/')).toBe(true)
+  // Smart wildcard: now matches www automatically
+  expect(regex1.test('https://www.haaretz.co.il/')).toBe(true)
+
+  // Explicit wildcard still works but requires subdomain
+  const regex2 = generateMatcherRegex('*.haaretz.co.il')
+  expect(regex2.test('https://haaretz.co.il/')).toBe(false) // Explicit wildcard requires subdomain
+  expect(regex2.test('https://www.haaretz.co.il/')).toBe(true)
+})
+
+it('handles github path matching correctly', () => {
+  const generalRegex = generateMatcherRegex('github.com/*')
+  const specificRegex = generateMatcherRegex('github.com/adarbahar/*')
+
+  const testUrl = 'https://github.com/adarbahar/repo'
+
+  // Both should match
+  expect(generalRegex.test(testUrl)).toBe(true)
+  expect(specificRegex.test(testUrl)).toBe(true)
+
+  // Test that the patterns are different
+  expect(generalRegex.source).not.toBe(specificRegex.source)
+})
+
+it('demonstrates smart wildcard solution for www subdomain matching', () => {
+  // With smart wildcards, the user's issue is automatically solved
+  // haaretz.co.il now matches www.haaretz.co.il automatically
+
+  const smartRegex = generateMatcherRegex('haaretz.co.il')
+  const explicitWildcardRegex = generateMatcherRegex('*.haaretz.co.il')
+
+  // Smart wildcard: base domain now includes subdomains
+  expect(smartRegex.test('https://haaretz.co.il/')).toBe(true)
+  expect(smartRegex.test('https://www.haaretz.co.il/')).toBe(true)
+  expect(smartRegex.test('https://m.haaretz.co.il/')).toBe(true)
+
+  // Explicit wildcard requires subdomain (doesn't match base domain)
+  expect(explicitWildcardRegex.test('https://haaretz.co.il/')).toBe(false)
+  expect(explicitWildcardRegex.test('https://www.haaretz.co.il/')).toBe(true)
+  expect(explicitWildcardRegex.test('https://m.haaretz.co.il/')).toBe(true)
 })

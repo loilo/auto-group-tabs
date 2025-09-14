@@ -31,6 +31,18 @@
     "message": "Prevent creating instances of this group in different windows, move tabs into existing groups in other windows instead.",
     "description": "The description of the single window checkbox in the edit dialog."
   },
+  "priorityLabel": {
+    "message": "Priority",
+    "description": "The label for the priority input field in the edit dialog."
+  },
+  "priorityDescription": {
+    "message": "Higher numbers take precedence over lower numbers (0-100)",
+    "description": "The description of the priority field in the edit dialog."
+  },
+  "priorityPlaceholder": {
+    "message": "0",
+    "description": "The placeholder for the priority input field."
+  },
   "noGroupTitle": {
     "message": "no title",
     "description": "A group with an empty title"

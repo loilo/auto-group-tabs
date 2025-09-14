@@ -67,6 +67,24 @@
             </LabelText>
           </ToggleLabel>
         </CardSection>
+
+        <CardSection ghost tight collapse seamless>
+          <LabelText>
+            {{ msg.priorityLabel }}
+            <template #secondary>
+              {{ msg.priorityDescription }}
+            </template>
+          </LabelText>
+          <Textfield
+            id="edit-dialog-priority"
+            type="number"
+            min="0"
+            max="100"
+            :modelValue="editPriority.toString()"
+            @update:modelValue="editPriority = parseInt($event) || 0"
+            :placeholder="msg.priorityPlaceholder"
+          />
+        </CardSection>
       </Card>
     </SlideVertical>
 
@@ -126,7 +144,8 @@ const props = withDefaults(
     deletable: false,
     options: () => ({
       strict: false,
-      merge: false
+      merge: false,
+      priority: 0
     })
   }
 )
@@ -151,6 +170,7 @@ const editTitle = ref(conflictManager.withoutMarker(props.title))
 const editColor = ref(props.color)
 const editStrict = ref(props.options.strict)
 const editMerge = ref(props.options.merge)
+const editPriority = ref(props.options.priority || 0)
 
 const colorMenu = ref()
 const titleField = ref()
@@ -204,7 +224,8 @@ function save(event: KeyboardEvent) {
   event.preventDefault()
   emit('save', editTitle.value, editColor.value, {
     strict: editStrict.value,
-    merge: editMerge.value
+    merge: editMerge.value,
+    priority: editPriority.value
   })
   emit('close')
 }
