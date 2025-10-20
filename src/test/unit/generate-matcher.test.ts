@@ -129,3 +129,8 @@ it('allows for regular expressions', () => {
   expect(regex.test('iFoo')).toBe(false)
   expect(regex.test('ufo')).toBe(false)
 })
+
+it('fails on invalid regular expressions', () => {
+  expect(() => generateMatcherRegex('/(unclosed parens/')).toThrow()
+  expect(() => generateMatcherRegex('/unfinished')).toThrow()
+})
