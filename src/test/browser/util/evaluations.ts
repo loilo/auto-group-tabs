@@ -1,7 +1,7 @@
 import { GroupConfiguration } from '@/util/types'
 
 export function isFocused(element: HTMLElement | SVGElement) {
-  return document.activeElement === element
+  return element.contains(document.activeElement)
 }
 
 export function isValid(input: HTMLElement | SVGElement) {
@@ -9,7 +9,11 @@ export function isValid(input: HTMLElement | SVGElement) {
 }
 
 export function getValue(input: HTMLElement | SVGElement) {
-  return (input as HTMLInputElement)?.value
+  if (input instanceof HTMLInputElement) {
+    return input.value
+  } else {
+    return input.querySelector('input')?.value
+  }
 }
 
 export function getGroups() {

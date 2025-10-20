@@ -4,7 +4,7 @@
       <slot />
     </ToggleLabel>
 
-    <mwc-switch class="card-checkbox" :id="id" />
+    <v-switch class="card-checkbox" :id="id" />
   </CardSection>
 </template>
 
@@ -18,12 +18,13 @@ const attrs = useAttrs()
 const id = computed(() => `switch-${attrs.id ?? crypto.randomUUID()}`)
 </script>
 
-<style lang="scss" scoped>
+<style scoped>
 .switch-card-section {
   cursor: pointer;
 }
 
 .toggle-label {
+  flex-grow: 1;
   cursor: inherit;
 }
 </style>

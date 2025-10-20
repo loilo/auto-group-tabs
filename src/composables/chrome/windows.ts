@@ -7,24 +7,31 @@ function _useReadonlyChromeWindows() {
   const lastRemoved = ref<number | undefined>(undefined)
 
   if (typeof chrome.windows !== 'undefined') {
-    chrome.windows.getAll().then(queriedWindows => {
-      windows.value = queriedWindows.filter(window => window.type === 'normal')
-      loaded.value = true
-
-      chrome.windows.onCreated.addListener(createdWindow => {
-        if (createdWindow.type !== 'normal') return
-
-        lastCreated.value = createdWindow
-        windows.value = [...windows.value, createdWindow]
-      })
-
-      chrome.windows.onRemoved.addListener(removedWindowId => {
-        lastRemoved.value = removedWindowId
-        windows.value = windows.value.filter(
-          window => window.id !== removedWindowId,
+    chrome.windows
+      .getAll()
+      .then(queriedWindows => {
+        windows.value = queriedWindows.filter(
+          window => window.type === 'normal',
         )
+        loaded.value = true
+
+        chrome.windows.onCreated.addListener(createdWindow => {
+          if (createdWindow.type !== 'normal') return
+
+          lastCreated.value = createdWindow
+          windows.value = [...windows.value, createdWindow]
+        })
+
+        chrome.windows.onRemoved.addListener(removedWindowId => {
+          lastRemoved.value = removedWindowId
+          windows.value = windows.value.filter(
+            window => window.id !== removedWindowId,
+          )
+        })
       })
-    })
+      .catch(error => {
+        console.error('Error getting chrome windows:', error)
+      })
   } else {
     loaded.value = true
   }

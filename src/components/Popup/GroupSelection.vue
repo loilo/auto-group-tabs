@@ -15,6 +15,15 @@ import {
 } from '@/util/group-configurations'
 import { isExtensionWorker } from '@/util/helpers'
 
+const props = defineProps<{
+  modelValue: string | null
+}>()
+
+const emit = defineEmits<{
+  (e: 'update:modelValue', value: string | null): void
+  (e: 'new'): void
+}>()
+
 const groups = useGroupConfigurations()
 
 const groupColors = computed(() =>
@@ -59,101 +68,82 @@ const options = useSyncedCopy(() =>
 
 const value = useSyncedCopy(() => props.modelValue)
 
-const props = defineProps<{
-  modelValue: string
-}>()
-
-const emit = defineEmits<{
-  (e: 'update:modelValue', value: string): void
-  (e: 'new'): void
-}>()
-
 onMounted(() => {
   if (tabGroupConfigured.value) {
     emit('update:modelValue', tabGroupConfigured.value.id)
   }
 })
 
-watch(value, async value => {
-  if (value === 'add-new') {
-    emit('new')
-    emit('update:modelValue', value)
-  } else if (value === 'add-from-current') {
-    const id = crypto.randomUUID()
+function addNew() {
+  emit('new')
+}
 
-    const groupsChanged = until(groups.data).changed()
-    await saveGroupConfigurations([
-      ...groups.data.value,
-      {
-        id,
-        title: tabGroup.value!.title ?? '',
-        color: tabGroup.value!.color,
-        matchers: [],
-        options: { strict: false, merge: false },
-      },
-    ])
-    await groupsChanged
+async function addFromCurrent() {
+  const id = crypto.randomUUID()
 
-    emit('update:modelValue', id)
-  } else {
-    emit('update:modelValue', value)
-  }
+  const groupsChanged = until(groups.data).changed()
+  await saveGroupConfigurations([
+    ...groups.data.value,
+    {
+      id,
+      title: tabGroup.value!.title ?? '',
+      color: tabGroup.value!.color,
+      matchers: [],
+      options: { strict: false, merge: false },
+    },
+  ])
+  await groupsChanged
+
+  emit('update:modelValue', id)
+}
+
+watch(value, value => {
+  emit('update:modelValue', value)
 })
 </script>
 
 <template>
   <Select :options="options" :label="msg.popupSelectLabel" v-model="value">
+    <template #selection="{ item }">
+      <GroupTag :color="groupColors[item.value]" :title="item.title" />
+    </template>
     <template v-if="tabGroup && !tabGroupConfigured" #before>
-      <mwc-list-item value="add-from-current" class="add-from-current">
+      <v-list-item @click="addFromCurrent">
         <span class="create-group-item">
+          <v-icon icon="mdi-plus" />
+
           <span class="create-group-item-label">
             {{ msg.popupAddCurrentGroup }}
           </span>
           <GroupTag :color="tabGroup!.color" :title="tabGroup!.title" />
         </span>
-      </mwc-list-item>
-      <li divider role="separator"></li>
+      </v-list-item>
     </template>
-    <template #default="{ value, label }">
-      <GroupTag :color="groupColors[value]" :title="label" />
+
+    <template #default="item">
+      <GroupTag :color="groupColors[item.value]" :title="item.title" />
     </template>
+
     <template #after>
-      <li divider role="separator"></li>
-      <mwc-list-item value="add-new" class="add-new">
+      <v-list-item @click="addNew">
         <span class="create-group-item">
+          <v-icon icon="mdi-plus" />
+
           <span class="create-group-item-label">
             {{ msg.popupCreateGroup }}
           </span>
         </span>
-      </mwc-list-item>
+      </v-list-item>
     </template>
   </Select>
 </template>
 
-<style lang="scss" scoped>
+<style scoped>
 .create-group-item {
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  color: var(--mdc-theme-primary);
-
-  &::before {
-    content: 'add';
-    font-family: var(--mdc-icon-font, 'Material Icons');
-    font-weight: normal;
-    font-style: normal;
-    font-size: 22px;
-    line-height: 1;
-    letter-spacing: normal;
-    text-transform: none;
-    display: inline-block;
-    white-space: nowrap;
-    overflow-wrap: normal;
-    direction: ltr;
-    -webkit-font-smoothing: antialiased;
-    text-rendering: optimizelegibility;
-    font-feature-settings: 'liga';
-  }
+  color: rgb(var(--v-theme-primary));
 }
 
 .create-group-item-label {

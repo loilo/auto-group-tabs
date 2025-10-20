@@ -16,6 +16,7 @@ export function when<T>(
       container,
       value => {
         if (predicate(value)) {
+          // oxlint-disable-next-line @typescript-eslint/no-floating-promises
           nextTick(() => {
             stop()
           })

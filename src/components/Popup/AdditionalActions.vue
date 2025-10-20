@@ -49,13 +49,19 @@ function edit() {
 </script>
 
 <template>
-  <mwc-button v-if="tabGroup && tabGroupConfigured" icon="tab" @click="edit">
+  <v-btn
+    v-if="tabGroup && tabGroupConfigured"
+    variant="text"
+    color="neutral"
+    icon="mdi-tab"
+    @click="edit"
+  >
     {{ msg.popupEditCurrentGroup }} &nbsp;
     <GroupTag :color="tabGroup.color" :title="tabGroup.title" dense />
-  </mwc-button>
+  </v-btn>
 </template>
 
-<style lang="scss" scoped>
+<style scoped>
 .suggestions {
   display: flex;
   align-items: center;
@@ -66,6 +72,6 @@ function edit() {
 
 .suggestions-title {
   color: var(--dimmed-foreground);
-  font-weight: var(--mdc-typography-button-font-weight, 500);
+  font-weight: 500;
 }
 </style>

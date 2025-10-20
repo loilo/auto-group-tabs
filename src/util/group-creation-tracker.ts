@@ -57,9 +57,13 @@ export class GroupCreationTracker {
       const queue = queueUntilResolve(creationPromise)
       map.set(group.id, queue)
 
-      queue.promise.then(() => {
-        map.delete(group.id)
-      })
+      queue.promise
+        .then(() => {
+          map.delete(group.id)
+        })
+        .catch(error => {
+          console.error('Error in group creation promise:', error)
+        })
     }
   }
 }

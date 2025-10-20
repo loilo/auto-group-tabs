@@ -28,7 +28,7 @@ withDefaults(
 )
 </script>
 
-<style lang="scss" scoped>
+<style scoped>
 .card-section {
   background-color: transparent;
   text-align: left;
@@ -44,6 +44,11 @@ withDefaults(
   padding: var(--body-padding);
   min-height: 54px;
   transition: box-shadow 150ms;
+
+  &:is(button, input, a, [tabindex]) {
+    white-space: normal;
+    outline: none;
+  }
 
   &.card-section-seamless {
     padding-left: 0;
@@ -69,7 +74,7 @@ withDefaults(
   }
 
   &:focus:focus-visible {
-    box-shadow: 0 0 0 3px var(--mdc-theme-primary);
+    box-shadow: 0 0 0 3px rgb(var(--v-theme-primary));
   }
 }
 </style>

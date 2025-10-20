@@ -19,5 +19,6 @@
   "files.watcherExclude": {
     "**/extension/**": true
   },
-  "typescript.tsdk": "node_modules/typescript/lib"
+  "typescript.tsdk": "node_modules/typescript/lib",
+  "vue.suggest.componentNameCasing": "preferPascalCase"
 }

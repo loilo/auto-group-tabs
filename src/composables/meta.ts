@@ -12,6 +12,7 @@ export function tickResetRef<T>(initialValue: T) {
     set: newValue => {
       value.value = newValue
 
+      // oxlint-disable-next-line @typescript-eslint/no-floating-promises
       nextTick(() => {
         value.value = initialValue as UnwrapRef<T>
       })

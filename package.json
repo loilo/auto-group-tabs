@@ -40,12 +40,15 @@
       ]
     },
     "build:background": {
-      "command": "esbuild src/background.ts --bundle --outfile=extension/background.js",
+      "command": "rolldown -c rolldown-background.config.ts",
       "files": [
         "src/background.ts"
       ],
       "output": [
         "extension/background.js"
+      ],
+      "dependencies": [
+        "build:options"
       ]
     },
     "test:types": {
@@ -59,7 +62,7 @@
       "output": []
     },
     "test:lint": {
-      "command": "oxlint src",
+      "command": "oxlint src --type-aware",
       "files": [
         "src/**/*",
         "!src/node_modules",
@@ -127,32 +130,18 @@
     }
   },
   "dependencies": {
-    "@a11y/focus-trap": "^1.0.5",
-    "@babel/types": "^7.28.2",
-    "@material/mwc-button": "^0.27.0",
-    "@material/mwc-checkbox": "^0.27.0",
-    "@material/mwc-fab": "^0.27.0",
-    "@material/mwc-formfield": "^0.27.0",
-    "@material/mwc-icon-button": "^0.27.0",
-    "@material/mwc-list": "^0.27.0",
-    "@material/mwc-radio": "^0.27.0",
-    "@material/mwc-select": "^0.27.0",
-    "@material/mwc-snackbar": "^0.27.0",
-    "@material/mwc-switch": "^0.27.0",
-    "@material/mwc-textarea": "^0.27.0",
-    "@material/mwc-textfield": "^0.27.0",
-    "@material/mwc-top-app-bar": "^0.27.0",
-    "@material/mwc-top-app-bar-fixed": "^0.27.0",
-    "@vueuse/core": "^13.7.0",
-    "@vueuse/shared": "^13.7.0",
+    "@babel/types": "^7.28.4",
+    "@vueuse/core": "^13.9.0",
+    "@vueuse/shared": "^13.9.0",
     "destr": "^2.0.5",
     "gsap": "^3.13.0",
     "monomitter": "^2.0.0",
     "php-date": "^4.0.1",
     "pinia": "^3.0.3",
-    "vue": "^3.5.19",
+    "vue": "^3.5.22",
     "vuedraggable": "^4.1.0",
-    "zod": "^4.0.17"
+    "vuetify": "^3.10.5",
+    "zod": "^4.1.12"
   },
   "devDependencies": {
     "@playwright/test": "^1.55.0",
@@ -161,20 +150,19 @@
     "@typescript-eslint/eslint-plugin": "^6.7.5",
     "@typescript-eslint/parser": "^6.7.5",
     "@vitejs/plugin-vue": "^6.0.1",
-    "@vue/compiler-sfc": "^3.5.19",
+    "@vue/compiler-sfc": "^3.5.22",
     "archiver": "^7.0.1",
-    "esbuild": "^0.25.9",
-    "eslint": "^8.51.0",
-    "eslint-config-prettier": "^9.0.0",
-    "eslint-plugin-vue": "^9.17.0",
-    "oxlint": "^1.12.0",
-    "sass": "^1.90.0",
-    "type-fest": "^4.41.0",
-    "typescript": "^5.9.2",
+    "oxlint": "^1.23.0",
+    "oxlint-tsgolint": "^0.2.0",
+    "rolldown": "^1.0.0-beta.44",
+    "tsdown": "^0.15.8",
+    "type-fest": "^5.1.0",
+    "typescript": "^5.9.3",
     "vite": "npm:rolldown-vite@latest",
-    "vite-plugin-static-copy": "^3.1.2",
+    "vite-plugin-static-copy": "^3.1.4",
+    "vite-plugin-vuetify": "^2.1.2",
     "vitest": "^3.2.4",
-    "vue-tsc": "^3.0.6",
+    "vue-tsc": "^3.1.1",
     "wireit": "^0.14.12"
   }
 }

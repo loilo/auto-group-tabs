@@ -1,25 +1,16 @@
 <template>
-  <div class="color-menu">
-    <mwc-formfield
-      v-for="(label, color) in colorNames"
-      :key="color"
-      :label="label"
-    >
-      <mwc-radio
-        :ref="
-          (el: HTMLInputElement) => {
-            colorRefs[color].value = el as HTMLInputElement
-          }
-        "
-        :checked="color === modelValue"
-        :style="{
-          '--mdc-theme-secondary': `var(--group-${color})`,
-          '--mdc-radio-unchecked-color': `var(--group-${color})`,
-        }"
-        @change="emit('update:modelValue', color)"
+  <v-radio-group v-model="modelValue" class="color-menu">
+    <template v-for="(label, color) in colorNames">
+      <v-radio
+        true-icon="mdi-radiobox-marked"
+        false-icon="mdi-radiobox-blank"
+        :base-color="`group-${color}`"
+        :color="`group-${color}`"
+        :value="color"
+        :label
       />
-    </mwc-formfield>
-  </div>
+    </template>
+  </v-radio-group>
 </template>
 
 <script lang="ts" setup>
@@ -30,40 +21,28 @@ const colorRefs = Object.fromEntries(
   colors.map(color => [color, ref<HTMLInputElement>()]),
 )
 
-const props = defineProps<{
-  modelValue: `${chrome.tabGroups.Color}`
-}>()
-
-const emit = defineEmits<{
-  (e: 'update:modelValue', modelValue: string): void
-}>()
+const modelValue = defineModel<`${chrome.tabGroups.Color}`>({
+  required: true,
+})
 
 defineExpose({
   refresh() {
     // Unfortunately, relying on Vue is not enough when working with custom elements,
     // we need to manually re-set the `checked` prop
-    for (const color of colors) {
-      colorRefs[color].value!.checked = color === props.modelValue
-    }
+    // for (const color of colors) {
+    //   colorRefs[color].value!.checked = color === modelValue.value
+    // }
   },
 })
 </script>
 
-<style lang="scss" scoped>
-.color-menu {
+<style scoped>
+.color-menu :deep(.v-selection-control-group) {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-}
 
-.color-button {
-  --mdc-icon-button-size: 24px;
-}
-
-.color {
-  --mdc-list-item-graphic-size: 16px;
-}
-
-mwc-radio {
-  text-align: center;
+  & > * {
+    grid-area: initial;
+  }
 }
 </style>

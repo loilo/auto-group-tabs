@@ -72,13 +72,14 @@ const localMatchers = useSyncedCopy(() => props.matchers)
 const patternListRef = ref<InstanceType<typeof PatternList>>()
 
 function showNewMatcher() {
+  // oxlint-disable-next-line @typescript-eslint/no-floating-promises
   nextTick(() => {
     patternListRef.value?.showNewMatcher()
   })
 }
 </script>
 
-<style lang="scss">
+<style>
 .group:not(.sort-hint ~ .group):not(:first-child):last-child {
   min-height: calc(100vh - 60px - 1.25rem - var(--body-padding));
 }
@@ -86,7 +87,7 @@ function showNewMatcher() {
 .group.dragging {
   background-color: var(--dimmed-background);
   padding: 5px 10px;
-  border-radius: var(--mdc-shape-small, 4px);
+  border-radius: 4px;
 
   .edit,
   .group-matchers {
@@ -100,6 +101,6 @@ function showNewMatcher() {
 
 .invalid-matcher {
   padding: 4px 16px;
-  color: var(--mdc-theme-error, #b00020);
+  color: rgb(var(--v-theme-error));
 }
 </style>

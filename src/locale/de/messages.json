@@ -51,6 +51,10 @@
     "message": "Ungültiger regulärer Ausdruck",
     "description": "Error message for invalid regex pattern"
   },
+  "alreadyIncluded": {
+    "message": "Das URL-Muster ist in dieser Gruppe bereits enthalten.",
+    "description": "Error message for duplicate pattern"
+  },
   "matchPatternInfo": {
     "message": "Mehr über URL-Muster erfahren (englisch)",
     "description": "Match pattern info link"

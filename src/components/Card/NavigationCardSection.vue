@@ -11,7 +11,7 @@ import ArrowRightIcon from '@/components/ArrowRightIcon.vue'
 import CardSection from './CardSection.vue'
 </script>
 
-<style lang="scss" scoped>
+<style scoped>
 .navigation-card-section {
   cursor: pointer;
 }

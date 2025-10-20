@@ -1,44 +1,58 @@
 <template>
   <div class="group-header" :class="[color]">
     <GroupTag :color="color" :title="title" />
-    <mwc-icon
+    <v-icon
       v-if="hasConflictingTitle"
       class="conflict-hint"
       :title="msg.duplicateGroupError"
-    >
-      warning
-    </mwc-icon>
+      icon="mdi-alert"
+    />
 
-    <div class="edit" v-if="editable && !sortMode">
-      <mwc-icon-button
-        class="action-button"
-        icon="edit"
-        :title="msg.editGroupTooltip"
-        @click="edit"
-      />
-      <mwc-icon-button
-        class="action-button"
-        icon="add_link"
-        :title="msg.newMatcherTooltip"
-        @click="emit('new-matcher')"
-      />
+    <div class="edit-buttons" v-if="editable && !sortMode">
+      <v-tooltip :text="msg.editGroupTooltip">
+        <template #activator="{ props: tooltipProps }">
+          <v-btn
+            v-bind="tooltipProps"
+            class="action-button action-edit"
+            variant="text"
+            color="neutral"
+            icon="mdi-pencil"
+            @click="edit"
+          />
+        </template>
+      </v-tooltip>
+
+      <v-tooltip :text="msg.newMatcherTooltip">
+        <template #activator="{ props: tooltipProps }">
+          <v-btn
+            v-bind="tooltipProps"
+            class="action-button action-new-matcher"
+            variant="text"
+            color="neutral"
+            icon="mdi-link-plus"
+            @click="emit('new-matcher')"
+          />
+        </template>
+      </v-tooltip>
     </div>
-    <mwc-icon v-if="sortMode" class="drag-handle">drag_indicator</mwc-icon>
+    <v-icon
+      v-if="sortMode"
+      class="drag-handle"
+      icon="mdi-drag"
+      size="x-large"
+    />
   </div>
 
-  <transition name="from-right">
-    <EditDialog
-      v-if="showEditDialog"
-      :id="groupId"
-      :title="title"
-      :color="color"
-      :options="options"
-      @save="save"
-      @delete="remove"
-      @close="showEditDialog = false"
-      deletable
-    />
-  </transition>
+  <EditDialog
+    v-model="showEditDialog"
+    :id="groupId"
+    :title="title"
+    :color="color"
+    :options="options"
+    @save="save"
+    @delete="remove"
+    deletable
+  />
 </template>
 
 <script setup lang="ts">
@@ -95,7 +109,7 @@ function remove() {
 }
 </script>
 
-<style lang="scss" scoped>
+<style scoped>
 .group-header {
   position: relative;
   display: flex;
@@ -146,10 +160,10 @@ function remove() {
 
   .conflict-hint {
     margin-left: 0.5rem;
-    color: var(--mdc-theme-warning);
+    color: rgb(var(--v-theme-warning));
   }
 
-  .edit {
+  .edit-buttons {
     margin-left: 0.4rem;
     margin-right: auto;
     z-index: 1;
@@ -157,45 +171,19 @@ function remove() {
   }
 
   .action-button {
-    --mdc-icon-size: 18px;
+    :deep(.v-icon) {
+      font-size: 1.125rem;
+    }
   }
 
   .drag-handle {
     cursor: move;
-    padding: 12px 6px;
-  }
-
-  .eyedropper {
-    color: var(--foreground);
-    background: var(--background);
-    z-index: 1;
-    padding-left: 0.25em;
-    margin-right: -1px;
-  }
-
-  .color-button {
-    --mdc-theme-primary: var(--group-color);
-  }
-}
-
-mwc-dialog {
-  @media (prefers-color-scheme: dark) {
-    --mdc-dialog-box-shadow:
-      0px 11px 15px -7px rgba(0, 0, 0, 1), 0px 24px 38px 3px rgba(0, 0, 0, 1),
-      0px 9px 46px 8px rgba(0, 0, 0, 1);
+    padding: 20px 12px;
   }
 }
 
 .group-title {
   margin: 0.5rem 0 1rem;
-}
-
-.preview {
-  width: 100vw;
-  box-sizing: border-box;
-  margin: -20px -24px 20px;
-  padding: 8px 24px 0 !important;
-  border-radius: var(--mdc-shape-medium, 4px) var(--mdc-shape-medium, 4px) 0 0;
 }
 
 .delete-button {

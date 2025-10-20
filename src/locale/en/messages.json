@@ -51,6 +51,10 @@
     "message": "Invalid regular expression",
     "description": "Error message for invalid regex pattern"
   },
+  "alreadyIncluded": {
+    "message": "The URL pattern is already included in this group.",
+    "description": "Error message for duplicate pattern"
+  },
   "matchPatternInfo": {
     "message": "Learn more about URL patterns",
     "description": "Match pattern info link"

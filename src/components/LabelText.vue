@@ -9,7 +9,7 @@
   </div>
 </template>
 
-<style lang="scss" scoped>
+<style scoped>
 .secondary {
   margin-top: 6px;
   color: var(--dimmed-foreground);

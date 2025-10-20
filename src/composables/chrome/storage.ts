@@ -46,38 +46,42 @@ export function useStorage<T extends JsonValue = any>(
     const data = ref(fallback)
     const changedFromStorage = tickResetRef(false)
 
-    readStorage(key, storage).then(value => {
-      loaded.value = true
+    readStorage(key, storage)
+      .then(value => {
+        loaded.value = true
 
-      if (typeof loadMapper === 'function') {
-        value = loadMapper(value)
-      }
+        if (typeof loadMapper === 'function') {
+          value = loadMapper(value)
+        }
 
-      if (typeof value !== 'undefined') {
-        changedFromStorage.value = true
-        data.value = value
-      }
-
-      watchStorage(
-        key,
-        newValue => {
-          if (ignoreChromeRuntimeEvents.value) {
-            return
-          }
-
+        if (typeof value !== 'undefined') {
           changedFromStorage.value = true
+          data.value = value
+        }
 
-          if (typeof loadMapper === 'function') {
-            newValue = loadMapper(newValue)
-          }
+        watchStorage(
+          key,
+          newValue => {
+            if (ignoreChromeRuntimeEvents.value) {
+              return
+            }
 
-          data.value = newValue
-        },
-        storage,
-      )
-    })
+            changedFromStorage.value = true
 
-    const watcher = <U extends JsonValue>(newValue: U) => {
+            if (typeof loadMapper === 'function') {
+              newValue = loadMapper(newValue)
+            }
+
+            data.value = newValue
+          },
+          storage,
+        )
+      })
+      .catch(error => {
+        console.error('Error reading storage key', key, error)
+      })
+
+    const watcher = async <U extends JsonValue>(newValue: U) => {
       if (changedFromStorage.value) return
       newValue = toRawDeep(newValue)
 
@@ -85,7 +89,7 @@ export function useStorage<T extends JsonValue = any>(
         newValue = saveMapper(newValue as unknown as T)
       }
 
-      writeStorage(key, newValue, storage)
+      await writeStorage(key, newValue, storage)
     }
 
     if (throttle > 0) {

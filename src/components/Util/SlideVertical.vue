@@ -23,7 +23,7 @@ const props = withDefaults(
     disabled?: boolean
     duration?: number
   }>(),
-  { duration: 0.6 },
+  { duration: 500 },
 )
 
 const emit = defineEmits<{

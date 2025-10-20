@@ -37,7 +37,7 @@ export async function saveGroupConfigurations(groups: GroupConfiguration[]) {
     ? lzma.compressBase64(JSON.stringify(groupsCopy))
     : groupsCopy
 
-  return await writeStorage('groups', saveableGroupsCopy, 'sync')
+  await writeStorage('groups', saveableGroupsCopy, 'sync')
 }
 
 /**

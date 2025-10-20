@@ -14,7 +14,7 @@ test('Test group creation flow', async ({ page }) => {
   await page.goto('http://localhost:6655/?context=options')
 
   // Find "+" button and click it
-  await page.locator('text=add').click()
+  await page.locator('.add-button').click()
 
   // Await the dialog container to appear
   const dialogContainer = page.locator('.dialog-container')
@@ -31,7 +31,7 @@ test('Test group creation flow', async ({ page }) => {
   expect(await getPreviewColor()).toBe('rgb(95, 99, 105)')
 
   // Expect initial group name input to be empty
-  const groupNameInput = dialogContainer.locator('mwc-textfield.group-title')
+  const groupNameInput = dialogContainer.locator('.group-title')
   expect(await groupNameInput.evaluate(getValue)).toBe('')
 
   // Fill in a name and pick a color
@@ -65,7 +65,7 @@ test('Test group creation flow', async ({ page }) => {
   await expect(groupsList.locator('.group')).toHaveCount(1)
 
   // Input field for first URL pattern should appear
-  await expect(page.locator('.pattern-list-new mwc-textfield')).toHaveCount(1)
+  await expect(page.locator('.pattern-list-new input')).toHaveCount(1)
 
   // Ensure that groups have been persisted through refresh
   await page.reload()

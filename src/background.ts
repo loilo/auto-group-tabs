@@ -220,10 +220,10 @@ async function assignTabsToGroup(
           )?.windowId
 
           if (targetWindowId && currentWindowId !== targetWindowId) {
-            chrome.windows.update(targetWindowId, {
+            await chrome.windows.update(targetWindowId, {
               focused: true,
             })
-            chrome.tabs.update(currentTabId, {
+            await chrome.tabs.update(currentTabId, {
               active: true,
             })
           }
@@ -392,8 +392,10 @@ watch(
 
       // Group has different matchers than before
       if (oldGroup.matchers.length !== newGroup.matchers.length) return true
-      const sortedOldMatchers = [...oldGroup.matchers].sort()
-      const sortedNewMatchers = [...newGroup.matchers].sort()
+      const sortBySource = (a: RegExp, b: RegExp) =>
+        a.source.localeCompare(b.source)
+      const sortedOldMatchers = [...oldGroup.matchers].sort(sortBySource)
+      const sortedNewMatchers = [...newGroup.matchers].sort(sortBySource)
 
       for (let i = 0; i < oldGroup.matchers.length; i++) {
         if (sortedOldMatchers[i].source !== sortedNewMatchers[i].source)
@@ -483,7 +485,7 @@ watch(
         const tabIdsToUngroup =
           uncheckedTabIdsToUngroup as NonEmptyArray<number>
 
-        chrome.tabs.ungroup(tabIdsToUngroup)
+        await chrome.tabs.ungroup(tabIdsToUngroup)
       }
     }
 
@@ -544,7 +546,7 @@ watch(chromeState.tabGroups.lastUpdated, async tabGroup => {
     updatedGroupItem.title = tabGroup.title ?? ''
     updatedGroupItem.color = tabGroup.color
 
-    saveGroupConfigurations(groupsCopy)
+    await saveGroupConfigurations(groupsCopy)
 
     if (conflictingItem) {
       // When there was a conflict, and the conflicting group has been renamed,
@@ -595,87 +597,96 @@ chrome.runtime.onMessage.addListener(message => {
   }
 })
 
-when(groupConfigurations.loaded).then(async () => {
-  // Wait for the extension state to initialize
-  console.debug('Waiting for extension state to initialize...')
-  await when(chromeState.tabs.loaded)
-
-  console.debug(
-    'Extension state initialized, grouping all appropriate tabs now...',
-  )
-  await groupAllAppropriateTabs()
-
-  console.debug(
-    'Initial grouping done, begin listening to chrome runtime events...',
-  )
-  ignoreChromeRuntimeEvents.value = false
-
-  watch(chromeState.tabs.lastUpdated, async (update: TabUpdate | undefined) => {
-    if (!update) return
-    if (chromeState.tabs.detachedTabs.value.includes(update.tab.id!)) return
-    if (draggingTabs.has(update.tab.id!)) return
-
-    const removedFromTabGroup =
-      update.changes.groupId === chrome.tabGroups.TAB_GROUP_ID_NONE
-    if (!update.changes.url && !removedFromTabGroup) return
-
-    if (removedFromTabGroup) {
-      console.debug(
-        'Removed tab %o (%o) from tab group %o. Looking up the group now...',
-        update.tab.title,
-        update.tab.id,
-        update.oldTab?.groupId,
-      )
-
-      try {
-        await chrome.tabGroups.get(update.oldTab!.groupId)
-        console.debug('Group found, it still exists.')
-      } catch {
-        console.debug(
-          'Group of removed tab no longer found. Waiting for extension state to reflect the removal...',
-        )
-
-        await when(removedTabGroups.history, history =>
-          history.some(item => item.snapshot?.id === update.oldTab?.groupId),
-        )
-
-        console.debug('Reflected tab group removal in extension state')
-      }
-    }
-
-    // Check if the tab itself is gone
-    if (!chromeState.tabsById.value[update.tab.id!]) return
+when(groupConfigurations.loaded)
+  .then(async () => {
+    // Wait for the extension state to initialize
+    console.debug('Waiting for extension state to initialize...')
+    await when(chromeState.tabs.loaded)
 
     console.debug(
-      'Reassigning tab %o (%o) due to change %o',
-      update.tab.title,
-      update.tab.id,
-      update.changes,
+      'Extension state initialized, grouping all appropriate tabs now...',
     )
+    await groupAllAppropriateTabs()
 
-    // Fetch current data for tab instead of reusing update.tab
-    // as this leads to problems in cases where the user closed a window
-    // by moving a tab.
-    const updatedTab = await chrome.tabs.get(update.tab.id!)
+    console.debug(
+      'Initial grouping done, begin listening to chrome runtime events...',
+    )
+    ignoreChromeRuntimeEvents.value = false
 
-    let assignedAny = false
-    for (const [group, tabs] of chromeTabsByGroupConfiguration.value) {
-      if (!tabs.some(tab => tab.id === updatedTab.id)) continue
+    watch(
+      chromeState.tabs.lastUpdated,
+      async (update: TabUpdate | undefined) => {
+        if (!update) return
+        if (chromeState.tabs.detachedTabs.value.includes(update.tab.id!)) return
+        if (draggingTabs.has(update.tab.id!)) return
 
-      assignedAny = true
-      await assignTabsToGroup([updatedTab], group)
-    }
+        const removedFromTabGroup =
+          update.changes.groupId === chrome.tabGroups.TAB_GROUP_ID_NONE
+        if (!update.changes.url && !removedFromTabGroup) return
 
-    // Check if tab has been reassigned,
-    // otherwise check if it needs to be removed from its current group
-    // because the group is configured as strict.
-    if (!assignedAny) {
-      ungroupAppropriateTabs([updatedTab])
-    }
+        if (removedFromTabGroup) {
+          console.debug(
+            'Removed tab %o (%o) from tab group %o. Looking up the group now...',
+            update.tab.title,
+            update.tab.id,
+            update.oldTab?.groupId,
+          )
+
+          try {
+            await chrome.tabGroups.get(update.oldTab!.groupId)
+            console.debug('Group found, it still exists.')
+          } catch {
+            console.debug(
+              'Group of removed tab no longer found. Waiting for extension state to reflect the removal...',
+            )
+
+            await when(removedTabGroups.history, history =>
+              history.some(
+                item => item.snapshot?.id === update.oldTab?.groupId,
+              ),
+            )
+
+            console.debug('Reflected tab group removal in extension state')
+          }
+        }
+
+        // Check if the tab itself is gone
+        if (!chromeState.tabsById.value[update.tab.id!]) return
+
+        console.debug(
+          'Reassigning tab %o (%o) due to change %o',
+          update.tab.title,
+          update.tab.id,
+          update.changes,
+        )
+
+        // Fetch current data for tab instead of reusing update.tab
+        // as this leads to problems in cases where the user closed a window
+        // by moving a tab.
+        const updatedTab = await chrome.tabs.get(update.tab.id!)
+
+        let assignedAny = false
+        for (const [group, tabs] of chromeTabsByGroupConfiguration.value) {
+          if (!tabs.some(tab => tab.id === updatedTab.id)) continue
+
+          assignedAny = true
+          await assignTabsToGroup([updatedTab], group)
+        }
+
+        // Check if tab has been reassigned,
+        // otherwise check if it needs to be removed from its current group
+        // because the group is configured as strict.
+        if (!assignedAny) {
+          await ungroupAppropriateTabs([updatedTab])
+        }
+      },
+    )
   })
-})
+  .catch(error => {
+    console.error('Error during initial grouping of tabs:', error)
+  })
 
-chrome.action.onClicked.addListener(() => {
+chrome.action.onClicked.addListener(async () => {
   console.debug('Trigger extension action')
-  chrome.runtime.openOptionsPage()
+  await chrome.runtime.openOptionsPage()
 })

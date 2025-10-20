@@ -58,20 +58,20 @@ const patterns = useSyncedCopy(
   <div class="suggestions">
     <span class="suggestions-title">{{ msg.suggestionTitle }}:</span>
 
-    <!-- eslint-disable vue/valid-v-for -->
-    <mwc-button
-      dense
-      v-for="option in options"
-      @click="patterns = option.patterns"
-    >
-      {{ option.description }}
-    </mwc-button>
-    <!-- eslint-enable vue/valid-v-for -->
+    <template v-for="option in options">
+      <v-btn
+        @click="patterns = option.patterns"
+        variant="text"
+        density="compact"
+      >
+        {{ option.description }}
+      </v-btn>
+    </template>
   </div>
   <PatternList ref="patternListRef" v-model="patterns" keep-one />
 </template>
 
-<style lang="scss" scoped>
+<style scoped>
 .suggestions {
   display: flex;
   align-items: center;
@@ -82,6 +82,6 @@ const patterns = useSyncedCopy(
 
 .suggestions-title {
   color: var(--dimmed-foreground);
-  font-weight: var(--mdc-typography-button-font-weight, 500);
+  font-weight: 500;
 }
 </style>

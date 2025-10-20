@@ -1,14 +1,17 @@
 <template>
   <OverlayDialog
+    :title="msg.settingsTransferConfigurationTitle"
     class="transfer-dialog"
+    contrast
     :class="{ dragging }"
-    @keydown.esc="close"
     @dragenter="onDragenter"
     @dragleave="onDragleave"
     @dragover.prevent="noop"
     @drop="onDrop"
   >
-    <AppBar :label="msg.settingsTransferConfigurationTitle" @back="close" />
+    <template #activator="data">
+      <slot name="activator" v-bind="data" />
+    </template>
 
     <div v-if="dragging" class="drop-zone">Drop file to import</div>
 
@@ -17,9 +20,9 @@
         <h2 class="subtitle-2">{{ msg.headlineExport }}</h2>
       </CardSection>
       <CardSection tight ghost>
-        <mwc-button @click="exportToFile">
+        <v-btn @click="exportToFile">
           {{ msg.buttonExport }}
-        </mwc-button>
+        </v-btn>
       </CardSection>
     </Card>
     <Card class="transfer-card">
@@ -34,12 +37,12 @@
             @change="importFromFileInput"
             style="display: none"
           />
-          <mwc-button @click="pickFile" :disabled="importing">
+          <v-btn @click="pickFile" :disabled="importing">
             {{ msg.buttonImport }}
-          </mwc-button>
+          </v-btn>
           <p class="warning-message">
-            <mwc-icon class="warning-icon">warning</mwc-icon>
-            {{ msg.importDiscardWarning }}
+            <v-icon class="warning-icon" icon="mdi-alert" />
+            <span>{{ msg.importDiscardWarning }}</span>
           </p>
 
           <SlideVertical :duration="0.3">
@@ -49,9 +52,9 @@
       </CardSection>
     </Card>
 
-    <mwc-snackbar :labelText="msg.importSuccess" ref="snackbarRef">
-      <mwc-icon-button icon="close" slot="dismiss" />
-    </mwc-snackbar>
+    <Snackbar v-model="showImportSuccessSnackbar">
+      {{ msg.importSuccess }}
+    </Snackbar>
   </OverlayDialog>
 </template>
 
@@ -61,9 +64,9 @@ import { destr } from 'destr'
 import date from 'php-date'
 import { inject, ref } from 'vue'
 
-import AppBar from '@/components/AppBar.vue'
 import Card from '@/components/Card/Card.vue'
 import CardSection from '@/components/Card/CardSection.vue'
+import Snackbar from '@/components/Snackbar.vue'
 import SlideVertical from '@/components/Util/SlideVertical.vue'
 import OverlayDialog from './OverlayDialog.vue'
 
@@ -98,6 +101,7 @@ function exportToFile() {
   a.click()
 }
 
+const showImportSuccessSnackbar = ref(false)
 const dragging = ref(false)
 const importFileRef = ref()
 const importing = ref(false)
@@ -139,7 +143,7 @@ async function importFile(file: File) {
 
   groupsCopy.value = parsedResult.data
 
-  snackbarRef.value.show()
+  showImportSuccessSnackbar.value = true
 
   importing.value = false
 }
@@ -152,8 +156,6 @@ const groupsCopy = useSyncedCopy(groupConfigurations.data, () => {
 function close() {
   emit('close')
 }
-
-const snackbarRef = ref()
 
 const dragLeaveBlocked = autoResetRef(false, 0)
 function onDragenter() {
@@ -177,10 +179,8 @@ function onDrop(event: DragEvent) {
 }
 </script>
 
-<style lang="scss" scoped>
+<style scoped>
 .transfer-dialog {
-  background-color: var(--dimmed-background);
-
   &.dragging {
     :deep(*) {
       pointer-events: none !important;
@@ -194,7 +194,7 @@ function onDrop(event: DragEvent) {
 
 .drop-zone {
   --drop-zone-background: rgb(0 0 0 / 30%);
-  --drop-zone-foreground: var(--mdc-theme-primary);
+  --drop-zone-foreground: rgb(var(--v-theme-primary));
 
   @media (prefers-color-scheme: dark) {
     --drop-zone-background: rgb(0 0 0 / 70%);
@@ -214,5 +214,10 @@ function onDrop(event: DragEvent) {
   font-weight: bold;
   z-index: 1000;
   pointer-events: none;
+}
+
+.warning-message {
+  display: flex;
+  align-items: center;
 }
 </style>

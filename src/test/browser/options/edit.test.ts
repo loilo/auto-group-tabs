@@ -35,7 +35,7 @@ test.beforeEach(async ({ page }) => {
 
 test('Edit and save groups', async ({ page }) => {
   // Find "edit" button and click it
-  await page.locator('text=edit').click()
+  await page.locator('.action-edit').click()
 
   // Await the dialog container to appear
   const dialogContainer = page.locator('.dialog-container')
@@ -52,7 +52,7 @@ test('Edit and save groups', async ({ page }) => {
   )
 
   // Expect initial group name input to be empty
-  const groupNameInput = dialogContainer.locator('mwc-textfield.group-title')
+  const groupNameInput = dialogContainer.locator('.group-title')
   expect(await groupNameInput.evaluate(getValue)).toBe('Test Group')
 
   // Focus and override name field
@@ -60,7 +60,7 @@ test('Edit and save groups', async ({ page }) => {
   const primaryKey = (await page.evaluate(isMacOS)) ? 'Meta' : 'Control'
   await groupNameInput.click()
   await page.keyboard.down(primaryKey)
-  page.keyboard.press('A')
+  await page.keyboard.press('A')
   await page.keyboard.up(primaryKey)
 
   await groupNameInput.press('Backspace')
@@ -112,7 +112,7 @@ test('Edit and save groups', async ({ page }) => {
 
 test('Delete Groups and undo deletion', async ({ page }) => {
   // Find "edit" button and click it
-  await page.locator('text=edit').click()
+  await page.locator('.action-edit').click()
 
   // Await the dialog container to appear
   const dialogContainer = page.locator('.dialog-container')

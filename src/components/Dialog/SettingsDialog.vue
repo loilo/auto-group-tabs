@@ -1,16 +1,22 @@
 <template>
-  <OverlayDialog class="settings-dialog" @keydown.esc="close">
-    <AppBar :label="msg.settingsTitle" @back="close" />
+  <OverlayDialog :title="msg.settingsTitle" contrast>
+    <template #activator="data">
+      <slot name="activator" v-bind="data" />
+    </template>
 
     <Card>
-      <NavigationCardSection @click="step = 'transfer'">
-        <Text>
-          {{ msg.settingsTransferConfigurationTitle }}
-          <template #secondary>
-            {{ msg.settingsTransferConfigurationSubtitle }}
-          </template>
-        </Text>
-      </NavigationCardSection>
+      <TransferDialog>
+        <template #activator="{ props: activatorProps }">
+          <NavigationCardSection v-bind="activatorProps">
+            <Text>
+              {{ msg.settingsTransferConfigurationTitle }}
+              <template #secondary>
+                {{ msg.settingsTransferConfigurationSubtitle }}
+              </template>
+            </Text>
+          </NavigationCardSection>
+        </template>
+      </TransferDialog>
       <NavigationCardSection @click="reloadRuntime()">
         <Text>
           {{ msg.settingsForceReloadTitle }}
@@ -20,17 +26,12 @@
         </Text>
       </NavigationCardSection>
     </Card>
-
-    <transition name="from-right">
-      <TransferDialog v-if="step === 'transfer'" @close="step = 'base'" />
-    </transition>
   </OverlayDialog>
 </template>
 
 <script setup lang="ts">
 import { ref } from 'vue'
 
-import AppBar from '@/components/AppBar.vue'
 import Card from '@/components/Card/Card.vue'
 import NavigationCardSection from '@/components/Card/NavigationCardSection.vue'
 import Text from '@/components/Text.vue'
@@ -53,7 +54,7 @@ function close() {
 }
 </script>
 
-<style lang="scss" scoped>
+<style scoped>
 .settings-dialog {
   background-color: var(--dimmed-background);
 }

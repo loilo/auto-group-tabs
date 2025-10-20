@@ -1,117 +1,28 @@
-<template>
-  <OverlayDialog @keydown.esc="cancel" @keydown.enter="save">
-    <TabBar
-      :tab-title="msg.previewTitle"
-      :group-title="editTitle"
-      class="preview"
-      :style="{
-        '--group-color': `var(--group-${editColor})`,
-        '--group-foreground-color': `var(--group-${editColor}-foreground)`,
-      }"
-    />
-
-    <Textfield
-      ref="titleField"
-      class="group-title"
-      v-model="editTitle"
-      :placeholder="msg.groupTitlePlaceholder"
-      :validator="checkForDuplicates"
-      :validation-message="msg.duplicateGroupError"
-    />
-
-    <ColorMenu
-      ref="colorMenu"
-      v-model="editColor"
-      @update:model-value="titleField.validate()"
-    />
-
-    <mwc-button
-      class="toggle-advanced-button"
-      :icon="showAdvanced ? 'expand_less' : 'expand_more'"
-      trailingicon
-      @click="showAdvanced = !showAdvanced"
-    >
-      {{ msg.headlineAdvanced }}
-    </mwc-button>
-
-    <SlideVertical :duration="0.3">
-      <Card v-if="showAdvanced" seamless>
-        <CardSection ghost tight collapse seamless class="radio-container">
-          <mwc-checkbox
-            id="edit-dialog-strict"
-            :checked="editStrict"
-            @change="editStrict = $event.target.checked"
-          />
-          <ToggleLabel for="edit-dialog-strict">
-            <LabelText>
-              {{ msg.checkboxStrict }}
-              <template #secondary>
-                {{ msg.checkboxStrictDescription }}
-              </template>
-            </LabelText>
-          </ToggleLabel>
-        </CardSection>
-
-        <CardSection ghost tight collapse seamless class="radio-container">
-          <mwc-checkbox
-            id="edit-dialog-merge"
-            :checked="editMerge"
-            @change="editMerge = $event.target.checked"
-          />
-          <ToggleLabel for="edit-dialog-merge">
-            <LabelText>
-              {{ msg.checkboxMerge }}
-              <template #secondary>
-                {{ msg.checkboxMergeDescription }}
-              </template>
-            </LabelText>
-          </ToggleLabel>
-        </CardSection>
-      </Card>
-    </SlideVertical>
-
-    <template v-slot:actionsBar>
-      <mwc-button
-        class="button-save"
-        dialogAction="ok"
-        unelevated
-        @click="save"
-        v-text="msg.buttonSave"
-      />
-      <mwc-button
-        class="button-cancel"
-        style="--mdc-theme-primary: var(--dimmed)"
-        @click="cancel"
-        v-text="msg.buttonCancel"
-      />
-      <mwc-button
-        v-if="deletable"
-        class="button-delete"
-        @click="remove"
-        v-text="msg.buttonDeleteGroup"
-        style="--mdc-theme-primary: var(--group-red)"
-      />
-    </template>
-  </OverlayDialog>
-</template>
-
 <script setup lang="ts">
 import Card from '@/components/Card/Card.vue'
 import CardSection from '@/components/Card/CardSection.vue'
 import ColorMenu from '@/components/Form/ColorMenu.vue'
-import Textfield from '@/components/Form/Textfield.vue'
 import ToggleLabel from '@/components/Form/ToggleLabel.vue'
-import SlideVertical from '@/components/Util/SlideVertical.vue'
-import TabBar from '@/components/TabBar.vue'
 import LabelText from '@/components/LabelText.vue'
+import TabBar from '@/components/TabBar.vue'
+import SlideVertical from '@/components/Util/SlideVertical.vue'
 import OverlayDialog from './OverlayDialog.vue'
 
-import { getCurrentInstance, onMounted, onUnmounted, ref } from 'vue'
 import { useGroupConfigurations } from '@/composables'
-import * as conflictManager from '@/util/conflict-manager'
-import { SaveOptions } from '@/util/types'
 import { useViewStore } from '@/stores'
+import * as conflictManager from '@/util/conflict-manager'
+import { SaveOptions, Translation } from '@/util/types'
 import { useStyleTag } from '@vueuse/core'
+import {
+  computed,
+  getCurrentInstance,
+  inject,
+  nextTick,
+  onUnmounted,
+  ref,
+  useTemplateRef,
+  watch,
+} from 'vue'
 
 const props = withDefaults(
   defineProps<{
@@ -140,20 +51,23 @@ const emit = defineEmits<{
   ): void
   (e: 'delete'): void
   (e: 'cancel'): void
-  (e: 'close'): void
 }>()
+
+const show = defineModel<boolean>({ default: false })
 
 const groups = useGroupConfigurations()
 
 const showAdvanced = ref(false)
 
 const editTitle = ref(conflictManager.withoutMarker(props.title))
+const editTitleLazy = ref(editTitle.value)
 const editColor = ref(props.color)
 const editStrict = ref(props.options.strict)
 const editMerge = ref(props.options.merge)
+const editFieldBlurred = ref(false)
 
 const colorMenu = ref()
-const titleField = ref()
+const titleField = useTemplateRef('titleField')
 
 const viewStore = useViewStore()
 
@@ -163,33 +77,53 @@ const { load } = useStyleTag(`html {
   min-height: 515px;
 }`)
 
-onMounted(() => {
-  load()
+watch(
+  show,
+  async isShown => {
+    if (!isShown) return
 
-  viewStore.edit.register(getCurrentInstance()!)
-  colorMenu.value.refresh()
+    // Reset edit fields
+    editTitle.value = conflictManager.withoutMarker(props.title)
+    editTitleLazy.value = editTitle.value
+    editColor.value = props.color
+    editStrict.value = props.options.strict
+    editMerge.value = props.options.merge
+    editFieldBlurred.value = false
 
-  // Need to wait for the <mwc-*> custom elements to render
-  requestAnimationFrame(() => {
-    titleField.value.focus()
-    titleField.value.select()
-  })
-})
+    await nextTick()
+
+    load()
+
+    viewStore.edit.register(getCurrentInstance()!)
+    colorMenu.value.refresh()
+
+    titleField.value?.focus()
+    titleField.value?.select()
+  },
+  { immediate: true },
+)
 
 onUnmounted(() => {
   viewStore.edit.deregister(getCurrentInstance()!)
 })
 
-function checkForDuplicates() {
+const msg = inject<Translation>('msg')!
+
+const titleErrorMessages = computed(() => {
+  const messages: string[] = []
+
   const conflictingGroup = groups.data.value.find(
-    group => group.color === editColor.value && group.title === editTitle.value,
+    group =>
+      group.color === editColor.value &&
+      group.title === editTitleLazy.value &&
+      group.id !== props.id,
   )
+  if (conflictingGroup) {
+    messages.push(msg.duplicateGroupError)
+  }
 
-  if (!conflictingGroup) return true
-  if (props.id) return props.id === conflictingGroup.id
-
-  return false
-}
+  return messages
+})
 
 function save(event: KeyboardEvent) {
   if (!groups.loaded.value) {
@@ -199,28 +133,123 @@ function save(event: KeyboardEvent) {
     return
   }
 
-  if (!titleField.value.isValid()) return
+  if (!titleField.value?.isValid) return
 
   event.preventDefault()
   emit('save', editTitle.value, editColor.value, {
     strict: editStrict.value,
     merge: editMerge.value,
   })
-  emit('close')
+  show.value = false
 }
 
 function cancel() {
   emit('cancel')
-  emit('close')
+  show.value = false
 }
 
 function remove() {
   emit('delete')
-  emit('close')
+  show.value = false
 }
 </script>
 
-<style lang="scss" scoped>
+<template>
+  <OverlayDialog
+    class="edit-dialog-overlay"
+    v-model="show"
+    @keydown.enter="save"
+  >
+    <template #activator="data">
+      <slot name="activator" v-bind="data" />
+    </template>
+
+    <TabBar
+      :tab-title="msg.previewTitle"
+      :group-title="editTitle"
+      class="preview"
+      :style="{
+        '--group-color': `var(--group-${editColor})`,
+        '--group-foreground-color': `var(--group-${editColor}-foreground)`,
+      }"
+    />
+
+    <v-text-field
+      ref="titleField"
+      class="group-title"
+      :model-value="editTitle"
+      @update:model-value="editTitle = $event"
+      @change="editTitleLazy = $event.target.value"
+      @blur="editFieldBlurred = true"
+      :label="msg.groupTitlePlaceholder"
+      validate-on="blur"
+      :error-messages="editFieldBlurred ? titleErrorMessages : []"
+    />
+
+    <ColorMenu
+      ref="colorMenu"
+      v-model="editColor"
+      @update:model-value="titleField?.validate()"
+    />
+
+    <v-btn
+      class="toggle-advanced-button"
+      variant="text"
+      :append-icon="showAdvanced ? 'mdi-chevron-up' : 'mdi-chevron-down'"
+      @click="showAdvanced = !showAdvanced"
+    >
+      {{ msg.headlineAdvanced }}
+    </v-btn>
+
+    <SlideVertical :duration="0.3">
+      <Card v-if="showAdvanced" seamless>
+        <CardSection ghost tight collapse seamless class="radio-container">
+          <v-checkbox id="edit-dialog-strict" v-model="editStrict" />
+          <ToggleLabel for="edit-dialog-strict">
+            <LabelText>
+              {{ msg.checkboxStrict }}
+              <template #secondary>
+                {{ msg.checkboxStrictDescription }}
+              </template>
+            </LabelText>
+          </ToggleLabel>
+        </CardSection>
+
+        <CardSection ghost tight collapse seamless class="radio-container">
+          <v-checkbox id="edit-dialog-merge" v-model="editMerge" />
+          <ToggleLabel for="edit-dialog-merge">
+            <LabelText>
+              {{ msg.checkboxMerge }}
+              <template #secondary>
+                {{ msg.checkboxMergeDescription }}
+              </template>
+            </LabelText>
+          </ToggleLabel>
+        </CardSection>
+      </Card>
+    </SlideVertical>
+
+    <template #actions>
+      <v-btn class="button-save" dialogAction="ok" @click="save">
+        {{ msg.buttonSave }}
+      </v-btn>
+      <v-btn variant="text" class="button-cancel" @click="cancel" color="grey">
+        {{ msg.buttonCancel }}
+      </v-btn>
+      <v-btn
+        v-if="deletable"
+        variant="text"
+        class="button-delete"
+        @click="remove"
+        color="group-red"
+      >
+        {{ msg.buttonDeleteGroup }}
+      </v-btn>
+    </template>
+  </OverlayDialog>
+</template>
+
+<style scoped>
 .group-header {
   position: relative;
   display: flex;
@@ -290,26 +319,10 @@ function remove() {
     color: var(--foreground);
     background: var(--background);
   }
-
-  .eyedropper {
-    color: var(--foreground);
-    background: var(--background);
-    z-index: 1;
-    padding-left: 0.25em;
-    margin-right: -1px;
-  }
-
-  .color-button {
-    --mdc-theme-primary: var(--group-color);
-  }
 }
 
-mwc-dialog {
-  @media (prefers-color-scheme: dark) {
-    --mdc-dialog-box-shadow:
-      0px 11px 15px -7px rgba(0, 0, 0, 1), 0px 24px 38px 3px rgba(0, 0, 0, 1),
-      0px 9px 46px 8px rgba(0, 0, 0, 1);
-  }
+:global(.edit-dialog-overlay .dialog-container) {
+  padding-top: 0;
 }
 
 .group-title {
@@ -339,5 +352,9 @@ mwc-dialog {
 .radio-container {
   display: flex;
   align-items: center;
+
+  & > *:first-child {
+    flex-shrink: 0;
+  }
 }
 </style>

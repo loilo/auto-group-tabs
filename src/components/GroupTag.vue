@@ -46,7 +46,7 @@ const displayTitle = computed(() => {
   </span>
 </template>
 
-<style lang="scss" scoped>
+<style scoped>
 .tag {
   position: relative;
   display: inline-block;
@@ -71,7 +71,7 @@ const displayTitle = computed(() => {
   }
 
   .tag-label {
-    // Hard-code line height in case height-modifying characters (e.g. emoji) are used
+    /* Hard-code line height in case height-modifying characters (e.g. emoji) are used */
     display: block;
     height: 16px;
     line-height: 1.2;

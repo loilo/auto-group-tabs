@@ -26,6 +26,7 @@ export function useSyncedCopy<T>(
       externalChange.value = true
       syncedCopy.value = get() as UnwrapRef<T>
 
+      // oxlint-disable-next-line @typescript-eslint/no-floating-promises
       nextTick(() => {
         externalChange.value = false
       })

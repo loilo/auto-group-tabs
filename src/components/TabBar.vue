@@ -86,6 +86,7 @@ onMounted(() => {
 watch(
   () => props.groupTitle,
   () => {
+    // oxlint-disable-next-line @typescript-eslint/no-floating-promises
     nextTick(() => {
       updateOverflowing()
     })
@@ -93,7 +94,7 @@ watch(
 )
 </script>
 
-<style lang="scss" scoped>
+<style scoped>
 .tab-bar {
   --tab-bar-background: #e3e3e3;
   --tab-bar-border: #caced6;
@@ -104,14 +105,13 @@ watch(
   @media (prefers-color-scheme: dark) {
     --tab-bar-background: #3c4043;
     --tab-bar-border: #353535;
-    --tab-background: var(--mdc-theme-surface, #353535);
+    --tab-background: rgb(var(--v-theme-dark-grey));
     --tab-foreground: #f1f3f4;
     --group-foreground: #202124;
   }
 
-  font-family:
-    -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial,
-    sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica,
+    Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';
   background-color: var(--tab-bar-background);
   border-top: 1px solid var(--tab-bar-border);
 
