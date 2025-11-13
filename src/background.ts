@@ -120,6 +120,8 @@ async function assignTabsToGroup(
   tabs: chrome.tabs.Tab[],
   group: GroupConfiguration
 ) {
+  tabs = await filterOutSplitTabs(tabs)
+
   if (tabs.length === 0) return
 
   const windowId = tabs[0].windowId
@@ -267,6 +269,12 @@ async function assignTabsToGroup(
   }
 
   await attemptGroupAssignment()
+}
+
+async function filterOutSplitTabs(tabs: chrome.tabs.Tab[]) {
+  const tabIds = new Set(tabs.map(tab => tab.id!))
+    const nonSplitTabs = await chrome.tabs.query({splitViewId: -1})
+    return nonSplitTabs.filter((tab) => tab.id !== undefined && tabIds.has(tab.id))
 }
 
 async function ungroupAppropriateTabs(tabs: chrome.tabs.Tab[]) {
