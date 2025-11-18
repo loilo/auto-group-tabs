@@ -272,12 +272,12 @@ async function assignTabsToGroup(
 }
 
 async function filterOutSplitTabs(tabs: chrome.tabs.Tab[]) {
-  const tabIds = new Set(tabs.map(tab => tab.id!))
-    const nonSplitTabs = await chrome.tabs.query({splitViewId: -1})
-    return nonSplitTabs.filter((tab) => tab.id !== undefined && tabIds.has(tab.id))
+    const nonSplitTabIDs = new Set((await chrome.tabs.query({splitViewId: -1})).map(tab => tab.id).filter(tabId => tabId !== undefined));
+    return tabs.filter((tab) =>  tab.id !== undefined && nonSplitTabIDs.has(tab.id))
 }
 
 async function ungroupAppropriateTabs(tabs: chrome.tabs.Tab[]) {
+  tabs = await filterOutSplitTabs(tabs);
   for (const tab of tabs) {
     if (tab.groupId !== chrome.tabGroups.TAB_GROUP_ID_NONE) {
       const assignedGroup = chromeState.tabGroups.items.value.find(
@@ -614,6 +614,7 @@ when(groupConfigurations.loaded).then(async () => {
     if (!update) return
     if (chromeState.tabs.detachedTabs.value.includes(update.tab.id!)) return
     if (draggingTabs.has(update.tab.id!)) return
+    if ((await filterOutSplitTabs([update.tab])).length === 0) return
 
     const removedFromTabGroup =
       update.changes.groupId === chrome.tabGroups.TAB_GROUP_ID_NONE
