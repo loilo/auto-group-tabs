@@ -68,6 +68,10 @@
   }
 }
 
+:not(custom-element):where([hidden]) {
+  display: none;
+}
+
 body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
