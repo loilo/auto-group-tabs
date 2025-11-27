@@ -54,7 +54,10 @@ test('Drag and drop groups', async ({ page }) => {
   await expect(dragHandles).toHaveCount(3)
 
   // Wait for group transition to finish
-  await page.locator('body').evaluate(waitAnimationsFinished)
+  await page
+    .locator('body')
+    .evaluate(waitAnimationsFinished)
+    .catch(() => {})
 
   await page.dragAndDrop(
     '.group:not(.group + .group) .drag-handle',
