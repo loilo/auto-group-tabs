@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import { useDialog } from '@/stores'
-import { useId, watch } from 'vue'
+import { onUnmounted, useId, watch } from 'vue'
 
 const props = defineProps<{
   title?: string
@@ -24,6 +24,10 @@ watch(
   },
   { immediate: true },
 )
+
+onUnmounted(() => {
+  dialog.openDialogs.delete(dialogId)
+})
 </script>
 
 <template>
