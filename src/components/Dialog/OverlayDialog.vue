@@ -43,7 +43,7 @@ onUnmounted(() => {
       <v-toolbar v-if="title" density="compact">
         <v-btn icon="mdi-arrow-left" color="white" @click="model = false" />
 
-        <v-toolbar-title>{{ title }}</v-toolbar-title>
+        <v-toolbar-title class="dialog-title">{{ title }}</v-toolbar-title>
       </v-toolbar>
 
       <v-container class="dialog-container">
@@ -66,6 +66,10 @@ onUnmounted(() => {
 
 .dialog-card {
   min-height: 100%;
+}
+
+.dialog-title {
+  font-weight: 500;
 }
 
 .dialog-container {
