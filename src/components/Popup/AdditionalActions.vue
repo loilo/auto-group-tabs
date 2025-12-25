@@ -52,8 +52,7 @@ function edit() {
   <v-btn
     v-if="tabGroup && tabGroupConfigured"
     variant="text"
-    color="neutral"
-    icon="mdi-tab"
+    prepend-icon="mdi-tab"
     @click="edit"
   >
     {{ msg.popupEditCurrentGroup }} &nbsp;
