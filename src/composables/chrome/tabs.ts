@@ -1,5 +1,5 @@
 import { whenever } from '@vueuse/core'
-import { computed, readonly, ref } from 'vue'
+import { computed, readonly, ref, toValue } from 'vue'
 import { ignoreChromeRuntimeEvents } from './util'
 import { useReadonlyChromeWindows } from './windows'
 
@@ -168,12 +168,15 @@ export function useChromeTabsByWindowId() {
 
   return computed<{
     [windowId: string]: chrome.tabs.Tab[]
-  }>(() =>
-    Object.fromEntries(
+  }>(() => {
+    // Trigger re-computation on tabs change
+    toValue(chromeTabs.items)
+
+    return Object.fromEntries(
       chromeWindows.items.value.map(window => [
         window.id,
         chromeTabs.items.value.filter(tab => tab.windowId === window.id),
       ]),
-    ),
-  )
+    )
+  })
 }
