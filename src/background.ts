@@ -287,30 +287,43 @@ async function ungroupAppropriateTabs(tabs: chrome.tabs.Tab[]) {
   )
 
   for (const tab of tabs) {
-    if (tab.groupId !== chrome.tabGroups.TAB_GROUP_ID_NONE) {
-      const assignedGroup = chromeState.tabGroups.items.value.find(
-        tabGroup => tabGroup.id === tab.groupId,
-      )
-      if (!assignedGroup) continue
+    // Skip ungrouping if tab is not in a group
+    if (tab.groupId === chrome.tabGroups.TAB_GROUP_ID_NONE) continue
 
+    // Skip ungrouping if reflected state says the tab is already ungrouped
+    const assignedGroup = chromeState.tabGroups.items.value.find(
+      tabGroup => tabGroup.id === tab.groupId,
+    )
+    if (!assignedGroup) continue
+    if (tab.groupId === chrome.tabGroups.TAB_GROUP_ID_NONE) continue
+
+    let shouldUngroupTab = false
+
+    // Apply ungrouping to strict groups
+    if (!shouldUngroupTab) {
       for (const groupConfiguration of augmentedGroupConfigurations.value) {
         const matchesGroupConfiguration =
           createGroupConfigurationMatcher(groupConfiguration)
-        if (matchesGroupConfiguration(assignedGroup!)) {
-          if (groupConfiguration.options.strict) {
-            console.debug(
-              'Unassigning tab %o (%o) from group %o (%o / %o)...',
-              tab.title,
-              tab.id,
-              tab.groupId,
-              groupConfiguration.title,
-              groupConfiguration.color,
-            )
 
-            await chrome.tabs.ungroup(tab.id!)
-          }
+        // Skip if the reflected group does not match the configuration
+        if (!matchesGroupConfiguration(assignedGroup!)) continue
+
+        if (groupConfiguration.options.strict) {
+          shouldUngroupTab = true
+          break
         }
       }
+    }
+
+    if (shouldUngroupTab) {
+      console.debug(
+        'Unassigning tab %o (%o) from group %o...',
+        tab.title,
+        tab.id,
+        tab.groupId,
+      )
+
+      await chrome.tabs.ungroup(tab.id!)
     }
   }
 }
