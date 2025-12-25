@@ -120,6 +120,13 @@ async function assignTabsToGroup(
   tabs: chrome.tabs.Tab[],
   group: GroupConfiguration,
 ) {
+  // We need to filter out split view tabs as they currently cause Chrome to crash when grouped
+  tabs = tabs.filter(
+    tab =>
+      tab.splitViewId === undefined ||
+      tab.splitViewId === chrome.tabs.SPLIT_VIEW_ID_NONE,
+  )
+
   if (tabs.length === 0) return
 
   const windowId = tabs[0].windowId
@@ -272,6 +279,13 @@ async function assignTabsToGroup(
 }
 
 async function ungroupAppropriateTabs(tabs: chrome.tabs.Tab[]) {
+  // We need to filter out split view tabs as they currently cause Chrome to crash when grouped
+  tabs = tabs.filter(
+    tab =>
+      tab.splitViewId === undefined ||
+      tab.splitViewId === chrome.tabs.SPLIT_VIEW_ID_NONE,
+  )
+
   for (const tab of tabs) {
     if (tab.groupId !== chrome.tabGroups.TAB_GROUP_ID_NONE) {
       const assignedGroup = chromeState.tabGroups.items.value.find(
