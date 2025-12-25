@@ -57,6 +57,27 @@ const chromeTabsByGroupConfiguration = computed(() => {
   return tabsByGroups
 })
 
+const chromeTabsBySplitViewId = computed(() => {
+  const tabsBySplitViewId = new Map<number, chrome.tabs.Tab[]>()
+  const tabs = chromeState.tabs.items.value
+
+  for (const tab of tabs) {
+    if (tab.splitViewId === undefined) continue
+    if (tab.splitViewId === chrome.tabs.SPLIT_VIEW_ID_NONE) continue
+
+    const splitViewId = tab.splitViewId
+
+    if (tabsBySplitViewId.has(splitViewId)) {
+      tabsBySplitViewId.get(splitViewId)!.push(tab)
+    } else {
+      const splitViewTabs = [tab]
+      tabsBySplitViewId.set(splitViewId, splitViewTabs)
+    }
+  }
+
+  return tabsBySplitViewId
+})
+
 /**
  * { [string: windowId]: Map<GroupConfiguration, chrome.tabs.Tab[]> }
  */
