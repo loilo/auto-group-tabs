@@ -695,6 +695,44 @@ when(groupConfigurations.loaded)
         }
       },
     )
+
+    watch(chromeState.tabs.lastMoved, async move => {
+      if (!move) return
+
+      for (const movedTab of move.tabs) {
+        if (chromeState.tabs.detachedTabs.value.includes(movedTab.id!)) continue
+        if (draggingTabs.has(movedTab.id!)) continue
+
+        // Check if the tab itself is gone
+        if (!chromeState.tabsById.value[movedTab.id!]) continue
+
+        console.debug(
+          'Reassigning tab %o (%o) due to move %o',
+          movedTab.title,
+          movedTab.id,
+          move.moveInfo,
+        )
+
+        // Fetch current data for tab instead of reusing update.tab
+        // as this leads to problems in cases where the user closed a window
+        // by moving a tab.
+        const updatedMovedTab = await chrome.tabs.get(movedTab.id!)
+
+        let assignedAny = false
+        for (const [group, tabs] of chromeTabsByGroupConfiguration.value) {
+          if (!tabs.some(tab => tab.id === updatedMovedTab.id)) continue
+
+          await assignTabsToGroup([updatedMovedTab], group)
+        }
+
+        // Check if tab has been reassigned,
+        // otherwise check if it needs to be removed from its current group
+        // because the group is configured as strict.
+        if (!assignedAny) {
+          await ungroupAppropriateTabs([updatedMovedTab])
+        }
+      }
+    })
   })
   .catch(error => {
     console.error('Error during initial grouping of tabs:', error)

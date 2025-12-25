@@ -9,6 +9,11 @@ export type TabUpdate = {
   oldTab: chrome.tabs.Tab | undefined
 }
 
+export type TabMove = {
+  tabs: chrome.tabs.Tab[]
+  moveInfo: chrome.tabs.OnMovedInfo
+}
+
 function _useReadonlyChromeTabs() {
   const tabs = ref<chrome.tabs.Tab[]>([])
   const detachedTabs = ref<number[]>([])
@@ -16,6 +21,7 @@ function _useReadonlyChromeTabs() {
   const lastCreated = ref<chrome.tabs.Tab | undefined>(undefined)
   const lastUpdated = ref<TabUpdate | undefined>(undefined)
   const lastRemoved = ref<number | undefined>(undefined)
+  const lastMoved = ref<TabMove | undefined>(undefined)
 
   if (typeof chrome.tabs !== 'undefined') {
     const chromeWindows = useReadonlyChromeWindows()
@@ -84,6 +90,46 @@ function _useReadonlyChromeTabs() {
           ...tabs.value.slice(index + 1),
         ]
       })
+
+      chrome.tabs.onMoved.addListener(async (movedTabId, moveInfo) => {
+        if (ignoreChromeRuntimeEvents.value) {
+          return
+        }
+
+        const [lowerIndex, upperIndex] = [
+          moveInfo.fromIndex,
+          moveInfo.toIndex,
+        ].sort((a, b) => a - b)
+        const affectedTabIndexes = tabs.value.flatMap((tab, index) => {
+          if (tab.windowId !== moveInfo.windowId) return []
+          if (tab.index < lowerIndex) return []
+          if (tab.index > upperIndex) return []
+          return [index]
+        })
+
+        const affectedTabs = affectedTabIndexes.map(index => tabs.value[index])
+
+        const tabsCopy = [...tabs.value]
+        for (const index of affectedTabIndexes) {
+          const tab = tabs.value[index]
+          if (tab.id === movedTabId) {
+            tabsCopy[index] = { ...tab, index: moveInfo.toIndex }
+          } else {
+            if (moveInfo.fromIndex < moveInfo.toIndex) {
+              tabsCopy[index] = { ...tab, index: tab.index - 1 }
+            } else {
+              tabsCopy[index] = { ...tab, index: tab.index + 1 }
+            }
+          }
+        }
+
+        tabs.value = tabsCopy
+
+        lastMoved.value = {
+          tabs: affectedTabs,
+          moveInfo: moveInfo,
+        }
+      })
     })
   } else {
     loaded.value = true
@@ -96,6 +142,7 @@ function _useReadonlyChromeTabs() {
     lastCreated: readonly(lastCreated),
     lastUpdated: readonly(lastUpdated),
     lastRemoved: readonly(lastRemoved),
+    lastMoved: readonly(lastMoved),
   }
 }
 
