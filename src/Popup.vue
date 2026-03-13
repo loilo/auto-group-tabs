@@ -130,7 +130,7 @@ async function createFromCurrentGroup(
       title,
       color,
       matchers: [],
-      options: { strict: false, merge: false },
+      options: { strict: false, merge: false, minTabsToGroup: 2 },
     },
   ])
 

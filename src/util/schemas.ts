@@ -5,6 +5,7 @@ import { colors } from './resources'
 export const SaveOptionsSchema = z.object({
   strict: z.boolean().default(false),
   merge: z.boolean().default(false),
+  minTabsToGroup: z.number().int().positive().default(2),
 })
 
 const matcherPatternRegex = new RegExp(matcherPattern)

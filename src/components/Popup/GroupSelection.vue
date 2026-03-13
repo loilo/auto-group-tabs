@@ -89,7 +89,7 @@ async function addFromCurrent() {
       title: tabGroup.value!.title ?? '',
       color: tabGroup.value!.color,
       matchers: [],
-      options: { strict: false, merge: false },
+      options: { strict: false, merge: false, minTabsToGroup: 2  },
     },
   ])
   await groupsChanged
