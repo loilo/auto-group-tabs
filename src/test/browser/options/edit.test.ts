@@ -25,7 +25,7 @@ test.beforeEach(async ({ page }) => {
       title: 'Test Group',
       color: 'blue',
       matchers: [],
-      options: { strict: true, merge: true },
+      options: { strict: true, merge: true, minTabsToGroup: 2 },
     } as GroupConfigurationWithoutId,
   ])
 
@@ -105,7 +105,7 @@ test('Edit and save groups', async ({ page }) => {
       title: 'Edited Group',
       color: 'red',
       matchers: [],
-      options: { strict: false, merge: false },
+      options: { strict: false, merge: false, minTabsToGroup: 2 },
     },
   ])
 })
@@ -136,7 +136,7 @@ test('Delete Groups and undo deletion', async ({ page }) => {
       title: 'Test Group',
       color: 'blue',
       matchers: [],
-      options: { strict: true, merge: true },
+      options: { strict: true, merge: true, minTabsToGroup: 2 },
     },
   ])
 })
