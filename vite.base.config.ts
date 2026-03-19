@@ -1,13 +1,14 @@
 // Configuration for bundling the options page
 
 import { resolve } from 'node:path'
+import { fileURLToPath } from 'node:url'
 
 import vue from '@vitejs/plugin-vue'
 import { viteStaticCopy } from 'vite-plugin-static-copy'
 import vuetify from 'vite-plugin-vuetify'
 import { defineConfig } from 'vitest/config'
 
-const __dirname = new URL('.', import.meta.url).pathname
+const __dirname = fileURLToPath(new URL('.', import.meta.url))
 
 // See https://vitejs.dev/config/
 export default defineConfig({

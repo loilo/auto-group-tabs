@@ -99,7 +99,7 @@
       ]
     },
     "build:manifest:chromium": {
-      "command": "node -e 'fs.writeFileSync(\"extension-chromium/manifest.json\", JSON.stringify((await import(\"./src/manifest/manifest.chromium.ts\")).default, null, 2))'",
+      "command": "node build-manifest.ts chromium",
       "files": [
         "src/**/*",
         "!src/node_modules"
@@ -112,7 +112,7 @@
       ]
     },
     "build:manifest:gecko": {
-      "command": "node -e 'fs.writeFileSync(\"extension-gecko/manifest.json\", JSON.stringify((await import(\"./src/manifest/manifest.gecko.ts\")).default, null, 2))'",
+      "command": "node build-manifest.ts gecko",
       "files": [
         "src/**/*",
         "!src/node_modules"
