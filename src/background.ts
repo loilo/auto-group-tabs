@@ -526,7 +526,10 @@ watch(chromeState.tabGroups.lastUpdated, async tabGroup => {
   if (!tabGroup) return
   if (programmaticallyUpdatingTabGroups.value) return
 
-  const oldTabGroup = tabGroupsHistory.history.value[0].snapshot.find(
+  const previousSnapshot = tabGroupsHistory.history.value[1]?.snapshot
+  if (!previousSnapshot) return
+
+  const oldTabGroup = previousSnapshot.find(
     stateTabGroup => stateTabGroup.id === tabGroup!.id,
   )
   if (!oldTabGroup) return
