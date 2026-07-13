@@ -38,25 +38,6 @@ const augmentedGroupConfigurations = computed(() =>
   })),
 )
 
-const chromeTabsByGroupConfiguration = computed(() => {
-  const tabsByGroups = new Map<GroupConfiguration, chrome.tabs.Tab[]>()
-  const tabs = chromeState.tabs.items.value
-
-  for (const tab of tabs) {
-    const group = getGroupConfigurationForTab(tab)
-    if (!group) continue
-
-    if (tabsByGroups.has(group)) {
-      tabsByGroups.get(group)!.push(tab)
-    } else {
-      const groupTabs = [tab]
-      tabsByGroups.set(group, groupTabs)
-    }
-  }
-
-  return tabsByGroups
-})
-
 /**
  * { [string: windowId]: Map<GroupConfiguration, chrome.tabs.Tab[]> }
  */
@@ -116,6 +97,13 @@ function getGroupConfigurationForTab(tab: chrome.tabs.Tab) {
 
 const groupCreationTracker = new GroupCreationTracker()
 
+function hasEnoughTabsToGroup(
+  group: GroupConfiguration,
+  tabs: chrome.tabs.Tab[],
+) {
+  return tabs.length >= group.options.minTabsToGroup
+}
+
 async function assignTabsToGroup(
   tabs: chrome.tabs.Tab[],
   group: GroupConfiguration,
@@ -126,8 +114,9 @@ async function assignTabsToGroup(
       tab.splitViewId === undefined ||
       tab.splitViewId === chrome.tabs.SPLIT_VIEW_ID_NONE,
   )
-
   if (tabs.length === 0) return
+
+  if (!hasEnoughTabsToGroup(group, tabs)) return
 
   const windowId = tabs[0].windowId
 
@@ -141,6 +130,7 @@ async function assignTabsToGroup(
 
   // Before attempting a merge: Check whether the source and target windows are compatible to move tabs between them
   let shouldMerge = false
+
   if (group.options.merge) {
     const sourceWindow = chromeState.windows.items.value.find(
       window => window.id === windowId,
@@ -322,6 +312,8 @@ async function groupAllAppropriateTabs() {
     tabsByGroups,
   } of chromeTabsByWindowIdAndGroupConfiguration.value) {
     for (const [group, tabs] of tabsByGroups) {
+      if (!hasEnoughTabsToGroup(group, tabs)) continue
+
       for (const tab of tabs) {
         assignedTabIds.add(tab.id!)
       }
@@ -617,6 +609,8 @@ when(groupConfigurations.loaded)
     console.debug('Waiting for extension state to initialize...')
     await when(chromeState.tabs.loaded)
 
+    console.debug('groupConfigurations', groupConfigurations)
+
     console.debug(
       'Extension state initialized, grouping all appropriate tabs now...',
     )
@@ -679,12 +673,20 @@ when(groupConfigurations.loaded)
         // by moving a tab.
         const updatedTab = await chrome.tabs.get(update.tab.id!)
 
+        const matchingGroupsInWindow =
+          chromeTabsByWindowIdAndGroupConfiguration.value.find(
+            ({ windowId }) => windowId === updatedTab.windowId,
+          )?.tabsByGroups
+
         let assignedAny = false
-        for (const [group, tabs] of chromeTabsByGroupConfiguration.value) {
+        for (const [group, tabs] of matchingGroupsInWindow ?? []) {
           if (!tabs.some(tab => tab.id === updatedTab.id)) continue
 
+          if (!hasEnoughTabsToGroup(group, tabs)) break
+
           assignedAny = true
-          await assignTabsToGroup([updatedTab], group)
+          await assignTabsToGroup(tabs, group)
+          break
         }
 
         // Check if tab has been reassigned,
