@@ -1,5 +1,5 @@
 import { z } from 'zod'
-import { matcherPattern } from './helpers'
+import { inputPattern } from './helpers'
 import { colors } from './resources'
 
 export const SaveOptionsSchema = z.object({
@@ -7,7 +7,7 @@ export const SaveOptionsSchema = z.object({
   merge: z.boolean().default(false),
 })
 
-const matcherPatternRegex = new RegExp(matcherPattern)
+const matcherPatternRegex = new RegExp(inputPattern)
 
 export const GroupConfigurationSchema = z.object({
   id: z.string().uuid(),
