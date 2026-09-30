@@ -2,7 +2,8 @@
   "type": "module",
   "scripts": {
     "dev": "wireit",
-    "dev:background": "wireit",
+    "dev:background:chromium": "wireit",
+    "dev:background:gecko": "wireit",
     "dev:test": "wireit",
     "build:options:chromium": "wireit",
     "build:options:gecko": "wireit",
@@ -31,8 +32,15 @@
         "vite.chromium.config.ts"
       ]
     },
-    "dev:background": {
-      "command": "rolldown -c rolldown-background.config.ts --watch",
+    "dev:background:chromium": {
+      "command": "rolldown -c rolldown-background.chromium.config.ts --watch",
+      "service": true,
+      "files": [
+        "src/background.ts"
+      ]
+    },
+    "dev:background:gecko": {
+      "command": "rolldown -c rolldown-background.gecko.config.ts --watch",
       "service": true,
       "files": [
         "src/background.ts"
