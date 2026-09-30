@@ -100,6 +100,19 @@ function getGroupConfigurationForTab(tab: chrome.tabs.Tab) {
     return
   }
 
+  // Ignore missing windows or special window types, e.g. pop-ups
+  const window = chromeState.windows.items.value.find(
+    window => window.id === tab.windowId,
+  )
+  if (!window || window.type !== 'normal') {
+    console.debug(
+      'Tab %o (%o) is not inside a normal window, ignore.',
+      tab.title,
+      tab.id,
+    )
+    return
+  }
+
   // Iterate tab group configurations
   let groupIndex = 0
   for (const group of augmentedGroupConfigurations.value) {
