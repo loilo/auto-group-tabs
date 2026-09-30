@@ -1,6 +1,6 @@
 export default {
   name: '__MSG_appName__',
-  version: '0.0.23',
+  version: '0.0.24',
   manifest_version: 3,
   description: '__MSG_appDesc__',
   homepage_url: 'https://loilo.de',
