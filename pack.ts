@@ -1,11 +1,12 @@
 import { createWriteStream } from 'node:fs'
 import { resolve } from 'node:path'
+import { fileURLToPath } from 'node:url'
 
 import archiver from 'archiver'
 
 const target = process.argv[2]
 
-const __dirname = new URL('.', import.meta.url).pathname
+const __dirname = fileURLToPath(new URL('.', import.meta.url))
 const output = createWriteStream(
   resolve(__dirname, `auto-group-tabs.${target}.zip`),
 )
