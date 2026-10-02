@@ -101,7 +101,7 @@ function deleteGroup(group: GroupConfiguration) {
 function addGroup(
   title: string,
   color: `${chrome.tabGroups.Color}`,
-  { strict, merge }: SaveOptions,
+  { strict, merge, minTabsToGroup }: SaveOptions,
 ) {
   const id = crypto.randomUUID()
 
@@ -113,6 +113,7 @@ function addGroup(
     options: {
       strict,
       merge,
+      minTabsToGroup,
     },
   })
 

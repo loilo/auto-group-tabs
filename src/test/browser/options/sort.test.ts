@@ -21,19 +21,19 @@ test('Drag and drop groups', async ({ page }) => {
     title: 'Test Group 1',
     color: 'blue',
     matchers: [],
-    options: { strict: true, merge: false },
+    options: { strict: true, merge: false, minTabsToGroup: 2 },
   }
   const group2 = {
     title: 'Test Group 2',
     color: 'red',
     matchers: ['example.com', 'example.org'],
-    options: { strict: true, merge: false },
+    options: { strict: true, merge: false, minTabsToGroup: 2 },
   }
   const group3 = {
     title: 'Test Group 3',
     color: 'green',
     matchers: ['github.com'],
-    options: { strict: true, merge: false },
+    options: { strict: true, merge: false, minTabsToGroup: 2 },
   }
 
   // Define groups programmatically

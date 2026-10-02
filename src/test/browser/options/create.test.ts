@@ -81,7 +81,7 @@ test('Test group creation flow', async ({ page }) => {
       title: 'Test Group',
       color: 'blue',
       matchers: [],
-      options: { strict: true, merge: true },
+      options: { strict: true, merge: true, minTabsToGroup: 2 },
     },
   ])
 })

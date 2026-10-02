@@ -38,6 +38,7 @@ const props = withDefaults(
     options: () => ({
       strict: false,
       merge: false,
+      minTabsToGroup: 2,
     }),
   },
 )
@@ -64,6 +65,7 @@ const editTitleLazy = ref(editTitle.value)
 const editColor = ref(props.color)
 const editStrict = ref(props.options.strict)
 const editMerge = ref(props.options.merge)
+const editMinTabsToGroup = ref(props.options.minTabsToGroup);
 const editFieldBlurred = ref(false)
 
 const colorMenu = ref()
@@ -88,6 +90,7 @@ watch(
     editColor.value = props.color
     editStrict.value = props.options.strict
     editMerge.value = props.options.merge
+    editMinTabsToGroup.value = props.options.minTabsToGroup;
     editFieldBlurred.value = false
 
     await nextTick()
@@ -139,6 +142,7 @@ function save(event: KeyboardEvent) {
   emit('save', editTitle.value, editColor.value, {
     strict: editStrict.value,
     merge: editMerge.value,
+    minTabsToGroup: editMinTabsToGroup.value,
   })
   show.value = false
 }
@@ -203,6 +207,15 @@ function remove() {
 
     <SlideVertical :duration="0.3">
       <Card v-if="showAdvanced" seamless>
+          <CardSection ghost tight collapse seamless class="radio-container">
+          <v-text-field
+            v-model.number="editMinTabsToGroup"
+            type="number"
+            min="1"
+            label="Minimum tabs before grouping"
+          />
+        </CardSection>
+
         <CardSection ghost tight collapse seamless class="radio-container">
           <v-checkbox id="edit-dialog-strict" v-model="editStrict" />
           <ToggleLabel for="edit-dialog-strict">
