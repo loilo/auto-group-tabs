@@ -51,7 +51,7 @@ test('Test group creation flow', async ({ page }) => {
 
   // Expect the preview to have updated
   expect(await previewLabel.textContent()).toBe('Test Group')
-  expect(await getPreviewColor()).toBe('rgb(25, 116, 232)')
+  expect(await getPreviewColor()).toBe('rgb(67, 107, 215)')
 
   // Save the new group
   await dialogContainer.locator(`text=${msg.buttonSave.message}`).click()
